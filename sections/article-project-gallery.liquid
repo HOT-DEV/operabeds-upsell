@@ -1,0 +1,83 @@
+{% comment %}
+    The Project Gallery section
+{% endcomment %}
+
+{%- liquid
+    assign project_gallery_images = article.metafields.accentuate.project_gallery_image
+-%}
+
+<section data-section-type="article-project-gallery" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper d-lg-flex flex-lg-wrap mx-lg-n1 mb-lg-n2">
+                        {%- for file in project_gallery_images -%}
+                            {%- liquid
+                                if file != blank
+                                    assign gallery_img_xs = file | file_img_url: '600x'
+                                    assign gallery_img_sm = file | file_img_url: '800x'
+                                    assign gallery_img_md = file | file_img_url: '800x'
+                                    assign gallery_img_lg = file | file_img_url: '600x'
+                                    assign gallery_img_xl = file | file_img_url: '1100x'
+                                endif
+
+                                assign gallery_img_alt = ''
+                            -%}
+
+                            <div class="swiper-slide col-lg-4 px-0 px-lg-1 mb-lg-2">
+                                {%- capture gallery_img_sources -%}
+                                    <source srcset="{{ gallery_img_xs | url }}" media="(max-width: 575px)">
+                                    <source srcset="{{ gallery_img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                    <source srcset="{{ gallery_img_md | url }}" media="(min-width: 768px)">
+                                {%- endcapture -%}
+                                <a data-fslightbox href="{{ gallery_img_xl | url }}">
+                                    <picture class="c-picture js-lazy" data-iesrc="{{ gallery_img_xxxl | url }}" data-alt="{{ gallery_img_alt | escape }}">
+                                        {{- gallery_img_sources | safe -}}
+                                    </picture>
+                                    <noscript>
+                                        <picture class="c-picture">
+                                            {{- gallery_img_sources | safe -}}
+                                            <img src="{{ gallery_img_xxxl | url }}" alt="{{ gallery_img_alt }}">
+                                        </picture>
+                                    </noscript>
+                                </a>
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-10 d-lg-none">
+            <div class="col-11 col-lg-10">
+                <div class="row flex-nowrap align-items-center">
+                    <div class="col-auto">
+                        <button class="swiper-button-prev c-carousel-arrow" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}">
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-left"></use>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <div class="swiper-pagination c-carousel-pagination"></div>
+                    </div>
+                    <div class="col-auto">
+                        <button class="swiper-button-next c-carousel-arrow" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}">
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-right"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{%- schema -%}
+{
+    "name": "Gallery",
+    "settings": [],
+    "blocks": []
+}
+{%- endschema -%}

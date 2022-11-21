@@ -1,0 +1,708 @@
+{% comment %}
+    Product Option snippet.
+{% endcomment %}
+{{ 'upgrade-info-popup.css' | asset_url | stylesheet_tag }}
+
+<style>
+    
+    .s-product__option, .container-upgrade {width: 100%;}
+    .s-product__option__swatch label span {width: 100%; white-space: normal; line-height: 1.2;}
+    .upgrade-package-checkmark {
+    position: absolute;
+    right: 0;
+    top: 2px;
+    height: 25px;
+    width: 25px;
+}
+.upgrade-package-checkmark#standard {
+    position: absolute;
+    top: 2px;
+    left: 95px;
+    transform: none;
+    height: 25px;
+    width: 25px;
+}
+.top-row input:checked~.upgrade-package-checkmark {
+    background-color: transparent;
+}
+/* .upgrade_package_full-card {background-color: #ffffff!important; border: 1px solid #006A5B;} */
+.upgrade-package-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.top-row {position: relative;}
+.top-row input:checked~.upgrade-package-checkmark:after {
+    display: block;
+}
+.top-row .upgrade-package-checkmark:after {
+    width: 21px;
+    height:21px;
+    border-radius: 100%;
+    background-color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='21' height='21' viewBox='0 0 21 21'%3E%3Cg id='Group_2696' data-name='Group 2696' transform='translate(-0.126)'%3E%3Cg id='Ellipse_245' data-name='Ellipse 245' transform='translate(0.126)' fill='%23fff' stroke='%230a2438' stroke-width='1.5'%3E%3Ccircle cx='10.5' cy='10.5' r='10.5' stroke='none'/%3E%3Ccircle cx='10.5' cy='10.5' r='9.75' fill='none'/%3E%3C/g%3E%3Cpath id='Path_825' data-name='Path 825' d='M-1223.413-5004.129l2.513,2.513,4.679-4.679' transform='translate(1230.336 5014.897)' fill='none' stroke='%230a2438' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'/%3E%3C/g%3E%3C/svg%3E%0A") !important;
+    background-size: 20px!important;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+</style>
+
+{%- liquid
+    assign rendered_split_options = ''
+    assign split_options_name_downcase = split_options_name | downcase
+    assign product_1_name =         product.metafields.accentuate.compare1_feature_name
+    assign product_2_name =         product.metafields.accentuate.compare2_feature_name
+    assign product_3_name =         product.metafields.accentuate.compare3_feature_name
+    assign compare_modal_image =    product.metafields.accentuate.compare_modal_image
+-%}
+
+<div class="js s-product__option{% if class %} {{ class }}{% endif %}">
+    <div class="row no-gutters justify-content-between align-items-center mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <label class="s-product__option__label" for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}">
+                {% if split_options_name_downcase contains 'smart base' %}
+                    {{ 'Upgrade Packages' }}    
+                {% else %}
+                    {{- split_options_name | escape -}}
+                {% endif %}
+                                {% if split_options_name_downcase contains 'mattress' and product.title contains 'Luxe' %}
+                                <div class="upgrade-info-popup" onclick="myFunction()" id="luxe-mattress">
+                                    <svg id="Group_2629" data-name="Group 2629" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+                                        <g id="Group_2630" data-name="Group 2630">
+                                        <text id="i" transform="translate(13 18)" fill="#0a2438" font-size="14" font-family="Gilroy-SemiBold, Gilroy" font-weight="600"><tspan x="-1.631" y="0">i</tspan></text>
+                                        <g id="Ellipse_244" data-name="Ellipse 244" fill="none" stroke="#0a2438" stroke-width="1.5">
+                                            <circle cx="13" cy="13" r="13" stroke="none"></circle>
+                                            <circle cx="13" cy="13" r="12.25" fill="none"></circle>
+                                        </g>
+                                        </g>
+                                    </svg>
+
+                                    <span class="popuptext luxe-mattress-content" id="myPopupInfo">
+                                        <div class="close-popup position-absolute" style="right:.5rem; top:.25rem;">✕</div>
+
+                                    <p class="mb-0 font-weight-bold">The Comfort Foam Bundle</p>
+                                    <p class="font-weight-medium">Comes with Luxe Adjustable Smart Bed and a Soft/Medium rated Comfort mattress. The Comfort is a layered foam mattress with cooling properties and a breathable cover.</p>
+
+                                    <p class="mb-0 font-weight-bold">The Hybrid Bundle</p>
+                                    <p class="font-weight-medium">Comes with Luxe Adjustable Smart Bed and a Medium rated Hybrid mattress. The Hybrid mattress is a combination of comfort foams and traditional springs.</p>
+
+                                    <p class="mb-0 font-weight-bold">The Natural Sprung Bundle</p>
+                                    <p class="mb-0 font-weight-medium">Comes with Luxe Adjustable Smart Bed and a Medium rated Natural Sprung mattress. The Natural Sprung is composed of pocket springs and natural wool.</p>
+
+                                </div>
+                                {% endif %}
+            </label>
+
+        </div>
+    </div>
+
+    {%- case split_options_layout -%}
+        {%- when 'swatch' -%}
+            {% comment %} Swatches {% endcomment %}
+            <div class="s-product__option__swatches"
+            {% unless condition %}
+            style="margin-right: 0;"                
+            {% endunless %}>
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign swatch_image = blank
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                        if split_options_name == 'Fabric'
+                            unless matching_split_value contains 'Fabric'
+                                assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                            else
+                                assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                            endunless
+                        elsif split_options_name == 'Size'
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                        elsif split_options_name contains 'Clamp'
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                        elsif split_options_name contains 'Rails'
+                            if product.title contains 'Classic Low' and matching_split_value contains 'Yes'
+                            assign image_name = 'swatch-rails-classic-low.png'
+                            elsif product.title contains 'Classic Low' and matching_split_value contains 'No'
+                            assign image_name = 'swatch-no-rails-classic-low.png'
+                            elsif product.handle == 'signature-profiling-bed-upholstered' and matching_split_value contains 'Yes'
+                            assign image_name = 'swatch-rails-signature-upholstered.png'  
+                            elsif product.handle == 'signature-profiling-bed-upholstered' and matching_split_value contains 'No'
+                            assign image_name = 'swatch-no-rails-signature-upholstered.png'                                                        
+                            elsif product.handle == 'signature-bariatric-bed' and matching_split_value contains 'Yes'
+                            assign image_name = 'swatch-rails-signature.png'  
+                            elsif product.handle == 'signature-bariatric-bed' and matching_split_value contains 'No'
+                            assign image_name = 'swatch-no-rails-signature.png'  
+                            elsif product.handle == 'signature-profiling-bed' and matching_split_value contains 'Yes'
+                            assign image_name = 'swatch-rails-signature.png'  
+                            elsif product.handle == 'signature-profiling-bed' and matching_split_value contains 'No'
+                            assign image_name = 'swatch-no-rails-signature.png'  
+                            elsif product.handle == 'solo-comfort-plus-profiling-bed' and matching_split_value contains 'Walnut'
+                            assign image_name = 'swatch-rails-walnut-solo-plus.png'  
+                            elsif product.handle == 'solo-comfort-plus-profiling-bed' and matching_split_value contains 'Oak'
+                            assign image_name = 'swatch-rails-oak-solo-plus.png'                                                                                     
+                            else
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                            endif
+                        elsif split_options_name contains 'Handset'
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                        elsif split_options_name contains 'Sides'
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                        elsif split_options_name contains 'Bed Size'
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                        elsif split_options_name contains 'Mattress'
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                        elsif split_options_name contains 'System'
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-' | remove: '(' | remove: ')'
+                        elsif split_options_name contains 'Type'
+                            if product.title contains 'Mesh'
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '-mesh' | append: '.png' | replace: ' ', '-'
+                            elsif product.title contains 'AutoTurn Lateral' and matching_split_value contains 'Bariatric'
+                            assign image_name = 'swatch-standard-type.png'
+                            else
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                            endif
+                        else
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                        endif
+                        assign swatch_image = image_name | file_img_url: 'small' | downcase
+
+                    -%}
+
+                    {%- unless rendered_split_options contains matching_split_value or split_options_name_downcase == 'smart base' -%}
+
+                    {% if split_options_name == 'Width' and split_values contains 'Single (3ft)' or split_values contains '90cm/3ft Single' or split_values contains '90cm/3ft'  %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-single-bed'%}
+                    <span>
+                        {{-'Single<p class="mt-1 mb-0">3ft / 90cm</p>'-}}
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains '75cm/2ft6' or split_values contains 'Small Single (2ft6)' %}
+
+        {% if product.title contains 'Fitted Stretch Sheet' %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-small-single-sheet'%}                      
+                    <span>
+                        {{-'Small Single<p class="mt-1 mb-0">2ft6 / 75 cm</p>'-}}
+                    </span>
+                </label>
+            </div>
+        </div>        
+
+        {% else %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-single-bed'%}
+                    <span>
+                        {{-'Small Single<p class="mt-1 mb-0">2ft6 / 75 cm</p>'-}}
+                    </span>
+                </label>
+            </div>
+        </div>
+        {% endif %}
+
+        {% elsif split_options_name == 'Width' and split_values contains '105cm/3ft6' or split_values contains '105cm/3ft6 Wide Single' %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-wide-single-bed'%}
+                    <!-- <img src="{{ 'bed_width_3ft6.png' | asset_img_url: 'x48' }}"> -->
+                    <span>
+                        {{-'Wide Single<p class="mt-1 mb-0">3ft6 / 105cm</p>'-}}
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains 'Small Double (4ft)' or split_values contains '120cm/4ft Small Double' or split_values contains '120cm/4ft' %}
+
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-smalldouble-bed'%}
+                    <span>
+                        {{-'Small Double<p class="mt-1 mb-0">4ft / 120cm</p>'-}}
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains 'King Dual (5ft)' or split_values contains 'King Dual (2 x 2ft6)'  %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-kingdual-bed'%}
+                    <span>
+                        {{-'King Dual<p class="mt-1 mb-0">5ft / 150cm</p>'-}}
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains 'Super King Dual (6ft)' or split_values contains 'Super King Dual (2 x 3ft)' or split_values contains '180cm/6ft Dual' %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-superkingdual-bed'%}
+                    <span>
+                        {% if product.handle contains 'change-dual-rotating-chair-bed' %}
+                        {{-'Dual<p class="mt-1 mb-0">6ft / 180cm</p>'-}}                            
+                        {% else %}
+                        {{-'Super King Dual<p class="mt-1 mb-0">6ft / 180cm</p>'-}}                        
+                        {% endif %}
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        {% else %}
+
+                        <div class="s-product__option__swatch">
+                            <input id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" name="options[{{ split_options_name | escape }}]" type="radio" value="{{ matching_split_value | escape }}"{% if is_split_option %} data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                            <label
+                                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                                {%- if swatch_image != blank -%}style="background-image: url({{ swatch_image }}); background-position: center; background-repeat: no-repeat;"{%- endif -%}
+                            >
+                                <span>
+                                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                                </span>
+                            </label>
+                        </div>
+                        {% endif %}
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+
+                {%- comment -%}Bespoke fabric option -ja{%- endcomment -%}
+                {% if product.metafields.custom.show_bespoke_fabric_option == true and split_options_name == 'Fabric' %}
+                {%- comment -%}
+                    <a href="#bespoke-design-service">
+                        <div class="s-product__option__swatch">
+                            <label style="background-image: url(https://cdn.shopify.com/s/files/1/0331/6806/4648/files/swatch-bespoke.png?v=1655729789);">
+                                <span>
+                                    Bespoke
+                                </span>
+                            </label>
+                        </div>
+                    </a>      {%- endcomment -%}
+
+                <!-- bespoke for desktop -->
+                {% for c in product.collections %}
+                {% if c.title == 'Adjustable Beds' %}
+                <div class="btn-bespoke-design_large">
+                    <a href="#bespoke-design-service">
+                        <svg aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-bespoke-service"></use>
+                        </svg>
+                        Bespoke Design Service</a>
+                </div>
+                {% endif %}
+                {% endfor %}
+
+                <!-- Bespoke for mobile -->
+                {% for c in product.collections %}
+                {% if c.title == 'Adjustable Beds' %}
+                <div class="btn-bespoke-design_small">
+                    <a href="#bespoke-design-service">
+                        <svg aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-bespoke-service"></use>
+                        </svg>
+                        Bespoke Design Service</a>
+                </div>
+                {% endif %}
+                {% endfor %}
+
+                {% endif %}
+
+
+                {%- comment -%}Extra width option -ja{%- endcomment -%}
+                {% if product.metafields.custom.show_extra_width_option == true %}
+                    {% if split_options_name == 'Width' %}
+                        <div class="option-width-wrapper mb-2 mb-lg-0">
+                            <div class="s-product__option__tab__width">
+                                {% unless product.title contains 'Dual' %}
+                                {% if product.metafields.custom.width_related_product_handle != blank %}                                                                    
+                                <a href="/products/{{ product.metafields.custom.width_related_product_handle }}">
+                                {% endif %}
+                                <label>
+                                    {% render 'icon-view-dual-sizes'%}
+                                    <span style="line-height: 1.2">
+                                        {{-'View<br>Dual Sizes'-}}
+                                    </span>
+                                </label>
+                                {% if product.metafields.custom.width_related_product_handle != blank %}                                                                    
+                                </a>
+                                {% endif %}
+                                {% else %}
+                                {% if product.metafields.custom.width_related_product_handle != blank %}                                    
+                                <a href="/products/{{ product.metafields.custom.width_related_product_handle }}">
+                                {% endif %}
+                                    <label>
+                                        {% render 'icon-view-single-sizes'%}
+                                    <span style="line-height: 1.2">
+                                        {{-'View<br>Single Sizes'-}}
+                                    </span>
+                                </label>  
+                                {% if product.metafields.custom.width_related_product_handle != blank %}                                                                                                     
+                                </a>
+                                {% endif %}                                
+                                {% endunless %}
+                            </div>
+                        </div>
+                    {% endif %}               
+                {% endif %}
+            </div>
+
+        {%- when 'tab' -%}
+            {% comment %} Tabs {% endcomment %}
+            <div class="s-product__option__tabs">
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                    -%}
+                    {%- unless rendered_split_options contains matching_split_value -%}
+                        <div class="s-product__option__tab">
+                            <input id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" name="options[{{ split_options_name | escape }}]" type="radio" value="{{ matching_split_value | escape }}"{% if is_split_option %} data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                            <label
+                                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                            >
+                                <span>
+                                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                                </span>
+                            </label>
+                        </div>
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+            </div>
+
+
+        {%- when 'tile' -%}
+            {% comment %} Tiles {% endcomment %}
+            <div class="s-product__option__tiles">
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign swatch_image = blank
+                        assign split_values = value | escape | split: split_character
+                        assign split_selected_values = option.selected_value | escape | split: split_character
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                        assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                        assign swatch_image = image_name | file_img_url: 'small' | downcase
+                    -%}
+
+              		{%- liquid
+                    	if product.handle == 'divan-adjustable-bed' and matching_split_value contains 'Emerald'
+                        	assign swatch_image = 'swatch-emerald-headboard.png' | file_img_url: 'small' | downcase
+                        endif
+                    	if product.handle == 'divan-adjustable-bed' and matching_split_value contains 'Pearl'
+                        	assign swatch_image = 'swatch-pearl-headboard.png' | file_img_url: 'small' | downcase
+                        endif                        
+              		-%}
+
+
+                    {%- unless rendered_split_options contains matching_split_value -%}
+                        <div class="s-product__option__tile">
+                            <input id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" name="options[{{ split_options_name | escape }}]" type="radio" value="{{ matching_split_value | escape }}"{% if is_split_option %} data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                            <label
+                                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                                {%- if swatch_image != blank -%}style="background-image: url({{ swatch_image }});"{%- endif -%}
+                            >
+                                <span>
+                                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                                </span>
+                            </label>
+                        </div>
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+            </div>
+
+            {%- when 'smartbase' -%}
+            {% comment %} Custom Adjustable Beds - Smart Base -ja {% endcomment %}
+            <div class="s-product__option__swatches" id="upgrade-packages">
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign swatch_image = blank
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                        if split_options_name == 'Fabric'
+                            unless matching_split_value contains 'Fabric'
+                                assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                            else
+                                assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                            endunless
+                        else
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                        endif
+                        assign swatch_image = image_name | file_img_url: 'small' | downcase
+                    -%}
+                    {%- unless rendered_split_options contains matching_split_value -%}
+                    {% if value == 'Standard' %}
+                        <div class="s-product__option__swatch" id="full-card" style="margin-right: 0; margin-bottom: 0;">
+                            <input id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" name="options[{{ split_options_name | escape }}]" type="radio" value="{{ matching_split_value | escape }}"{% if is_split_option %} data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                            <label
+                                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" class=""
+
+                            >
+                            <div class="position-absolute">
+                                <p class="font-weight-semibold text-14">
+                                    {{ value }}
+                                </p> 
+                            </div>
+                            </label>
+                            <div class="upgrade-info-popup" onclick="myFunction()">
+                                <svg id="Group_2629" data-name="Group 2629" xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+                                    <g id="Group_2630" data-name="Group 2630">
+                                      <text id="i" transform="translate(13 18)" fill="#0a2438" font-size="14" font-family="Gilroy-SemiBold, Gilroy" font-weight="600"><tspan x="-1.631" y="0">i</tspan></text>
+                                      <g id="Ellipse_244" data-name="Ellipse 244" fill="none" stroke="#0a2438" stroke-width="1.5">
+                                        <circle cx="13" cy="13" r="13" stroke="none"/>
+                                        <circle cx="13" cy="13" r="12.25" fill="none"/>
+                                      </g>
+                                    </g>
+                                  </svg>
+
+                                <span class="popuptext" id="myPopupInfo">
+                                    <div class="close-popup position-absolute" style="right:.5rem; top:.25rem;">&#10005</div>
+                                    <p>The Standard Base comes with adjustable back/leg rest, Zero-Gravity and Anti-Snore settings.</p>
+                                    <p class="mb-0">Upgrade to the Plus to add, back massage, lighting and app control or the Luxe for
+                                        all previous features with the addition of full body massage, Alexa Pairing, Wall Hugging and
+                                        more.</p>
+                                </span>
+                            </div>                            
+                        </div>
+                    {% else %}
+                        <div class="s-product__option__swatch" id="half-card" style="margin-right: 0; margin-bottom: 0;">
+                            <input id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" name="options[{{ split_options_name | escape }}]" type="radio" value="{{ matching_split_value | escape }}"{% if is_split_option %} data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                            <label
+                                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" class=""
+
+                            >
+                            <div class="position-absolute">
+                                <p class="font-weight-semibold text-14">
+                                    {{ value }}
+                                </p>                               
+{% if value contains 'MotionPlus™' or value contains 'Plus' %}
+    <ul>
+        {% if settings.feature_motionplus_1 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionplus_1 }}
+            </li>
+        {% endif %}      
+        {% if settings.feature_motionplus_2 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionplus_2 }}
+            </li>
+        {% endif %}      
+        {% if settings.feature_motionplus_3 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionplus_3 }}
+            </li>
+        {% endif %}      
+        {% if settings.feature_motionplus_4 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionplus_4 }}
+            </li>
+        {% endif %}      
+        {% if settings.feature_motionplus_5 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionplus_5 }}
+            </li>
+        {% endif %}      
+    </ul>
+
+{% elsif value contains 'MotionLuxe™' or value contains 'Luxe' %}
+
+    <ul>
+        {% if settings.feature_motionluxe_1 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionluxe_1 }}
+            </li>
+        {% endif %}      
+        {% if settings.feature_motionluxe_2 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionluxe_2 }}
+            </li>
+        {% endif %}      
+        {% if settings.feature_motionluxe_3 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionluxe_3 }}
+            </li>
+        {% endif %}      
+        {% if settings.feature_motionluxe_4 != blank  %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionluxe_4 }}
+            </li>
+        {% endif %}      
+        {% if settings.feature_motionluxe_5 != blank %}
+            <li>
+                <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>    
+                {{ settings.feature_motionluxe_5 }}
+            </li>
+        {% endif %}      
+    </ul>
+{% endif %}
+
+
+                            </div>
+                            </label>
+                        </div>        
+                    {% endif %}
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+            </div>            
+
+        {%- else -%}
+            {% comment %} Select {% endcomment %}
+            <select class="s-product__option__select" id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}" name="options[{{ split_options_name | escape }}]"{% if is_split_option %} data-product-split-option{% endif %}>
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign split_values = value | escape | split: split_character
+                        assign split_selected_values = option.selected_value | escape | split: split_character
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+                    -%}
+                    {%- unless rendered_split_options contains matching_split_value -%}
+                        <option value="{{ matching_split_value | escape }}"{% if is_selected %} selected{% endif %}>
+                            {{- matching_split_value | escape -}}
+                        </option>
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+            </select>
+    {%- endcase -%}
+</div>
+
+{{ 'upgrade-info-popup.js' | asset_url | script_tag }}

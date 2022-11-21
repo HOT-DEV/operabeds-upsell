@@ -1,0 +1,22 @@
+{%- comment -%}
+Usage is like this:
+
+{%- render 'presenter-phone-number'
+    _phone_number:      settings.company_phone,
+    _template:          block.settings.template_telephone,
+    _anchor_title:      'Call {number}',
+    _anchor_classes:    'd-inline-block text-14'
+-%}
+{%- endcomment -%}
+{%- liquid
+
+    assign phone_number_no_spaces = _phone_number | replace: ' ', ''
+    assign phone_number = _phone_number
+    assign title = _anchor_title | default: 'Call {number}'
+    if _anchor_classes
+        assign css_class = 'class=\"{classes}\"' | replace: '{classes}', _anchor_classes
+    endif
+    assign content = '<a {css_classes} href="tel:{number_no_spaces}" title="{title}"><span class="rTapNumber413992">{number}</span></a>' | replace: '{title}', new_title | replace: '{number_no_spaces}', phone_number_no_spaces | replace: '{number}', phone_number | replace: '{css_classes}', css_class
+    assign output = _template | replace: '{number}', content
+-%}
+{{ output }}

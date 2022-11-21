@@ -1,0 +1,706 @@
+{% comment %}
+    The Product section template
+{% endcomment %}
+{{- 'media_custom_slider.css' | asset_url | stylesheet_tag -}}
+{% if product.variants.size > 1 %}
+    {{- 'sticky_product_card.css' | asset_url | stylesheet_tag -}}
+{% endif %}
+{{ 'option_selection.js' | shopify_asset_url | script_tag }}
+
+{%- liquid
+    assign current_variant = product.selected_or_first_available_variant
+    assign attached_product_images = product.images | where: 'attached_to_variant?', true
+    assign unattached_product_images = product.images | where: 'attached_to_variant?', false
+    assign product_type_downcase = product.type | downcase
+
+    assign image_caption = product.metafields.my_fields.first_image_caption
+
+    for tag in product.tags
+        assign tag_downcase = tag | downcase
+        assign tag_key = tag | split: '_' | first | downcase
+        assign tag_value = tag | split: '_' | last
+        if tag_key == 'badge'
+            assign tag_ribbon_value = tag_value
+        elsif tag_key == 'ribbon'
+            assign tag_ribbon_category = tag_value
+        endif
+    endfor
+
+    assign trade_customer_logged_in = false
+    assign trade_customer_tag = settings.trade_customer_tag_bold_app
+    if customer and customer.tags contains trade_customer_tag
+        assign trade_customer_logged_in = true
+    endif
+
+    assign product_skus = product.variants | map: 'sku' | join: ','
+    assign product_metafield_skus = product.metafields.trustpilot.skus | remove: '' | append: ',' | replace: ',,', ','
+    assign product_all_skus = product_skus | append: ',' | append: product_metafield_skus | replace: ',,', ',' | remove: ''
+
+-%}
+
+<section class="s-product pt-md-8" data-section-type="product" data-section-id="{{ section.id }}" style="background-color: #E9EAEC;">
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10 px-2 px-lg-4 px-xl-2">
+                <div class="d-flex flex-column flex-lg-row mb-8 mt-2 mt-md-0 mb-md-20 justify-content-between">
+                    <div class="col-12 col-lg-7 col-xl-7 px-0 mb-0 mb-lg-0 pr-lg-4">
+                        {%-
+                            render 'breadcrumb',
+                            class: 'mb-6',
+                            show_back_link: true
+                        -%}  
+                        <div class="s-product__media d-scroll-2">
+                            <div class="s-product__media__primary">
+                                <div class="s-product__media__primary__slider swiper-container radius-10" data-product-media-slider>
+                                    <div class="swiper-wrapper">
+                                        {%- for unattached_product_image in unattached_product_images -%}
+                                            {%- liquid
+                                                assign image = unattached_product_image | img_url: '812x525'
+                                            -%}
+                                            <div class="swiper-slide">
+                                            
+                                                {% if forloop.first == true and image_caption != blank %}
+                                                    <figcaption class="collections-caption">
+                                                        {{ image_caption }}
+                                                    </figcaption>                                                 
+                                                {% endif %}
+
+                                                <picture class="js-lazy" data-iesrc="{{ image | url }}"
+                                                    data-alt="{{ unattached_product_image.alt | escape }}">
+                                                    <source srcset="{{ image | url }}">
+                                                </picture>
+                                            </div>
+                                        {%- else -%}
+                                            <div class="swiper-slide" id="main-slider">
+                                                <picture class="js-lazy" data-iesrc="{{ image | url }}"
+                                                    data-alt="{{ 'Placeholder Image' | escape }}">
+                                                    <source srcset="{{ image | url }}">
+                                                </picture>
+                                            </div>
+                                        {%- endfor -%}
+                                    </div>
+                                    
+                                    <button
+                                        class="s-product__media__primary__slider__btn s-product__media__primary__slider__btn--prev d-none d-md-block"
+                                        type="button"
+                                        aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}"
+                                        data-product-media-prev>
+                                        <svg aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-chevron-left"></use>
+                                        </svg>
+                                    </button>
+                                    <button
+                                        class="s-product__media__primary__slider__btn s-product__media__primary__slider__btn--next d-none d-md-block"
+                                        type="button"
+                                        aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}"
+                                        data-product-media-next>
+                                        <svg aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-chevron-right"></use>
+                                        </svg>
+                                    </button> 
+                                </div>
+                                
+                                <div class="s-product__media__primary__controls mt-2 mb-2 d-none">
+                                    <div class="row justify-content-center no-gutters">
+                                        <div class="col-sm-10">
+                                            <div class="row flex-nowrap align-items-center no-gutters">
+                                                <div class="col-auto">
+                                                    <button class="s-product__media__primary__controls__btn"
+                                                        type="button"
+                                                        aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}"
+                                                        data-product-media-prev>
+                                                        <svg aria-hidden="true" role="presentation">
+                                                            <use xlink:href="#sprite-chevron-left"></use>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="s-product__media__primary__controls__pagination"
+                                                        data-product-media-pagination></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button class="s-product__media__primary__controls__btn"
+                                                        type="button"
+                                                        aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}"
+                                                        data-product-media-next>
+                                                        <svg aria-hidden="true" role="presentation">
+                                                            <use xlink:href="#sprite-chevron-right"></use>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {%- comment -%} Media Thumbnail Slider {%- endcomment -%}
+                            <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+                            <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>                                                            
+                            
+                            <div class="s-product__media__secondary" data-thumbs="{{ unattached_product_images.size }}">            
+                                {% if unattached_product_images.size > 1 %}
+                                    <div class="row flex-nowrap no-gutters mt-2 mb-2 mb-md-0">
+                                        <div class="swiper productThumbnails position-relative overflow-hidden bg-transparent" id="product-info-slider">
+                                            <div class="swiper-wrapper" id="product-info-slider">
+                                                {%- for unattached_product_image in unattached_product_images -%}
+                                                    <div class="swiper-slide bg-transparent" id="product-info-slider" style="padding: 0; border-radius: 0;">
+                                                        <a class="" href="" role="button" data-product-media-thumbnail>
+                                                            <img class="js-lazy" width="196" height="115" data-src="{{ unattached_product_image | img_url: '196x115' }}" data-alt="{{ unattached_product_image.alt | escape }}">
+                                                        </a>
+                                                    </div>
+                                                {%- endfor -%}
+                                            </div>
+                                            <div class="swiper-button-prev" id="productThumbnails" style="width: 35px; height: 35px;"></div>
+                                            <div class="swiper-button-next" id="productThumbnails" style="width: 35px; height: 35px;"></div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            {%- comment -%} Media CTA bar -ja{%- endcomment -%}
+                            {% if product.metafields.custom.cta_bar_specifications == true or product.metafields.custom.cta_bar_watch_video != blank %}                                
+                                <div class="s-product__media-ctabar row m-0 px-0 py-0 pt-md-3 pt-lg-3 pb-md-1 pb-lg-0 justify-content-between">
+                                    <!-- Block 1 -->
+                                    {% if product.metafields.custom.cta_bar_specifications == true %}
+                                    <a href="#product-resources" class="d-none d-xl-flex col-12 order-2 order-lg-1 col-lg mb-lg-0 bg-white text-13 font-weight-semibold p-3 text-center radius-10 align-items-center justify-content-center" style="text-decoration: none; width: 100%;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25.524" height="17.349" viewBox="0 0 25.524 17.349">
+                                                <g id="Group_2688" data-name="Group 2688" transform="translate(0.5 0.5)">
+                                                <line id="Line_614" data-name="Line 614" y1="3.27" transform="translate(4.087 13.079)" fill="none" stroke="#0a2438" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+                                                <line id="Line_615" data-name="Line 615" y1="3.27" transform="translate(8.175 13.079)" fill="none" stroke="#0a2438" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+                                                <line id="Line_616" data-name="Line 616" y1="3.27" transform="translate(12.262 13.079)" fill="none" stroke="#0a2438" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+                                                <line id="Line_617" data-name="Line 617" y1="3.27" transform="translate(16.349 13.079)" fill="none" stroke="#0a2438" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+                                                <ellipse id="Ellipse_247" data-name="Ellipse 247" cx="5.722" cy="3.27" rx="5.722" ry="3.27" transform="translate(13.079)" fill="none" stroke="#0a2438" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+                                                <path id="Path_1162" data-name="Path 1162" d="M25.024,14.31c0,1.806-2.562,3.27-5.722,3.27H.5V7.77H19.3c3.16,0,5.722-1.464,5.722-3.27Z" transform="translate(-0.5 -1.23)" fill="none" stroke="#0a2438" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+                                                <line id="Line_618" data-name="Line 618" y1="3.27" transform="translate(13.079 3.27)" fill="none" stroke="#0a2438" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+                                                </g>
+                                            </svg>
+                                                <span style="">View Dimensions & Specifications</span>
+                                    </a>
+                                    {% endif %}
+                                    <!-- Block 2 -->
+                                    {% if product.metafields.custom.cta_bar_watch_video != blank %}
+                                    <!-- Divider -->
+                                    <div class="d-none d-xl-block order-lg-2"style="width: .5rem; padding: 0; margin: 0;"></div>
+                                    <a href="https://youtu.be/{{ product.metafields.custom.cta_bar_watch_video }}" class="order-1 order-lg-3 mb-2 mb-lg-0 col-12 col-lg bg-white text-13 font-weight-semibold p-3 text-center radius-10 d-flex align-items-center justify-content-center" style="text-decoration: none;" data-lity>
+                                        <div class="">
+                                                <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M15.625 44.5312C15.2227 44.5292 14.827 44.4287 14.4726 44.2383C14.1096 44.0333 13.8078 43.7352 13.5984 43.3747C13.389 43.0142 13.2795 42.6044 13.2812 42.1875V7.8125C13.2753 7.39302 13.383 6.97976 13.593 6.61654C13.8029 6.25333 14.1072 5.95371 14.4737 5.74946C14.8401 5.54522 15.255 5.44396 15.6743 5.45643C16.0937 5.46891 16.5018 5.59465 16.8555 5.82031L44.9609 23.0078C45.3047 23.2144 45.5892 23.5064 45.7867 23.8555C45.9842 24.2046 46.088 24.5989 46.088 25C46.088 25.4011 45.9842 25.7954 45.7867 26.1444C45.5892 26.4935 45.3047 26.7856 44.9609 26.9922L16.8555 44.1797C16.4854 44.4078 16.0597 44.5295 15.625 44.5312V44.5312ZM15.625 7.03125C15.4889 7.03241 15.355 7.06588 15.2344 7.1289C15.1159 7.19956 15.0177 7.29961 14.9492 7.41938C14.8808 7.53915 14.8445 7.67456 14.8437 7.8125V42.1875C14.8445 42.3254 14.8808 42.4609 14.9492 42.5806C15.0177 42.7004 15.1159 42.8004 15.2344 42.8711C15.3584 42.9366 15.4971 42.9691 15.6373 42.9657C15.7775 42.9623 15.9145 42.923 16.0351 42.8516L44.1601 25.6641C44.2732 25.594 44.3665 25.4962 44.4312 25.38C44.4959 25.2638 44.5298 25.133 44.5298 25C44.5298 24.867 44.4959 24.7362 44.4312 24.62C44.3665 24.5038 44.2732 24.406 44.1601 24.3359L16.0351 7.14844C15.9139 7.06784 15.7705 7.0269 15.625 7.03125V7.03125Z" fill="#0A2438"/>
+                                                </svg>
+                                                <span class="">
+                                                    <span style="">Watch video</span>
+                                                </span>
+                                            </div>
+                                        </a>                                    
+                                    {% endif %}
+                                </div>
+                            {% endif %}                              
+                        </div>
+                    </div>
+                    <div class="product-details-column col-12 col-lg-5 col-xl-5 mt-lg-4 px-0 bg-white radius-10" id="ja">
+                        <div class="price-details pb-6 {% if product.options.size > 1 %}d-scroll scroll-effect{% endif %}" id="showScroll">
+                            <span class="sale-badge {% if current_variant.compare_at_price > current_variant.price %} on-sale {% endif %}">Sale</span>
+                            <h1 class="font-weight-bold text-26 text-lg-28 text-elephant"> {{ product.title | safe }}</h1>
+
+                            <div class="col-12 text-14 leading-tight m-0 p-0">
+                                <div class="mb-1 text-14 leading-tight">
+                                    <div class="text-32 text-md-34 leading-tight font-weight-medium">
+                                        <div class="d-flex align-items-center">
+                                            <span class="money tracking-wide font-weight-semibold price-details-real {% if current_variant.compare_at_price > current_variant.price %}text-red{% else %}text-tropical{% endif %}" data-product-id="{{ product.id }}" data-product-price-exc-vat>
+                                                {{- current_variant.price | money_without_trailing_zeros -}}
+                                            </span>
+                                            <span class="ml-3 text-12 font-weight-semibold price-details-compare{% if current_variant.compare_at_price <= current_variant.price %} compare-price-hide {% endif %}" style="text-decoration: line-through; color: #79858D"
+                                            data-product-price-exc-vat-original>{{ current_variant.compare_at_price | times: 1.2 | money_without_trailing_zeros }}
+                                            <!-- <span class="mb-0 text-14">{{- ' inc. VAT' | escape -}}</span>	 -->
+                                            </span>
+                                        </div>
+                                        <div class="d-flex align-items-start justify-content-between mt-0" style="flex-wrap: wrap; row-gap: 3px;">
+                                            <div class="d-flex">
+                                                <span class="text-12 font-weight-medium mr-2" style="color: #79858D">{{- ' with VAT Relief' | escape -}}</span>
+                                                <span class="mb-0 text-12 font-weight-semibold mr-1" data-product-price-inc-vat>
+                                                    {{- current_variant.price | times: 1.2 | money_without_trailing_zeros -}}
+                                                </span>
+                                                <span class="text-12 font-weight-semibold text-elephant pr-2" style="">{{- ' inc. VAT' | escape -}}</span>
+                                            </div>
+                                            {% if product.metafields.custom.extra_message != blank %}
+                                                <div class="d-flex">
+                                                    <span class="text-right text-12 font-weight-medium" style="color: #79858D">{{ product.metafields.custom.extra_message }}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if product.variants.size > 1 %}
+                            <div class="price-details sticky-product-card" id="sticky_product_card">
+                                <div class="d-flex card-inner align-items-center">
+                                    <div class="col-4 pl-0 text-right">
+                                        {% assign current_variant = product.selected_or_first_available_variant %}
+                                        {%- if current_variant.featured_image -%}
+                                            {% assign card_image = current_variant.featured_image %}
+                                        {% else %}
+                                            {% assign card_image = product.featured_image %}
+                                        {%- endif -%}
+                                        <img class="active-variant-image" src="{{ card_image | img_url: '300x' }}" alt="Product card image">
+                                    </div>
+                                    <div class="col-8 m-0 p-0 leading-tight">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-15 font-weight-semibold text-rolling-stone">Your Configuration</span>
+                                            <img class="btn-top-arrow" src="{{ 'Vector.svg' | asset_url }}" alt="Back to top arrow">
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="money tracking-wide font-weight-semibold price-details-real text-20 {% if current_variant.compare_at_price > current_variant.price %}text-red{% else %}text-tropical{% endif %}" data-product-id="{{ product.id }}" product-card-price-exc-vat>
+                                                {{- current_variant.price | money_without_trailing_zeros -}}
+                                            </span>
+                                            <span class="ml-3 text-12 font-weight-semibold price-details-compare text-rolling-stone text-line-through {% if current_variant.compare_at_price <= current_variant.price %} compare-price-hide {% endif %}" product-card-price-exc-vat-original>
+                                                {{ current_variant.compare_at_price | times: 1.2 | money_without_trailing_zeros }}
+                                            </span>
+                                        </div>
+                                        <div class="d-flex align-items-start justify-content-between mt-0" style="flex-wrap: wrap; row-gap: 3px;">
+                                            <span class="text-12 font-weight-medium mr-2 text-rolling-stone">{{- ' with VAT Relief' | escape -}}</span>
+                                            <div class="d-flex">
+                                                <span class="mb-0 text-12 font-weight-semibold mr-1 text-rolling-stone" product-card-price-inc-vat>
+                                                    {{- current_variant.price | times: 1.2 | money_without_trailing_zeros -}}
+                                                </span>
+                                                <span class="text-12 font-weight-semibold text-rolling-stone">{{- ' inc. VAT' | escape -}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if product.variants.size > 1 or product.handle contains 'autoturn' %}
+                            <hr class="divider-product">
+                        {% endif %}
+                
+                        {%- comment -%}New Review and icon container -ja{%- endcomment -%}
+                        {% if product.metafields.custom.show_trustpilot_reviews == true or product.metafields.custom.cta_bar_specifications == true %}
+                            <div class="extra-details row py-2 py-lg-4 no-gutters justify-content-between">
+                                {% if product.metafields.custom.show_trustpilot_reviews == true %}                       
+                                    <div class="product-trustpilot-badge col-8 col-xl-6 py-2 pr-2 {% if product.metafields.custom.cta_bar_specifications == true %}br-1024{% endif %}">
+                                        <!-- TrustBox widget - Product Mini MultiSource -->
+                                        <div class="trustpilot-widget mt-2 pr-0" data-locale="en-GB" id="stars" data-template-id="577258fb31f02306e4e3aaf9" data-businessunit-id="6015ba1d33fc5e0001b26c2b" data-style-height="24px" data-style-width="100%" data-theme="light" data-sku="{{ product_all_skus }}" data-name="{{ product.title }}" data-no-reviews="hide">
+                                            <a href="https://uk.trustpilot.com/review/operabeds.com" target="_blank" rel="noopener">Trustpilot</a>
+                                        </div>
+                                        <!-- End TrustBox widget -->
+                                    </div>
+                                {% endif %}
+                                {% if product.metafields.custom.cta_bar_specifications == true %}                        
+                                    <div class="{% if product.metafields.custom.show_trustpilot_reviews == true %}col-4 col-xl-6{%else%}col-12 col-xl-12{%endif%} text-12 text-elephant font-weight-medium d-flex align-items-center {% if product.metafields.custom.show_trustpilot_reviews == true %}justify-content-end justify-content-lg-center{%else%}justify-content-start justify-content-lg-start{%endif%} {% if product.metafields.custom.show_trustpilot_reviews == true %}pl-4{%else%}pl-0{%endif%} pr-0 m-0">
+                                {%- if product.handle contains 'autoturn' -%}
+                                    <a data-calculatorid="61f957e55eddd2002ce5b243" href="#/calculator/61f957e55eddd2002ce5b243">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                        <span class="mr-sm-2 mr-hd-4">
+                                            <svg aria-hidden="true" role="presentation" style="width: 26px; height: 26px;">
+                                            <use xlink:href="#calculator-elephant"></use>
+                                            </svg>
+                                        </span>
+                                        <span class="d-none d-sm-block text-left font-weight-semibold">
+                                            {{'Cost Saving Calculator'}}
+                                        </span>
+                                        </div>
+                                    </a>
+                                {%- else -%}                               
+                                        <a href="#product-information">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                            <span class="mr-xl-2 mr-hd-4 {%if product.metafields.custom.show_trustpilot_reviews != true%}mr-2{% endif %}">
+                                                {% render 'icon-information' %}
+                                            </span>
+                                            <span class="{%if product.metafields.custom.show_trustpilot_reviews == true%}d-none{%endif%} d-xl-block text-left font-weight-semibold">
+                                                {{'Product Information'}}
+                                            </span>
+                                            </div>
+                                        </a>
+                                        {%- endif -%}                                
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {% if product.variants.size > 1 or product.handle contains 'autoturn' %}
+                                <hr class="divider-product">
+                            {% endif %}
+                            
+                        {% endif %}
+
+                        {%- form 'product', product, data-product-form: '', data-product-handle: product.handle, data-product-variant: current_variant.id, class: 'mt-6' -%}
+                        <input name="quantity" type="hidden" value="1" />
+
+                        {%- if product.has_only_default_variant -%}
+                        <input name="id" type="hidden" value="{{ current_variant.id }}" />
+                        {%- else -%}
+                        <div class="s-product__options pb-6"
+                        {% unless condition %}
+                            style="justify-content: space-between;"
+                        {% endunless %}>
+
+                        {% comment %} JavaScript Options {% endcomment %}
+                        {%- for option in product.options_with_values -%}
+                        {%- liquid
+                                        assign options_index = forloop.index0
+                                        assign split_character = ' &amp; '
+                                        assign options_name = option.name | escape
+                                        assign split_options = options_name | split: split_character | uniq
+
+                                        assign is_split_option = false
+                                        if options_name contains split_character
+                                            assign is_split_option = true
+                                        endif
+                                    -%}
+                        {%- for split_option in split_options -%}
+                        {%- liquid
+                                            assign split_options_index = forloop.index0
+                                            assign split_options_name = split_option | strip | default: 'Option'
+                                            assign split_options_name_downcase = split_options_name | downcase
+                                            assign split_options_layout = 'select'
+
+                                            if split_options_name_downcase == 'fabric' or split_options_name_downcase contains 'colour' or split_options_name_downcase contains 'material' or split_options_name_downcase contains 'motor' or split_options_name_downcase contains 'size' or split_options_name_downcase contains 'clamp' or split_options_name_downcase contains 'type' or split_options_name_downcase contains 'system' or split_options_name_downcase contains 'version' or split_options_name_downcase contains 'width' or split_options_name_downcase contains 'rails' or split_options_name_downcase contains 'handset' or split_options_name_downcase contains 'sides' or split_options_name_downcase == 'mattress'
+                                                assign split_options_layout = 'swatch'
+                                            elsif split_options_name_downcase == 'legs' or split_options_name_downcase contains 'headboard' 
+                                                assign split_options_layout = 'tile'                                                   
+                                            elsif split_options_name_downcase == 'smart base'
+                                                assign split_options_layout = 'smartbase'                                                    
+                                            endif
+                                        -%}
+                        {%-
+                                            render 'product-option-ja',
+                                            class: '',
+                                            option: option,
+                                            options_index: options_index,
+                                            split_options: split_options,
+                                            split_options_index: split_options_index,
+                                            split_options_name: split_options_name,
+                                            split_options_layout: split_options_layout,
+                                            is_split_option: is_split_option,
+                                            split_character: split_character,
+                                        -%}
+                                        
+
+                        {%- endfor -%}
+                        {%- endfor -%}
+
+                        {% comment %} NoScript Options {% endcomment %}
+                        <noscript>
+                            <div class="s-product__option">
+                                <div class="row no-gutters justify-content-between align-items-center mb-4">
+                                    <div class="col-auto">
+                                        <label class="s-product__option__label" for="productOptions">
+                                            {{- 'Options' | escape -}}
+                                        </label>
+                                    </div>
+                                </div>
+                                <select class="s-product__option__select" id="productOptions" name="id">
+                                    {%- for variant in product.variants -%}
+                                    <option value="{{ variant.id }}" {% if variant.id == current_variant.id %}
+                                        selected{% endif %}{% unless variant.available %} disabled{% endunless %}>
+                                        {{ variant.title | escape | replace: '&amp;', '/' | escape }} -
+                                        {{ variant.price | money }}
+                                    </option>
+                                    {%- endfor -%}
+                                </select>
+                            </div>
+                        </noscript>
+
+                        </div>
+                        {%- endif -%}                                             
+                        
+                        {%- comment -%}Delivery information (Phase 2 - should be swapped to dynamic delivery checker){%- endcomment -%}
+                        {% for tag in product.tags %}
+                            {% if tag contains 'Delivery_' %}
+                                {% assign deliveryMessage = true %}
+                                {% assign timeDelivery = tag | split: '_' | last %}
+                            {% endif %}
+
+                            {% if tag contains 'Delivery & Setup' %}
+                                {% assign deliverySetupMessage = true %}
+                                {% assign timeDeliverySetup = tag | split: '_' | last %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if deliveryMessage or deliverySetupMessage %}
+                        <hr class="divider-product">
+                        <div class="delivery-details col-12 py-4">
+                            <span class="d-block d-md-inline">
+                                <p class="text-16 text-right text-abbey mb-0">
+                                    {% if deliveryMessage == true and deliverySetupMessage == blank %}
+                                        <span class="font-weight-semibold">{{'Delivery: '}}</span>{{ timeDelivery }}
+                                    {% endif %}
+                                    {% if deliverySetupMessage == true and deliveryMessage == blank %}
+                                        <span
+                                        class="font-weight-semibold">{{'Delivery & Setup: '}}</span>{{ timeDeliverySetup }}
+                                    {% endif %}
+                                    {% if deliveryMessage == true and deliverySetupMessage == true %}
+                                        <span class="font-weight-semibold">{{'Delivery: '}}</span>{{ timeDelivery }}<br>
+                                        <span
+                                        class="font-weight-semibold">{{'Delivery & Setup: '}}</span>{{ timeDeliverySetup }}
+                                    {% endif %}
+                                </p>
+                                {% for handle in product.handle %}
+                                    {% if handle == 'flyte-adjustable-bed' or handle == 'flyte-dual-adjustable-bed' or handle == 'hagen-adjustable-bed' or handle == 'hagen-dual-adjustable-bed' or handle == 'edel-adjustable-bed' or handle == 'edel-dual-adjustable-bed' %}   
+                                            <div class="temp-delivery-info text-right mt-2">
+                                                <span class="font-weight-bold mb-0 text-13">4-6 weeks for</span>
+                                                <span class="text-13 mb-0">Fabrics in Zinc, Headboards in Opal</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if handle == 'signature-profiling-bed-upholstered' or handle == 'signature-comfort-profiling-bed' or handle == 'solo-comfort-profiling-bed' or handle == 'solo-comfort-plus-profiling-bed' or handle == 'signature-comfort-dual-profiling-bed'%}                                        
+                                            <div class="temp-delivery-info text-right mt-2">
+                                                <span class="font-weight-bold mb-0 text-13">4-6 weeks for</span>
+                                                <span class="text-13 mb-0">Fabrics in Zinc, Sisal Leather or Lichtgrau Leather, Headboards in Opal</span>
+                                            </div>
+                                        {% endif %}   
+                                        {% if handle contains 'change-dual-rotating-chair-bed' or handle contains 'change-rotating-chair-bed'%}                                        
+                                            <div class="temp-delivery-info text-right mt-2">
+                                                <p class="font-weight-bold mb-0 text-13 text-underline-calc">Delivery Message</p>
+                                                <p class="text-13 mb-0">*Delivery can be quicker depending on stock.<br>
+                                                Contact us for more information.</p>
+                                            </div>
+                                    {% endif %}                                           
+                                {% endfor %}
+                            </span>
+                        </div>
+                        {% endif %}                      
+
+                        <hr class="divider-product">                          
+
+                        {%- comment -%} Configuration SKU section {%- endcomment -%}
+                        <div class="config-sku col-12 bg-white py-4 text-right">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="mb-2 text-16 font-weight-semibold leading-none">
+                                        {{- 'Your Configuration' | escape -}}
+                                    </p>
+                                    <p class="s-product__sku mb-0 text-12 leading-tight text-abbey text-uppercase font-weight-bold"
+                                        {%- if current_variant.sku.size == 0 -%}hidden{%- endif -%}>
+                                        <span data-product-sku>
+                                            {{- current_variant.sku -}}
+                                        </span>
+                                    </p>
+
+                                    <ul class="s-product__summary__list text-14 d-none" data-product-summary>
+                                        {%- for option in product.options_with_values -%}
+                                        {%- if option.selected_value != blank and option.selected_value != 'Default Title' -%}
+                                        {%- liquid
+                                                        assign options_index = forloop.index0
+                                                        assign options_name = option.name | escape
+                                                        assign split_options = options_name | split: split_character | uniq
+
+                                                        assign is_split_option = false
+                                                        if options_name contains split_character
+                                                            assign is_split_option = true
+                                                        endif
+                                                    -%}
+                                        {%- for split_option in split_options -%}
+                                        {%- liquid
+                                                            assign split_options_index = forloop.index0
+                                                            assign split_options_name = split_option | strip | default: 'Option'
+                                                            assign rendered_split_options = ''
+                                                        -%}
+                                        <li>
+                                            <strong>
+                                                {{- split_options_name | append: ':' | escape -}}
+                                            </strong>
+                                            {%- for value in option.values -%}
+                                            {%- liquid
+                                                                    assign split_values = value | escape | split: split_character
+                                                                    assign split_selected_values = option.selected_value | escape | split: split_character
+                                                                    assign matching_split_value = split_values[split_options_index]
+                                                                    assign matching_split_selected_value = split_selected_values[split_options_index]
+                                                                    assign is_selected = false
+                                                                    if matching_split_value == matching_split_selected_value
+                                                                        assign is_selected = true
+                                                                    endif
+                                                                -%}
+                                            {%- if is_selected -%}
+                                            {%- unless rendered_split_options contains matching_split_value -%}
+                                            {%-
+                                                                            render 'product-option-value-presenter',
+                                                                            value: matching_split_value
+                                                                        -%}
+                                            {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                                            {%- endunless -%}
+                                            {%- endif -%}
+                                            {%- endfor -%}
+                                        </li>
+                                        {%- endfor -%}
+                                        {%- endif -%}
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>  
+
+                        <hr class="divider-product">
+
+                        {%- comment -%}Updated add to cart button -ja{%- endcomment -%}
+                        <div class="s-product__add-to-cart py-6">
+                            <button class="c-add-to-cart-btn radius-10" type="submit" name="add" {% unless current_variant.available %} disabled{% endunless %} data-product-submit>
+                                <span>
+                                    {%- if current_variant.available -%}
+                                        {% comment %} {{ 'template.product.add_to_cart' | t }} {% endcomment %}
+                                        {% if product.type == 'Care Bed' or product.type == 'Smart Bed' or product.type == 'Comfort Bed' or product.type == 'Rotating Chair Bed' or product.type == 'Profiling Bed' or product.title contains 'Adjustable Bed' or product.title contains 'Adjustable Smart Base' %}
+                                            <span class="text-16 text-md-18 text-lg-16 text-xl-18 tracking-widest font-weight-semibold">+ Add to Basket</span>
+                                            <div class="text-12 text-md-14 text-lg-12 text-xl-14 font-weight-medium mt-2 tracking-normal text-normalcase">
+                                            {{ 'Choose mattress and accessories at next step' }}</div>
+                                        {% else %}
+                                            Add to Basket
+                                        {% endif %}
+                                    {%- else -%}
+                                        {% comment %} {{ 'template.product.sold_out' | t }} {% endcomment %}
+                                        Sold Out
+                                    {%- endif -%}
+                                </span>
+                            </button>
+                        </div>       
+                
+                        {%- comment -%}New Payment method container -ja{%- endcomment -%}
+                        <div class="payment-icons d-flex col-12 justify-content-center mb-5 {%- if current_variant.price < 20000 -%}mb-0{%- endif -%}">
+                            {% render 'payment-icons' %}    
+                        </div>
+
+                        {%- comment -%}New Klarna container -ja {%- endcomment -%}
+                        <div class="klarna-container__desktop d-none d-xl-flex col-12" {%- if current_variant.price < 20000 -%}style="display: none!important;"{%- endif -%}>
+                            <div class="d-flex col-12 align-items-center justify-content-between radius-10 bg-gray text-11 px-0 py-4">
+                            <div class="col-6 px-md-4 text-left">
+                                {{'Split your payment at checkout with Klarna 9.9% APR'}}
+                            </div>
+                            <div class="col-3 px-md-4 border-sides-light text-center">
+                                <span class="" data-finance-container data-product-price="{{ current_variant.price }}">
+                                    <span class="font-weight-bold" data-finance-monthly></span>
+                                    <span>per month</span>
+                                </span>
+                            </div>
+                            <div class="col-3 px-md-4 text-center">
+                                {% render 'klarna-logotype' %}
+                            </div>
+                        </div>
+                        </div>
+
+                        {%- comment -%} Klarna container {%- endcomment -%}
+                        <div class="klarna-container__mobile d-xl-none mb-4" {%- if current_variant.price < 20000 -%}style="display: none!important;"{%- endif -%}>
+                            <div class="bg-gray p-3 radius-10 text-12 text-lg-11 text-center">
+                            <p class="mb-2">
+                                {{'Split your payment at checkout with Klarna 9.9% APR'}}
+                            </p>
+                            <div class="row justify-content-between">
+                                <div class="col-6 text-left">
+                                    <span class="" data-finance-container data-product-price="{{ current_variant.price }}">
+                                        <span class="font-weight-bold" data-finance-monthly></span>
+                                        <span>per month</span>
+                                    </span>
+                                </div>
+                                <div class="col-6 text-right font-weight-bold">
+                                
+                                    <img src="{{ 'klarna-logotype-small.png' | asset_img_url: 'master' }}" alt="">                   
+                                
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        {%- comment -%}Updated Call container -ja {%- endcomment -%}
+                        <div class="s-product__cta text-center border-none pt-0 pb-4">
+                            <p class="m-0 text-14 text-lg-center text-elephant">
+                                <span class="d-block d-md-inline">
+                                    {{- 'Prefer to purchase over the phone?' | escape -}}
+                                </span>
+                                <br class="lg-breakline">
+                                <span class="d-block d-md-inline font-weight-bold">
+                                    {%- render 'presenter-phone-number'
+                                        _phone_number:  settings.company_phone,
+                                        _template:      section.settings.template_telephone,
+                                    -%}
+                                </span>
+                            </p>
+                        </div>
+                        {%- endform -%}
+                    </div>
+                </div>                  
+            </div>
+        </div>
+    </div>
+{%- render 'product-cross-sell', product: product -%}
+</section>
+
+  <style>
+    .s-product__media__primary__slider.configured {border: none!important;}
+    .s-product__media__primary__slider .swiper-wrapper .swiper-slide-active {width: 100%!important;}
+    .swiper-button-next, .swiper-button-prev { outline: none; }
+  </style>
+
+{{ 'media_thumbnail_slider.js' | asset_url | script_tag }}
+{% if product.variants.size > 1 %}
+    {{ 'sticky_product_card.js' | asset_url | script_tag }}    
+{% endif %}
+{{ 'media_custom_slider.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+    "name": "Product",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Show Klarna?"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_klarna_settings",
+            "default": true,
+            "label": "Show Klarna"
+        },
+        {
+            "type": "number",
+            "id": "show_klarna_minimim_value",
+            "default": 0,
+            "label": "Minimum Value for Klarna to show (in whole pounds)",
+            "placeholder": "150"
+        },
+        {
+            "type": "header",
+            "content": "Klarna Messages"
+        },
+        {
+            "type": "text",
+            "id": "klarna_finance_message",
+            "default": "Finance options available",
+            "label": "Finance Options Message"
+        },
+        {
+            "type": "text",
+            "id": "klarna_finance_rate_message",
+            "default": "6.9% APR Representative",
+            "label": "Rate Message"
+        },
+        {
+            "type": "header",
+            "content": "Klarna More Information"
+        },
+        {
+            "type": "url",
+            "id": "klarna_finance_link_url",
+            "label": "Link URL"
+        },
+        {
+            "type": "text",
+            "id": "klarna_finance_link_text",
+            "default": "Learn more about finance options",
+            "label": "Link text"
+        },
+        {
+            "type": "header",
+            "content": "Telephone Number"
+        },
+        {
+            "type": "text",
+            "id": "template_telephone",
+            "label": "Telephone",
+            "default": "Call us on {number}",
+            "info": "{number} is automatically replaced with the theme's company telephone number"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}
+
+    

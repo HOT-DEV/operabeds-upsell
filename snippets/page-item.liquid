@@ -1,0 +1,71 @@
+{% comment %}
+    The page Item snippet.
+{% endcomment %}
+
+{%- liquid 
+    if page.metafields.global.page_hero
+        assign image_desktop = page.metafields.global.page_hero
+    else
+        assign image_desktop = shop.metafields.global.page_hero
+    endif
+    
+    if page.metafields.global.page_hero_alt
+        assign image_alt = page.metafields.global.page_hero_alt
+    else
+        assign image_alt = shop.metafields.global.page_hero | default: page.title
+    endif
+
+
+    assign image_alt = image_alt | default: heading
+
+    if image_desktop != blank
+        assign img_xs = image_desktop | file_img_url: '300x300', crop: 'center'
+        assign img_sm = image_desktop | file_img_url: '450x450', crop: 'center'
+    else
+        assign img_xs = image_desktop | file_img_url: '300x300', crop: 'center'
+        assign img_sm = image_desktop | file_img_url: '450x450', crop: 'center'
+    endif
+
+-%}
+<div class="c-search-tile{% if class %} {{ class }}{% endif %}" data-product-item data-type="page">
+    <div class="c-search-tile__media">
+        <a href="{{ page.url }}" aria-label="{{ page.title | escape }}" title="{{ page.title | escape }}">
+            {%- if img_desktop != blank -%}
+                <picture class="c-search-tile__media__picture js-lazy" data-iesrc="{{ img_sm }}" data-alt="{{ image_alt }}">
+                    <source srcset="{{ img_sm }}" media="(min-width: 768px)">
+                    <source srcset="{{ img_xs }}" media="(max-width: 767px)">
+                </picture>
+                <noscript>
+                    <picture class="">
+                        <source srcset="{{ img_sm }}" media="(min-width: 768px)">
+                        <source srcset="{{ img_xs }}" media="(max-width: 767px)">
+                        <img src="{{ img_xs }}" alt="{{ image_alt }}" />
+                    </picture>
+                </noscript>
+            {%- endif -%}
+        </a>
+    </div>
+    <div class="c-search-tile__content">
+        <div class="c-search-tile__content__title">
+            <div class="row justify-content-between">
+                <div class="col-8">
+                    <h3 class="mb-0 text-18 font-weight-normal leading-tight">
+                        <a href="{{ page.url }}" aria-label="{{ page.title | escape }}" title="{{ page.title | escape }}">
+                            {{- page.title | escape -}}
+                        </a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="c-search-tile__content__list">
+            {%- assign description_parts = page.content | split: '</p>' -%}
+            {%- if description_parts.size > 0 -%}
+                <p>{{ description_parts | first | strip_html | strip | truncatewords: 20, '...' | escape }}</p>
+            {%- endif -%}
+        </div>
+        <div class="c-search-tile__ribbon">
+            Information Page
+        </div>
+    </div>
+        
+</div>

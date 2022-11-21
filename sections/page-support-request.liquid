@@ -1,0 +1,57 @@
+{% comment %}
+    The online needs assessments section template.
+{% endcomment %}
+<section aria-labelledby="page-title">
+    {%- 
+        render 'page-header',
+        image_mobile:           null,
+        image_tablet:           null,
+        image_desktop:          section.settings.hero_image,
+        image_alt:              image_alt,
+        heading:                page.title,
+        strapline:              null,
+        page_content:           null,
+        _add_header_element:    null,
+        _image_store:           null,
+    -%}
+
+    <div class="container site-padding my-12 mt-lg-14 mb-lg-24">
+        <div class="row justify-content-center">
+            {%- if page.content != blank -%}
+                <div class="c-rte mb-12 mb-lg-14 col-lg-6">
+                    {{- page.content -}}
+                </div>
+            {%- endif -%}
+
+            {%- if section.settings.support_request_form_html -%}
+                <div class="col-lg-6 mt-4 mt-lg-0">
+                    <div class="c-page-form">
+                        {{ section.settings.support_request_form_html }}
+                    </div>
+                </div>
+            {%- endif -%}
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Support Request",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image"
+        },
+        {
+            "type": "html",
+            "id": "support_request_form_html",
+            "label": "Form Embed code"
+        }
+    ]
+}
+{% endschema %}

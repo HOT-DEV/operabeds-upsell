@@ -1,0 +1,332 @@
+{% comment %}
+    The Hero section template.
+{% endcomment %}
+
+<section class="s-hero" data-section-type="hero" data-section-id="{{ section.id }}">
+    <div class="swiper-container h-100" data-loop="{% if section.blocks.size > 1 %}{{ section.settings.loop }}{% else %}false{% endif %}" data-transition="{{ section.settings.effect }}">
+        <div class="swiper-wrapper h-100">
+            {%- for block in section.blocks -%}
+                <div class="s-hero__slide swiper-slide h-100" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                    <div class="s-hero__slide__content h-100">
+                        <div class="container site-padding h-100">
+                            <div class="row h-100 align-items-center">
+                                <div class="col-12 text-center {{ block.settings.text_colour }}">
+                                    {%- if block.settings.strapline != blank -%}
+                                        <p class="mb-4 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                                            {{- block.settings.strapline | escape -}}
+                                        </p>
+                                    {%- endif -%}
+                                    {%- if block.settings.heading != blank -%}
+                                        <p class="m-0 text-36 text-lg-46 font-weight-medium leading-tight">
+                                            {{- block.settings.heading | escape | newline_to_br | safe -}}
+                                        </p>
+                                    {%- endif -%}
+                                    {%- if block.settings.primary_link != blank or block.settings.secondary_link != blank -%}
+                                        <div class="row justify-content-center">
+                                            <div class="col-12 col-sm-auto">
+                                                <div class="c-btn-group mt-4">
+                                                    {%- if block.settings.primary_link != blank -%}
+                                                        <a class="c-btn c-btn--gold c-btn--1" href="{{ block.settings.primary_link | url }}">
+                                                            {{- block.settings.primary_link_text | default: 'Primary Link' | escape -}}
+                                                        </a>
+                                                    {%- endif -%}
+                                                    {%- if block.settings.secondary_link != blank -%}
+                                                        <a class="c-btn-outline c-btn--1 ml-md-4 mt-4 mt-md-0" href="{{ block.settings.secondary_link | url }}">
+                                                            {{- block.settings.secondary_link_text | default: 'Secondary Link' | escape -}}
+                                                        </a>
+                                                    {%- endif -%}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%- liquid
+                        assign img_xs = 'https://via.placeholder.com/576x476'
+                        assign img_sm = 'https://via.placeholder.com/768x476'
+                        assign img_md = 'https://via.placeholder.com/1024x476'
+                        assign img_lg = 'https://via.placeholder.com/1280x580'
+                        assign img_xl = 'https://via.placeholder.com/1440x680'
+                        assign img_xxl = 'https://via.placeholder.com/1670x780'
+                        assign img_xxxl = 'https://via.placeholder.com/1920x780'
+
+                        if block.settings.image_mobile != blank
+                            assign img_xs = block.settings.image_mobile | img_url: 'x600'
+                            assign img_sm = block.settings.image_mobile | img_url: '800x'
+                        endif
+
+                        if block.settings.image_tablet != blank
+                            assign img_md = block.settings.image_tablet | img_url: '1100x'
+                        endif
+
+                        if block.settings.image_desktop != blank
+                            assign img_lg = block.settings.image_desktop | img_url: '1300x'
+                            assign img_xl = block.settings.image_desktop | img_url: '1500x'
+                            assign img_xxl = block.settings.image_desktop | img_url: '1800x'
+                            assign img_xxxl = block.settings.image_desktop | img_url: '2048x'
+                        endif
+                    -%}
+                    <picture class="s-hero__slide__bg js-lazy" data-iesrc="{{ img_xxxl | url }}" data-alt="{{ block.settings.image_desktop.alt | escape }}">
+                        <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+                        <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                        <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                        <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                        <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                        <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                        <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+                        {% comment %} <img alt="" /> {% endcomment %}
+                    </picture>
+                    {%- if block.settings.overlay_enabled -%}
+                        {%- liquid
+                            assign has_overlay_colour_from = false
+                            assign overlay_colour_from = block.settings.overlay_colour_from
+                            assign overlay_opacity_from = block.settings.overlay_opacity_from
+                            unless overlay_colour_from == 'rgba(0,0,0,0)'
+                                assign has_overlay_colour_from = true
+                                assign overlay_colour_from = overlay_colour_from | color_modify: 'alpha', overlay_opacity_from
+                            endunless
+
+                            assign has_overlay_colour_to = false
+                            assign overlay_colour_to = block.settings.overlay_colour_to
+                            assign overlay_opacity_to = block.settings.overlay_opacity_to
+                            unless overlay_colour_to == 'rgba(0,0,0,0)'
+                                assign has_overlay_colour_to = true
+                                assign overlay_colour_to = overlay_colour_to | color_modify: 'alpha', overlay_opacity_to
+                            endunless
+                        -%}
+                        {%- if has_overlay_colour_from and has_overlay_colour_to -%}
+                            <div
+                                class="s-hero__slide__overlay"
+                                aria-hidden="true"
+                                role="presentation"
+                                style="background: linear-gradient({{ overlay_colour_from }}, {{ overlay_colour_to }});"
+                            >
+                            </div>
+                        {%- endif -%}
+                    {%- endif -%}
+                </div>
+            {%- else -%}
+                {% comment %}
+                    Placeholder Slide, rendered when the section has no blocks
+                {% endcomment %}
+                <div class="s-hero__slide swiper-slide h-100">
+                    <div class="s-hero__slide__content h-100">
+                        <div class="container site-padding h-100">
+                            <div class="row h-100 align-items-center">
+                                <div class="col-12 text-center text-white">
+                                    <p class="mb-4 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                                        {{- 'Lorem ipsum dolar' | escape -}}
+                                    </p>
+                                    <p class="m-0 text-36 text-lg-46 font-weight-medium leading-tight">
+                                        {{- 'Lorem ipsum dolar' | escape -}}
+                                        <br />
+                                        {{- 'sit amet' | escape -}}
+                                    </p>
+                                    <div class="c-btn-group d-sm-inline-flex flex-sm-nowrap mt-4">
+                                        <a class="c-btn c-btn--1" href="{{ '#' | url }}">
+                                            {{- 'Primary Link' | escape -}}
+                                        </a>
+                                        <a class="c-btn-outline c-btn--1 mt-4 mt-sm-0 ml-sm-4" href="{{ '#' | url }}">
+                                            {{- 'Secondary Link' | escape -}}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <picture class="s-hero__slide__bg">
+                        {%- liquid
+                            assign img_xs = 'https://via.placeholder.com/576x476'
+                            assign img_sm = 'https://via.placeholder.com/768x476'
+                            assign img_md = 'https://via.placeholder.com/1024x476'
+                            assign img_lg = 'https://via.placeholder.com/1280x580'
+                            assign img_xl = 'https://via.placeholder.com/1440x680'
+                            assign img_xxl = 'https://via.placeholder.com/1670x780'
+                            assign img_xxxl = 'https://via.placeholder.com/1920x780'
+                        -%}
+                        <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+                        <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                        <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                        <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                        <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                        <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                        <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+                        <img alt="" />
+                    </picture>
+                    <div
+                        class="s-hero__slide__overlay"
+                        aria-hidden="true"
+                        role="presentation"
+                        style="background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));"
+                    >
+                    </div>
+                </div>
+            {%- endfor -%}
+        </div>
+        <div class="s-hero__pagination swiper-pagination"></div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Hero",
+    "settings": [
+        {
+            "type": "radio",
+            "id": "effect",
+            "label": "Transition Effect",
+            "options": [
+                { "value": "slide", "label": "Slide" },
+                { "value": "fade", "label": "Fade" }
+            ],
+            "default": "slide",
+            "info": "Change the slide transition effect"
+        },
+        {
+            "type": "checkbox",
+            "id": "loop",
+            "label": "Loop Slides",
+            "default": true,
+            "info": "Loop the transition back to the first slide"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "slide",
+            "name": "Slide",
+            "limit": 10,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "Content",
+                    "info": "Manage content."
+                },
+                {
+                    "type": "text",
+                    "id": "strapline",
+                    "label": "Strapline"
+                },
+                {
+                    "type": "textarea",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "select",
+                    "id": "text_colour",
+                    "label": "Text Colour",
+                    "options": [
+                        {
+                            "value": "text-white",
+                            "label": "Light"
+                        },
+                        {
+                            "value": "text-elephant",
+                            "label": "Dark"
+                        }
+                    ],
+                    "default": "text-elephant",
+                    "info": "Change the colour of the text"
+                },
+                {
+                    "type": "header",
+                    "content": "Links",
+                    "info": "Manage links."
+                },
+                {
+                    "type": "url",
+                    "id": "primary_link",
+                    "label": "Primary Link"
+                },
+                {
+                    "type": "text",
+                    "id": "primary_link_text",
+                    "label": "Primary Link Text"
+                },
+                {
+                    "type": "url",
+                    "id": "secondary_link",
+                    "label": "Secondary Link"
+                },
+                {
+                    "type": "text",
+                    "id": "secondary_link_text",
+                    "label": "Secondary Link Text"
+                },
+                {
+                    "type": "header",
+                    "content": "Image",
+                    "info": "Add a background image to the slide."
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_desktop",
+                    "label": "Desktop Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_tablet",
+                    "label": "Tablet Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_mobile",
+                    "label": "Mobile Image"
+                },
+                {
+                    "type": "header",
+                    "content": "Overlay",
+                    "info": "Add an overlay to the slide. Overlays sit on top of the image and underneath the text."
+                },
+                {
+                    "type": "checkbox",
+                    "id": "overlay_enabled",
+                    "label": "Enabled",
+                    "info": "Enable or disable the overlay",
+                    "default": true
+                },
+                {
+                    "type": "color",
+                    "id": "overlay_colour_from",
+                    "label": "Colour From",
+                    "default": "#000000"
+                },
+                {
+                    "type": "color",
+                    "id": "overlay_colour_to",
+                    "label": "Colour To",
+                    "default": "#000000"
+                },
+                {
+                    "type": "range",
+                    "id": "overlay_opacity_from",
+                    "label": "Opacity From",
+                    "default": 0.5,
+                    "step": 0.1,
+                    "min": 0,
+                    "max": 1
+                },
+                {
+                    "type": "range",
+                    "id": "overlay_opacity_to",
+                    "label": "Opacity To",
+                    "default": 0.5,
+                    "step": 0.1,
+                    "min": 0,
+                    "max": 1
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Hero",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": []
+        }
+    ]
+}
+{% endschema %}

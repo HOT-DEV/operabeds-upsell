@@ -1,0 +1,459 @@
+{% comment %}
+    The Cart template.
+{% endcomment %}
+{%- liquid
+    assign show_vat_relief = true
+    assign show_po_number = false
+    assign trade_customer_tag = settings.trade_customer_tag_bold_app
+    if customer and customer.tags contains trade_customer_tag
+        assign show_vat_relief = false
+        assign show_po_number = true
+        assign trade_customer_logged_in = true
+    endif
+-%}
+
+<section class="t-cart-wrapper pt-xl-24 pb-xl-24" aria-labelledby="page-title" style="background-color: #F4F4F4;">
+    <div class="container site-padding py-6" style="background-color: #F4F4F4;">
+        {%- if cart.item_count > 0 -%}      
+              <h1 class="text-26 text-lg-30 text-blue-diane font-weight-medium" id="page-title">Your Order</h1>      
+                  <div class="row">
+                {%- if section.settings.vat_relief_visible and show_vat_relief -%}
+                    <div class="col-xl-8">
+            <form id="cart_checkout" action="/cart" method="post" data-cart-form>
+                {%- for item in cart.items -%}
+                    {%- render 'cart-item',
+                        item: item
+                        _index: forloop.index,
+                        _index0: forloop.index0,
+                        _last: forloop.last,
+                    -%}
+                {%- endfor -%}
+                <!-- <div class="row mt-6" data-mczr="{% if item.properties._mczr_designId %}item-{{ item.properties._mczr_designId }}{% else %}item-not-mczr{% endif %}">
+                    <div class="col-12 mt-3 mb-8">
+                        <div class="t-cart-notes">
+                            <div class="c-form-field c-form-field--white-bg">
+                                <label for="CartSpecialInstructions" class="c-heading-sm">{{ 'template.cart.note_label' | t }}</label>
+                                <textarea placeholder="{{ 'template.cart.note_placeholder' | t }}" name="note" id="CartSpecialInstructions" class="c-form-input">{{ cart.note }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>                 -->
+            </form> 
+
+                    {%- comment -%} Delivery Options {%- endcomment -%}
+        <div class="delivery-options col-12 my-8 mb-xl-0 p-0 d-none d-xl-block">
+            <div class="text-left bg-elephant text-white">
+                <h2 class="u-heading-md text-20 mb-0 px-10 py-6">
+                    <span class="font-weight-bold">Delivery Options:</span> Select option after you've proceeded to checkout
+                </h2>
+            </div>
+
+            <div class="row m-0 bg-white">
+                <div class="delivery-options-container col-12 col-md-7 my-8">
+                    <div class="row px-8 pb-8 pt-0 align-items-center justify-content-center">
+                        <div class="col-3 p-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="45.006" height="45.006"
+                                viewBox="0 0 45.006 45.006">
+                                <g id="delivery-2" transform="translate(0 -0.009)">
+                                    <rect id="Rectangle_75" data-name="Rectangle 75" width="26.283" height="22.778"
+                                        transform="translate(14.75 1.087)" fill="none" stroke="#96917d"
+                                        stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                    <line id="Line_72" data-name="Line 72" x2="6.133"
+                                        transform="translate(25.263 8.095)" fill="none" stroke="#96917d"
+                                        stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                    <line id="Line_73" data-name="Line 73" x2="6.133" y2="14.017"
+                                        transform="translate(34.9 29.998)" fill="none" stroke="#96917d"
+                                        stroke-miterlimit="10" stroke-width="2" />
+                                    <circle id="Ellipse_19" data-name="Ellipse 19" cx="4.38" cy="4.38" r="4.38"
+                                        transform="translate(9.493 35.254)" fill="none" stroke="#96917d"
+                                        stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                    <path id="Path_334" data-name="Path 334" d="M44.006,29.671H11.035L6.734,1H1"
+                                        transform="translate(0 0.009)" fill="none" stroke="#96917d"
+                                        stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="col-9 p-0">
+                            <p class="text-20 font-weight-bold">Courier Delivery</p>
+                            <p class="text-14 mb-2 font-weight-medium">Standard (2-3 Working Days) - <span class="text-14 font-weight-semibold text-tropical mb-0 tracking-wider">FREE</span></p>
+                            <p class="text-14 font-weight-medium">Next Working Day - <span class="text-14 font-weight-semibold text-tropical mb-0 tracking-wider">£50</span></p>
+                        </div>
+                    </div>
+                    <div class="row px-8 d-flex align-items-center justify-content-center">
+                        <div class="col" style="border-bottom: 1px solid #D3D3D3;"></div>
+                        <div class="col-3 text-20 font-weight-bold d-flex justify-content-center">OR</div>
+                        <div class="col" style="border-bottom: 1px solid #D3D3D3;"></div>
+                    </div>
+                    <div class="row px-8 pt-8 pb-0 align-items-center justify-content-center">
+                        <div class="col-3 p-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                width="49.008" height="42.438" viewBox="0 0 49.008 42.438">
+                                <defs>
+                                    <clipPath id="clip-path">
+                                        <rect id="Rectangle_982" data-name="Rectangle 982" width="49.008"
+                                            height="42.438" fill="none" stroke="#707070" stroke-width="2" />
+                                    </clipPath>
+                                </defs>
+                                <g id="Group_2205" data-name="Group 2205" transform="translate(0 0)">
+                                    <g id="Group_2204" data-name="Group 2204" transform="translate(0 0)"
+                                        clip-path="url(#clip-path)">
+                                        <path id="Path_487" data-name="Path 487"
+                                            d="M20.294,46.388a4.292,4.292,0,0,0-1.6-3.374,12.978,12.978,0,0,0-8.169-2.784,12.976,12.976,0,0,0-8.169,2.784,4.291,4.291,0,0,0-1.6,3.374v2.528H20.294Z"
+                                            transform="translate(-0.132 -7.095)" fill="none" stroke="#95907d"
+                                            stroke-width="2" />
+                                        <path id="Path_488" data-name="Path 488"
+                                            d="M15.794,27.847a5.429,5.429,0,1,1-5.429-8.577"
+                                            transform="translate(-1.062 -3.399)" fill="none" stroke="#95907d"
+                                            stroke-width="2" />
+                                        <path id="Path_489" data-name="Path 489"
+                                            d="M41.614,27.847a5.429,5.429,0,1,0,5.429-8.577"
+                                            transform="translate(-7.339 -3.399)" fill="none" stroke="#95907d"
+                                            stroke-width="2" />
+                                        <path id="Path_490" data-name="Path 490"
+                                            d="M54.566,46.388a4.293,4.293,0,0,0-1.6-3.374,13.378,13.378,0,0,0-16.339,0,4.293,4.293,0,0,0-1.6,3.374v2.528H54.566Z"
+                                            transform="translate(-6.177 -7.095)" fill="none" stroke="#95907d"
+                                            stroke-width="2" />
+                                        <path id="Path_491" data-name="Path 491" d="M17.886,4.14l9.772,3.49,9.771-3.49"
+                                            transform="translate(-3.154 -0.73)" fill="none" stroke="#95907d"
+                                            stroke-width="2" />
+                                        <line id="Line_455" data-name="Line 455" y2="13.261"
+                                            transform="translate(24.504 6.899)" fill="none" stroke="#95907d"
+                                            stroke-linejoin="round" stroke-width="2" />
+                                        <path id="Path_492" data-name="Path 492"
+                                            d="M37.43,16.8l-9.772,3.49L17.887,16.8V3.542L27.658.75,37.43,3.542Z"
+                                            transform="translate(-3.154 -0.133)" fill="none" stroke="#95907d"
+                                            stroke-width="2" />
+                                    </g>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="col-9 p-0">
+                            <p class="text-20 font-weight-bold">Premium 2-Man Installation</h2>
+                                <p class="text-14 font-weight-medium">4-7 Working Days</p>
+                                <p class="text-14 font-weight-medium mb-0 text-tropical tracking-wider">£145</p>
+                        </div>
+                    </div>
+                    <div class="row px-8 pt-8 pb-0 align-items-center justify-content-center d-md-none">
+                        <div class="col-3 p-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="51.789" height="49.071" viewBox="0 0 51.789 49.071">
+                                <g id="recycling" transform="translate(-2.191 -4.111)">
+                                    <path id="Path_461" data-name="Path 461" d="M16.044,41.679H4L17.62,20"
+                                        transform="translate(0 2.862)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                        stroke-width="2" />
+                                    <path id="Path_462" data-name="Path 462" d="M42.136,29.55,48.5,39.727H22"
+                                        transform="translate(3.679 4.813)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                        stroke-width="2" />
+                                    <path id="Path_463" data-name="Path 463" d="M19.014,15.608,25.019,6,37.973,26.806"
+                                        transform="translate(3.069)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                        stroke-width="2" />
+                                    <path id="Path_464" data-name="Path 464" d="M7.309,22.409,16.944,20l2.409,9.635"
+                                        transform="translate(0.676 2.862)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                        stroke-miterlimit="10" stroke-width="2" />
+                                    <path id="Path_465" data-name="Path 465" d="M38.574,15.229,36.4,24.92l-9.691-2.174"
+                                        transform="translate(4.642 1.886)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                        stroke-miterlimit="10" stroke-width="2" />
+                                    <path id="Path_466" data-name="Path 466" d="M29.226,46.453,22,39.226,29.226,32"
+                                        transform="translate(3.679 5.314)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                        stroke-miterlimit="10" stroke-width="2" />
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="col-9 p-0">
+                            <p class="text-20 font-weight-bold">Old Bed Removal</h2>
+                                <p class="text-14 font-weight-medium">The 2-man installation crew will dismantle and remove your old
+                                    bed and mattress before installing your new bed.</p>                                   
+                                    <p class="text-14 font-weight-medium mb-0 text-tropical tracking-wider">£95</p>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="d-none d-md-flex flex-column text-center align-items-center justify-content-center col-md-5 px-8 my-8">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="51.789" height="49.071" viewBox="0 0 51.789 49.071">
+                        <g id="recycling" transform="translate(-2.191 -4.111)">
+                            <path id="Path_461" data-name="Path 461" d="M16.044,41.679H4L17.62,20"
+                                transform="translate(0 2.862)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                stroke-width="2" />
+                            <path id="Path_462" data-name="Path 462" d="M42.136,29.55,48.5,39.727H22"
+                                transform="translate(3.679 4.813)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                stroke-width="2" />
+                            <path id="Path_463" data-name="Path 463" d="M19.014,15.608,25.019,6,37.973,26.806"
+                                transform="translate(3.069)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                stroke-width="2" />
+                            <path id="Path_464" data-name="Path 464" d="M7.309,22.409,16.944,20l2.409,9.635"
+                                transform="translate(0.676 2.862)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                stroke-miterlimit="10" stroke-width="2" />
+                            <path id="Path_465" data-name="Path 465" d="M38.574,15.229,36.4,24.92l-9.691-2.174"
+                                transform="translate(4.642 1.886)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                stroke-miterlimit="10" stroke-width="2" />
+                            <path id="Path_466" data-name="Path 466" d="M29.226,46.453,22,39.226,29.226,32"
+                                transform="translate(3.679 5.314)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                stroke-miterlimit="10" stroke-width="2" />
+                        </g>
+                    </svg>
+                    <p class="text-20 font-weight-bold mt-4">Old Bed Removal</p>
+                    <p class="text-14 font-weight-medium">The 2-man installation crew will dismantle and remove your old
+                        bed and mattress before installing your new bed.</p>
+                        <p class="text-14 font-weight-medium mb-0 text-tropical tracking-wider">£95</p>
+                </div>
+            </div>
+        </div>
+        
+
+                    </div>
+                    <div class="col-xl-4 ">
+                        {%- render 'cart-summary', cart, show_po_number: show_po_number, -%}
+                        <div class="delivery-options col-12 my-8 mb-xl-0 p-0 d-xl-none">
+                            <div class="text-left bg-elephant text-white">
+                                <h2 class="u-heading-md text-20 mb-0 px-10 py-6">
+                                    <span class="font-weight-bold">Delivery Options:</span> Select option after you've proceeded to checkout
+                                </h2>
+                            </div>
+                
+                            <div class="row m-0 bg-white">
+                                <div class="delivery-options-container col-12 col-md-7 my-8">
+                                    <div class="row px-8 pb-8 pt-0 align-items-center justify-content-center">
+                                        <div class="col-3 p-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="45.006" height="45.006"
+                                                viewBox="0 0 45.006 45.006">
+                                                <g id="delivery-2" transform="translate(0 -0.009)">
+                                                    <rect id="Rectangle_75" data-name="Rectangle 75" width="26.283" height="22.778"
+                                                        transform="translate(14.75 1.087)" fill="none" stroke="#96917d"
+                                                        stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                                    <line id="Line_72" data-name="Line 72" x2="6.133"
+                                                        transform="translate(25.263 8.095)" fill="none" stroke="#96917d"
+                                                        stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                                    <line id="Line_73" data-name="Line 73" x2="6.133" y2="14.017"
+                                                        transform="translate(34.9 29.998)" fill="none" stroke="#96917d"
+                                                        stroke-miterlimit="10" stroke-width="2" />
+                                                    <circle id="Ellipse_19" data-name="Ellipse 19" cx="4.38" cy="4.38" r="4.38"
+                                                        transform="translate(9.493 35.254)" fill="none" stroke="#96917d"
+                                                        stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                                    <path id="Path_334" data-name="Path 334" d="M44.006,29.671H11.035L6.734,1H1"
+                                                        transform="translate(0 0.009)" fill="none" stroke="#96917d"
+                                                        stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" />
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="col-9 p-0">
+                                        <p class="text-20 font-weight-bold">Courier Delivery</p>
+                                        <p class="text-14 mb-2 font-weight-medium">Standard (2-3 Working Days) - <span class="text-14 font-weight-semibold text-tropical mb-0 tracking-wider">FREE</span></p>
+                                        <p class="text-14 font-weight-medium">Next Working Day - <span class="text-14 font-weight-semibold text-tropical mb-0 tracking-wider">£50</span></p>
+                                        </div>
+                                    </div>
+                                    <div class="row px-8 d-flex align-items-center justify-content-center">
+                                        <div class="col" style="border-bottom: 1px solid #D3D3D3;"></div>
+                                        <div class="col-3 text-20 font-weight-bold d-flex justify-content-center">OR</div>
+                                        <div class="col" style="border-bottom: 1px solid #D3D3D3;"></div>
+                                    </div>
+                                    <div class="row px-8 pt-8 pb-0 align-items-center justify-content-center">
+                                        <div class="col-3 p-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                width="49.008" height="42.438" viewBox="0 0 49.008 42.438">
+                                                <defs>
+                                                    <clipPath id="clip-path">
+                                                        <rect id="Rectangle_982" data-name="Rectangle 982" width="49.008"
+                                                            height="42.438" fill="none" stroke="#707070" stroke-width="2" />
+                                                    </clipPath>
+                                                </defs>
+                                                <g id="Group_2205" data-name="Group 2205" transform="translate(0 0)">
+                                                    <g id="Group_2204" data-name="Group 2204" transform="translate(0 0)"
+                                                        clip-path="url(#clip-path)">
+                                                        <path id="Path_487" data-name="Path 487"
+                                                            d="M20.294,46.388a4.292,4.292,0,0,0-1.6-3.374,12.978,12.978,0,0,0-8.169-2.784,12.976,12.976,0,0,0-8.169,2.784,4.291,4.291,0,0,0-1.6,3.374v2.528H20.294Z"
+                                                            transform="translate(-0.132 -7.095)" fill="none" stroke="#95907d"
+                                                            stroke-width="2" />
+                                                        <path id="Path_488" data-name="Path 488"
+                                                            d="M15.794,27.847a5.429,5.429,0,1,1-5.429-8.577"
+                                                            transform="translate(-1.062 -3.399)" fill="none" stroke="#95907d"
+                                                            stroke-width="2" />
+                                                        <path id="Path_489" data-name="Path 489"
+                                                            d="M41.614,27.847a5.429,5.429,0,1,0,5.429-8.577"
+                                                            transform="translate(-7.339 -3.399)" fill="none" stroke="#95907d"
+                                                            stroke-width="2" />
+                                                        <path id="Path_490" data-name="Path 490"
+                                                            d="M54.566,46.388a4.293,4.293,0,0,0-1.6-3.374,13.378,13.378,0,0,0-16.339,0,4.293,4.293,0,0,0-1.6,3.374v2.528H54.566Z"
+                                                            transform="translate(-6.177 -7.095)" fill="none" stroke="#95907d"
+                                                            stroke-width="2" />
+                                                        <path id="Path_491" data-name="Path 491" d="M17.886,4.14l9.772,3.49,9.771-3.49"
+                                                            transform="translate(-3.154 -0.73)" fill="none" stroke="#95907d"
+                                                            stroke-width="2" />
+                                                        <line id="Line_455" data-name="Line 455" y2="13.261"
+                                                            transform="translate(24.504 6.899)" fill="none" stroke="#95907d"
+                                                            stroke-linejoin="round" stroke-width="2" />
+                                                        <path id="Path_492" data-name="Path 492"
+                                                            d="M37.43,16.8l-9.772,3.49L17.887,16.8V3.542L27.658.75,37.43,3.542Z"
+                                                            transform="translate(-3.154 -0.133)" fill="none" stroke="#95907d"
+                                                            stroke-width="2" />
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="col-9 p-0">
+                                            <p class="text-20 font-weight-bold">Premium 2-Man Installation</h2>
+                                                <p class="text-14 font-weight-medium">4-7 Working Days</p>
+                                                <p class="text-14 font-weight-medium mb-0 text-tropical tracking-wider">£145</p>
+                                        </div>
+                                    </div>
+                                    <div class="row px-8 pt-8 pb-0 align-items-center justify-content-center d-md-none">
+                                        <div class="col-3 p-0">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="51.789" height="49.071" viewBox="0 0 51.789 49.071">
+                                                <g id="recycling" transform="translate(-2.191 -4.111)">
+                                                    <path id="Path_461" data-name="Path 461" d="M16.044,41.679H4L17.62,20"
+                                                        transform="translate(0 2.862)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                                        stroke-width="2" />
+                                                    <path id="Path_462" data-name="Path 462" d="M42.136,29.55,48.5,39.727H22"
+                                                        transform="translate(3.679 4.813)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                                        stroke-width="2" />
+                                                    <path id="Path_463" data-name="Path 463" d="M19.014,15.608,25.019,6,37.973,26.806"
+                                                        transform="translate(3.069)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                                        stroke-width="2" />
+                                                    <path id="Path_464" data-name="Path 464" d="M7.309,22.409,16.944,20l2.409,9.635"
+                                                        transform="translate(0.676 2.862)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                                        stroke-miterlimit="10" stroke-width="2" />
+                                                    <path id="Path_465" data-name="Path 465" d="M38.574,15.229,36.4,24.92l-9.691-2.174"
+                                                        transform="translate(4.642 1.886)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                                        stroke-miterlimit="10" stroke-width="2" />
+                                                    <path id="Path_466" data-name="Path 466" d="M29.226,46.453,22,39.226,29.226,32"
+                                                        transform="translate(3.679 5.314)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                                        stroke-miterlimit="10" stroke-width="2" />
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="col-9 p-0">
+                                            <p class="text-20 font-weight-bold">Old Bed Removal</h2>
+                                                <p class="text-14 font-weight-medium">The 2-man installation crew will dismantle and remove your old
+                                                    bed and mattress before installing your new bed.</p>                                   
+                                                    <p class="text-14 font-weight-medium mb-0 text-tropical tracking-wider">£95</p>
+                                        </div>
+                                    </div>                    
+                                </div>
+                                <div class="d-none d-md-flex flex-column text-center align-items-center justify-content-center col-md-5 px-8 my-8">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="51.789" height="49.071" viewBox="0 0 51.789 49.071">
+                                        <g id="recycling" transform="translate(-2.191 -4.111)">
+                                            <path id="Path_461" data-name="Path 461" d="M16.044,41.679H4L17.62,20"
+                                                transform="translate(0 2.862)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                                stroke-width="2" />
+                                            <path id="Path_462" data-name="Path 462" d="M42.136,29.55,48.5,39.727H22"
+                                                transform="translate(3.679 4.813)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                                stroke-width="2" />
+                                            <path id="Path_463" data-name="Path 463" d="M19.014,15.608,25.019,6,37.973,26.806"
+                                                transform="translate(3.069)" fill="none" stroke="#96917d" stroke-miterlimit="10"
+                                                stroke-width="2" />
+                                            <path id="Path_464" data-name="Path 464" d="M7.309,22.409,16.944,20l2.409,9.635"
+                                                transform="translate(0.676 2.862)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                                stroke-miterlimit="10" stroke-width="2" />
+                                            <path id="Path_465" data-name="Path 465" d="M38.574,15.229,36.4,24.92l-9.691-2.174"
+                                                transform="translate(4.642 1.886)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                                stroke-miterlimit="10" stroke-width="2" />
+                                            <path id="Path_466" data-name="Path 466" d="M29.226,46.453,22,39.226,29.226,32"
+                                                transform="translate(3.679 5.314)" fill="none" stroke="#96917d" stroke-linecap="square"
+                                                stroke-miterlimit="10" stroke-width="2" />
+                                        </g>
+                                    </svg>
+                                    <p class="text-20 font-weight-bold mt-4">Old Bed Removal</p>
+                                    <p class="text-14 font-weight-medium">The 2-man installation crew will dismantle and remove your old
+                                        bed and mattress before installing your new bed.</p>
+                                        <p class="text-14 font-weight-medium mb-0 text-tropical tracking-wider">£95</p>
+                                </div>
+                            </div>
+                        </div>                            
+                    </div>
+                {%- else -%}
+                    <div class="col-xl-4 offset-lg-8">
+                        {%- render 'cart-summary', cart, show_po_number: show_po_number, -%}
+                    </div>
+                {%- endif -%}
+            </div>
+        {%- else -%}
+        <h1 class="text-26 text-lg-46 text-blue-diane font-weight-normal" id="page-title">{{- 'template.cart.title' | t -}}</h1>      
+            <div class="row flex-md-nowrap mb-md-4">
+                <div class="col-12 col-md-8 mb-3 mb-md-0">
+                    <p>{{ 'template.cart.empty' | t }}</p>
+                    <p>{{ 'template.cart.continue_browsing_html' | t }}</p>
+                </div>
+            </div>
+        {%- endif -%}       
+      </div>
+  </section>
+
+  
+
+
+{%- render 'vat-relief-popup' -%}
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": [
+        {
+            "type": "header",
+            "content": "Options"
+        },
+        {
+            "type": "checkbox",
+            "id": "vat_relief_visible",
+            "label": "Show VAT relief form?",
+            "info": "VAT relief text & link can be edited in theme languages",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_notes",
+            "label": "Enable Notes for customer",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Vat Relief Heading"
+        },
+        {
+            "type": "text",
+            "id": "vat_relief_heading",
+            "label": "Entitled to VAT Relief?"
+        },
+        {
+            "type": "header",
+            "content": "Form Text"
+        },
+        {
+            "type": "header",
+            "content": "Vat Eligibility Link"
+        },
+        {
+            "type": "text",
+            "id": "vat_relief_link_text",
+            "label": "Link Text",
+            "default": "Find out if you are eligible for VAT relief."
+        },
+        {
+            "type": "url",
+            "id": "vat_relief_link_url",
+            "label": "Link Url"
+        },
+        {
+            "type": "text",
+            "id": "vat_relief_link_accessibility",
+            "label": "Link Accessibility Label",
+            "default": "Are you eligible?"
+        },
+        {
+            "type": "richtext",
+            "id": "vat_relief_text_html",
+            "label": "Vat Relief Text",
+            "default": "<p>If you are entitled to VAT Relief you can remove VAT during the checkout process.<\/p><p>I understand that, by completing this form and processing this order, I am digitally signing to agree that the details I have provided above qualify me for relief from value added tax.<\/p><p>If you are in any doubt as to whether you are eligible to receive goods or services zero-rated for VAT you should consult VAT Notice 701\/7 VAT reliefs for disabled people or contact the National Advice Service on 0300 200 3700 before signing the declaration. <a href=\"https:\/\/www.gov.uk\/financial-help-disabled\/vat-relief\">For more information read HMRC's website.<\/a><\/p>"
+        },
+        {
+            "type": "header",
+            "content": "Charity"
+        },
+        {
+            "type": "richtext",
+            "id": "charity_text_html",
+            "label": "Link Text",
+            "default": "<p><strong>Claiming as a charity?<\/strong> Call us on 0333 222 8584<\/p>"
+        }
+  ],
+  "blocks": [
+  ]
+}
+{% endschema %}
+{% render "cart-script.mczr" %}

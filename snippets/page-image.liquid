@@ -1,0 +1,30 @@
+{%- liquid
+    assign image = _image
+    assign image_alt = image.alt | default: _image_alt
+    assign img_xs = image | img_url: '576x476'
+    assign img_sm = image | img_url: '768x476'
+    assign img_md = image | img_url: '1024x476'
+    assign img_lg = image | img_url: '1280x580'
+    assign img_xl = image | img_url: '1440x680'
+    assign img_xxl = image | img_url: '1670x780'
+    assign img_xxxl = image | img_url: '1920x780'
+-%}
+{%- if image -%}
+    <div class="container site-padding my-16 my-lg-20">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="bg-athens-gray">
+                    <picture class="c-picture js-lazy" data-iesrc="{{ img_xxxl | url }}" {% if image_alt %}data-alt="{{ image_alt | escape }}"{%- endif -%}>
+                        <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+                        <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                        <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                        <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                        <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                        <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                        <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+                    </picture>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endif -%}

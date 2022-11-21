@@ -1,0 +1,81 @@
+<div id="view-retailers" class="overlay">
+    <div class="popup-call p-0">
+        <a class="close" href="#/">&times;</a>
+
+        <div class="d-block d-lg-flex flex-lg-row justify-content-center">
+            <div class="cta-retailers-image col-lg-4 px-0 text-center">
+            </div>
+
+            <div class="col-lg-8 px-4 px-lg-16 py-12 text-center text-lg-left">
+                <h3 class="text-24 text-lg-30 font-weight-medium mb-6">{{- settings.popup_retailers_title -}}</h3>
+                <p class="text-16">{{- settings.popup_retailers_info -}}</p>
+                <div class="c-page-form pt-6 pt-lg-6">
+                    {%- form 'contact', class: 'c-form c-form-alt', id: 'view-retailers-form', aria-label: 'View Retailers form' -%}
+                    <input type="hidden" name="contact[form]" value="View Retailers Form (popup)">
+                    {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+                    <div class="d-lg-flex flex-lg-row justify-content-lg-between">
+                        <div class="c-form-field mb-6" id="split">
+                            <label class="white-bg" for="name">Your Full Name</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'name' %} c-input--error{% endif %}"
+                                id="name" name="contact[name]" placeholder="Enter your full name" type="text"
+                                {%- if form.name -%} value="{{ form.name }}" {%- endif -%} required />
+                        </div>
+
+                        <div class="c-form-field mb-6 c-form-field--white-bg" id="split">
+                            <label for="email">E-Mail Address</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'email' %} c-input--error{% endif %}"
+                                id="email" name="contact[email]" placeholder="Enter your email address" type="email"
+                                {%- if form.email -%} value="{{ form.email }}" {%- endif -%} required />
+                        </div>
+                    </div>
+                    <div class="d-lg-flex flex-lg-row justify-content-lg-between">
+
+
+                        <div class="c-form-field mb-6" id="split">
+                            <label for="phone">Your Phone Number</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'phone' %} c-input--error{% endif %}"
+                                id="phone" name="contact[phone]" placeholder="Enter your phone number" type="number"
+                                {%- if form.phone -%} value="{{ form.phone }}" {%- endif -%} required />
+                        </div>
+                        <div class="c-form-field mb-6 c-form-field--white-bg" id="split">
+                            <label for="town-postcode">Town or Postcode</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'town' %} c-input--error{% endif %}"
+                                id="notes" name="contact[town]" placeholder="Enter your town or postcode" type="text"
+                                {%- if form.name -%} value="{{ form.name }}" {%- endif -%} />
+                        </div>
+                    </div>
+                    <div class="c-form-field textarea mb-6 mt-10 mt-sm-0 c-form-field--white-bg text-left">
+                        <label for="Message">Products You Want to See or Try</label>
+                        <textarea
+                            class="c-form-input mt-4 mt-sm-0 {% if show_errors == true and form.errors contains 'message' %} c-input--error{% endif %}"
+                            id="message" name="contact[message]" placeholder="Enter the products" required>
+                                {%- if form.body -%}
+                                    {{- form.body -}}
+                                {%- endif -%}
+                            </textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-sm-end">
+                        <button type="submit" class="c-form-contact-submit c-add-to-cart-btn">
+                            <span
+                                class="text-16 text-uppercase tracking-wider text-bold">{{- settings.popup_retailers_ctalabel -}}</span>
+                        </button>
+                    </div>
+                      {%- if form.posted_successfully? -%}
+                      <div class="bg-mossgreen">
+                          <p class="c-alert c-alert--success text-tropical text-center text-16 mt-4 p-2" role="alert"> Thank you! Your request
+                              has been received and we will contact you soon.
+                          </p>
+                      </div>
+                      {%- endif -%}                  
+                    {%- endform -%}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

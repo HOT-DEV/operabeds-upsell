@@ -1,0 +1,152 @@
+{% comment %}
+    The Project CTA section
+{% endcomment %}
+
+{%- liquid
+    assign project_cta_strapline = article.metafields.accentuate.project_cta_strapline | default: section.settings.subtitle
+    assign project_cta_heading = article.metafields.accentuate.project_cta_heading | default: section.settings.heading
+    assign project_cta_text = article.metafields.accentuate.project_cta_text | default: section.settings.text
+    assign project_cta_image = article.metafields.accentuate.project_cta_image
+    assign project_cta_link_text = article.metafields.accentuate.project_cta_link_text | default: section.settings.cta_text_1
+    assign project_cta_link_url = article.metafields.accentuate.project_cta_link_url | default: section.settings.cta_url_1
+
+    assign img_xs = 'https://via.placeholder.com/575x277'
+    assign img_sm = 'https://via.placeholder.com/767x277'
+    assign img_md = 'https://via.placeholder.com/1023x277'
+    assign img_lg = 'https://via.placeholder.com/1280x600'
+    assign img_xl = 'https://via.placeholder.com/1440x700'
+    assign img_xxl = 'https://via.placeholder.com/1670x800'
+    assign img_xxxl = 'https://via.placeholder.com/1920x800'
+    assign img_alt = ''
+
+    if project_cta_image != blank
+        assign img_xs = project_cta_image | file_img_url: '575x277', crop: 'center'
+        assign img_sm = project_cta_image | file_img_url: '767x277', crop: 'center'
+        assign img_md = project_cta_image | file_img_url: '1023x277', crop: 'center'
+        assign img_lg = project_cta_image | file_img_url: '1280x600', crop: 'center'
+        assign img_xl = project_cta_image | file_img_url: '1440x700', crop: 'center'
+        assign img_xxl = project_cta_image | file_img_url: '1670x800', crop: 'center'
+        assign img_xxxl = project_cta_image | file_img_url: '1920x800', crop: 'center'
+    else
+        assign image = section.settings.image
+        assign img_xs = image | img_url: '600x'
+        assign img_sm = image | img_url: '800x'
+        assign img_md = image | img_url: '1100x'
+        assign img_lg = image | img_url: '1300x'
+        assign img_xl = image | img_url: '1500x'
+        assign img_xxl = image | img_url: '1800x'
+        assign img_xxxl = image | img_url: '2048x'
+    endif
+-%}
+
+<section data-section-type="article-project-cta" data-section-id="{{ section.id }}">
+    <div class="c-image-and-text my-16 my-lg-20">
+        {%- capture img_sources -%}
+            <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+            <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+            <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+            <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+            <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+            <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+            <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+        {%- endcapture -%}
+        <picture class="c-image-and-text__bg js-lazy" data-iesrc="{{- img_xxxl -}}" data-alt="{{ img_alt | escape }}">
+            {{- img_sources | safe -}}
+        </picture>
+        <noscript>
+            <picture class="c-image-and-text__bg">
+                {{- img_sources | safe -}}
+                <img alt="{{ img_alt | escape }}">
+            </picture>
+        </noscript>
+        <div class="container site-padding">
+            <div class="row">
+                <div class="col-lg-6 col-xxl-5 offset-lg-6">
+                    <div class="c-image-and-text__content pb-14 p-lg-20">
+                        {%- if project_cta_strapline != blank -%}
+                            <h2 class="text-14 font-weight-normal font-weight-md-bold text-uppercase tracking-widest text-elephant mb-6 mb-md-8">
+                                {{- project_cta_strapline | escape -}}
+                            </h2>
+                        {%- endif -%}
+                        {%- if project_cta_heading != blank -%}
+                            <h3 class="text-24 text-md-36 text-elephant font-weight-normal mb-9 mb-md-7">
+                                {{- project_cta_heading | escape -}}
+                            </h3>
+                        {%- endif -%}
+                        {%- if project_cta_text != blank -%}
+                            <div class="c-rte text-14 text-abbey">
+                                {{- project_cta_text | safe -}}
+                            </div>
+                        {%- endif -%}
+                        <div class="row d-sm-inline-flex mt-10 mb-n4 align-items-sm-center">
+                            {%- if project_cta_link_text != blank and project_cta_link_url != blank -%}
+                                <div class="col-12 col-sm-auto mb-4">
+                                    <a href="{{ project_cta_link_url }}" class="c-btn-outline c-btn-outline--blue c-btn--lg c-btn--responsive">
+                                        {{- project_cta_link_text | escape -}}
+                                    </a>
+                                </div>
+                            {%- endif -%}
+                            <div class="col-12 col-sm-auto mb-4">
+                                {%- if settings.company_phone != blank -%}
+                                    <a class="text-16 font-weight-semibold tracking-wider leading-tight text-uppercase" href="{{ settings.company_phone | strip | replace: ' ', '' | prepend: 'tel:' }}">
+                                        Call <span class="rTapNumber413992">{{- settings.company_phone -}}</span>
+                                    </a>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Call to Action",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Default settings"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Can we support you with your project?"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Subtitle",
+            "default": "Contact Us"
+        },
+        {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "header",
+            "content": "CTA"
+        },
+        {
+            "type": "text",
+            "id": "cta_text_1",
+            "label": "Text",
+            "default": "View All Projects"
+        },
+        {
+            "type": "url",
+            "id": "cta_url_1",
+            "label": "Url"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

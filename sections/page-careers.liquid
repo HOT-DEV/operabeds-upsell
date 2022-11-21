@@ -1,0 +1,633 @@
+{% comment %}
+    The Careers Page template.
+{% endcomment %}
+{%- render 'page-header',
+    image_mobile:       null,
+    image_tablet:       null,
+    image_desktop:      section.settings.hero_image,
+    image_alt:          null,
+    heading:            page.title,
+    strapline:          section.settings.page_strapline,
+    page_content:       null,
+    _image_store:       null,
+    _add_header_element: null
+-%}
+
+{%- for block in section.blocks -%}
+    {%- if block.type == 'image-and-text' -%}
+        <div data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }} id="{{ block.settings.title | handleize }}" {% if forloop.last %}class="mb-24"{% endif %}>
+            {%- render 'page-image-and-text-tab'
+                    _image: block.settings.image
+                    _heading: block.settings.heading,
+                    _text_panel_position: block.settings.text_panel_position,
+                    _text: block.settings.text,
+                    _cta_url: block.settings.cta_url
+                    _cta_text: block.settings.cta_text,
+                -%}
+        </div>
+    {%- elsif block.type == 'text' -%}
+        {%- if block.settings.panel_theme_colour == 'grey' -%}
+            <div class="bg-athens-gray text-blue-diane mt-18">
+                <div class="container site-padding py-8">
+                    <p class="m-0 text-center font-weight-bold text-16 tracking-widest leading-relaxed text-uppercase">
+                        {{- block.settings.heading | escape -}}
+                    </p>
+                </div>
+            </div>
+        {%- else -%}
+            <div class="container site-padding pt-lg-16">
+                <p class="m-0 text-center font-weight-bold text-16 tracking-widest leading-relaxed text-uppercase text-blue-diane">
+                    {{- block.settings.heading | escape -}}
+                </p>
+            </div>
+        {%- endif -%}
+    {%- elsif block.type == 'info-blocks' -%}
+        {%- render 'page-info-block', _settings: block.settings -%}
+    {%- elsif block.type == 'bg-image-with-text' -%}
+        {%- render 'page-text-banner-image', _settings: block.settings -%}
+    {%- elsif block.type == 'vacancy' -%}
+        {%- liquid
+            if vacancy_already_placed
+                continue
+            endif
+            assign vacancy_already_placed = true
+            assign vacancies = section.blocks | where: 'type', 'vacancy'
+        -%}
+        <div class="bg-athens-gray">
+            <div class="container site-padding py-16">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-xxl-10">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2 class="m-0 u-heading-md text-center text-elephant">
+                                    {{ section.settings.vacancy_panel_heading }}
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="row mt-8 mb-n5 mx-n3">
+                            {%- if vacancies.size > 0 -%}
+                                {%- for vacancy in vacancies -%}
+                                    <div class="col-12 col-md-6 col-lg-4 mb-5 px-3">
+                                        {%-
+                                            render 'vacancy-card',
+                                            class: 'w-100 h-100',
+                                            _title: vacancy.settings.vacancy_title,
+                                            _url: vacancy.settings.vacancy_url,
+                                            _strapline: vacancy.settings.vacancy_strapline,
+                                            _description: vacancy.settings.vacancy_text,
+                                            _image: vacancy.settings.image,
+                                            _posted_date: vacancy.settings.posted_date,
+                                        -%}
+                                    </div>
+                                {%- endfor -%}
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+{%- endfor -%}
+
+{% schema %}
+{
+    "name": "Careers",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image"
+        },
+        {
+            "type": "textarea",
+            "id": "page_strapline",
+            "label": "Page Strapline (add line break for design)",
+            "default": "Enjoy a career\r\nenhancing lives"
+        },
+        {
+            "type": "header",
+            "content": "Vacancies Panels Heading"
+        },
+        {
+            "type": "text",
+            "id": "vacancy_panel_heading",
+            "label": "Vacancy Panel Heading",
+            "default": "Current Opportunities"
+        },
+        {
+            "type": "header",
+            "content": "Team Comments"
+        },
+        {
+            "type": "text",
+            "id": "team_comments_panel_heading",
+            "label": "Panel Heading",
+            "default": "Team Comments"
+        },
+        {
+            "type": "image_picker",
+            "id": "team_comments_image",
+            "label": "Background Image"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image-and-text",
+            "name": "Image & Text Panel",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image Picker"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                },
+                {
+                    "type": "header",
+                    "content": "Call To Action"
+                },
+                {
+                    "type": "text",
+                    "id": "cta_text",
+                    "label": "Text",
+                    "default": "Learn more"
+                },
+                {
+                    "type": "url",
+                    "id": "cta_url",
+                    "label": "Url"
+                },
+                {
+                    "type": "header",
+                    "content": "Text Panel Positioning"
+                },
+                {
+                    "type": "select",
+                    "id": "text_panel_position",
+                    "label": "Text Panel Position (Left/Right)",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                    ],
+                    "default": "left",
+                    "info": "Set the position of the text panel"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "name": "Text Panel",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "select",
+                    "id": "panel_theme_colour",
+                    "label": "Panel Background Colour (Grey/White)",
+                    "options": [
+                        {
+                            "value": "grey",
+                            "label": "Grey"
+                        },
+                        {
+                            "value": "white",
+                            "label": "White"
+                        }
+                    ],
+                    "default": "grey",
+                    "info": "Set the background panel colour"
+                }
+            ]
+        },
+        {
+            "type": "vacancy",
+            "name": "Vacancy",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "vacancy_title",
+                    "label": "Vacancy Title"
+                },
+                {
+                    "type": "text",
+                    "id": "vacancy_strapline",
+                    "label": "Vacancy Strapline"
+                },
+                {
+                    "type": "textarea",
+                    "id": "vacancy_text",
+                    "label": "Vacancy Info"
+                },
+                {
+                    "type": "page",
+                    "id": "vacancy_url",
+                    "label": "Vacancy More Detail (Page)"
+                },
+                {
+                    "type": "text",
+                    "id": "posted_date",
+                    "label": "Posted Date",
+                    "placeholder": "dd/mmy/yyyy",
+                    "info": "Data format must be dd/mm/yyyy"
+                }
+            ]
+        },
+        {
+            "type": "bg-image-with-text",
+            "name": "Bg Image with Text Panel",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                }
+            ]
+        },
+        {
+            "type": "info-blocks",
+            "name": "Info Blocks",
+            "settings": [
+            {
+                "type": "header",
+                "content": "Panel 1"
+            },
+            {
+                "type": "select",
+                "id": "panel_1_icon",
+                "options": [
+                { "value": "advice", "label": "Advice"},
+                { "value": "arrow-down", "label": "Arrow Down"},
+                { "value": "arrow-left", "label": "Arrow Left"},
+                { "value": "arrow-right", "label": "Arrow Right"},
+                { "value": "arrow-up", "label": "Arrow Up"},
+                { "value": "bars", "label": "Bars"},
+                { "value": "bed", "label": "Bed"},
+                { "value": "bespoke-service", "label": "Bespoke Service"},
+                { "value": "brochure2", "label": "Brochure2"},
+                { "value": "brush-square", "label": "Brush Square"},
+                { "value": "caret-down", "label": "Caret Down"},
+                { "value": "caret-left", "label": "Caret Left"},
+                { "value": "caret-right", "label": "Caret Right"},
+                { "value": "caret-up", "label": "Caret Up"},
+                { "value": "check-circle", "label": "Check Circle"},
+                { "value": "check", "label": "Check"},
+                { "value": "chevron-down", "label": "Chevron Down"},
+                { "value": "chevron-left", "label": "Chevron Left"},
+                { "value": "chevron-right", "label": "Chevron Right"},
+                { "value": "chevron-up", "label": "Chevron Up"},
+                { "value": "circulation", "label": "Circulation"},
+                { "value": "close", "label": "Close"},
+                { "value": "comfort", "label": "Comfort"},
+                { "value": "customisable", "label": "Customisable"},
+                { "value": "delivery-lg", "label": "Delivery Lg"},
+                { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                { "value": "delivery-time", "label": "Delivery Time"},
+                { "value": "delivery", "label": "Delivery"},
+                { "value": "delivery2", "label": "Delivery2"},
+                { "value": "discover", "label": "Discover"},
+                { "value": "documents", "label": "Documents"},
+                { "value": "documents2", "label": "Documents2"},
+                { "value": "double-quote", "label": "Double Quote"},
+                { "value": "facebook-f", "label": "Facebook F"},
+                { "value": "finance", "label": "Finance"},
+                { "value": "finance2", "label": "Finance2"},
+                { "value": "headboards", "label": "Headboards"},
+                { "value": "headset", "label": "Headset"},
+                { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                { "value": "heart-outline", "label": "Heart Outline"},
+                { "value": "light-bulb", "label": "Light Bulb"},
+                { "value": "linkedin-in", "label": "Linkedin In"},
+                { "value": "maintenance", "label": "Maintenance"},
+                { "value": "minus", "label": "Minus"},
+                { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                { "value": "parts", "label": "Parts"},
+                { "value": "play-circle", "label": "Play Circle"},
+                { "value": "plus", "label": "Plus"},
+                { "value": "posture", "label": "Posture"},
+                { "value": "recycle-lg", "label": "Recycle Lg"},
+                { "value": "sales", "label": "Sales"},
+                { "value": "search", "label": "Search"},
+                { "value": "secure-checkout", "label": "Secure Checkout"},
+                { "value": "shopping-bag", "label": "Shopping Bag"},
+                { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                { "value": "star-fill", "label": "Star Fill"},
+                { "value": "star-outline", "label": "Star Outline"},
+                { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                { "value": "twitter", "label": "Twitter"},
+                { "value": "uk-map", "label": "Uk Map"},
+                { "value": "union-jack", "label": "Union Jack"},
+                { "value": "user-check", "label": "User Check"},
+                { "value": "user", "label": "User"},
+                { "value": "warranty", "label": "Warranty"},
+                { "value": "widths", "label": "Widths"},
+                { "value": "wireless", "label": "Wireless"}
+                ],
+                "label": "Icon"
+            },
+            {
+                "type": "text",
+                "id": "panel_1_heading",
+                "label": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "panel_1_text",
+                "label": "Text"
+            },
+            {
+                "type": "header",
+                "content": "Panel 2"
+            },
+            {
+                "type": "select",
+                "id": "panel_2_icon",
+                "options": [
+                { "value": "advice", "label": "Advice"},
+                { "value": "arrow-down", "label": "Arrow Down"},
+                { "value": "arrow-left", "label": "Arrow Left"},
+                { "value": "arrow-right", "label": "Arrow Right"},
+                { "value": "arrow-up", "label": "Arrow Up"},
+                { "value": "bars", "label": "Bars"},
+                { "value": "bed", "label": "Bed"},
+                { "value": "bespoke-service", "label": "Bespoke Service"},
+                { "value": "brochure2", "label": "Brochure2"},
+                { "value": "brush-square", "label": "Brush Square"},
+                { "value": "caret-down", "label": "Caret Down"},
+                { "value": "caret-left", "label": "Caret Left"},
+                { "value": "caret-right", "label": "Caret Right"},
+                { "value": "caret-up", "label": "Caret Up"},
+                { "value": "check-circle", "label": "Check Circle"},
+                { "value": "check", "label": "Check"},
+                { "value": "chevron-down", "label": "Chevron Down"},
+                { "value": "chevron-left", "label": "Chevron Left"},
+                { "value": "chevron-right", "label": "Chevron Right"},
+                { "value": "chevron-up", "label": "Chevron Up"},
+                { "value": "circulation", "label": "Circulation"},
+                { "value": "close", "label": "Close"},
+                { "value": "comfort", "label": "Comfort"},
+                { "value": "customisable", "label": "Customisable"},
+                { "value": "delivery-lg", "label": "Delivery Lg"},
+                { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                { "value": "delivery-time", "label": "Delivery Time"},
+                { "value": "delivery", "label": "Delivery"},
+                { "value": "delivery2", "label": "Delivery2"},
+                { "value": "discover", "label": "Discover"},
+                { "value": "documents", "label": "Documents"},
+                { "value": "documents2", "label": "Documents2"},
+                { "value": "double-quote", "label": "Double Quote"},
+                { "value": "facebook-f", "label": "Facebook F"},
+                { "value": "finance", "label": "Finance"},
+                { "value": "finance2", "label": "Finance2"},
+                { "value": "headboards", "label": "Headboards"},
+                { "value": "headset", "label": "Headset"},
+                { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                { "value": "heart-outline", "label": "Heart Outline"},
+                { "value": "light-bulb", "label": "Light Bulb"},
+                { "value": "linkedin-in", "label": "Linkedin In"},
+                { "value": "maintenance", "label": "Maintenance"},
+                { "value": "minus", "label": "Minus"},
+                { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                { "value": "parts", "label": "Parts"},
+                { "value": "play-circle", "label": "Play Circle"},
+                { "value": "plus", "label": "Plus"},
+                { "value": "posture", "label": "Posture"},
+                { "value": "recycle-lg", "label": "Recycle Lg"},
+                { "value": "sales", "label": "Sales"},
+                { "value": "search", "label": "Search"},
+                { "value": "secure-checkout", "label": "Secure Checkout"},
+                { "value": "shopping-bag", "label": "Shopping Bag"},
+                { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                { "value": "star-fill", "label": "Star Fill"},
+                { "value": "star-outline", "label": "Star Outline"},
+                { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                { "value": "twitter", "label": "Twitter"},
+                { "value": "uk-map", "label": "Uk Map"},
+                { "value": "union-jack", "label": "Union Jack"},
+                { "value": "user-check", "label": "User Check"},
+                { "value": "user", "label": "User"},
+                { "value": "warranty", "label": "Warranty"},
+                { "value": "widths", "label": "Widths"},
+                { "value": "wireless", "label": "Wireless"}
+                ],
+                "label": "Icon"
+            },
+            {
+                "type": "text",
+                "id": "panel_2_heading",
+                "label": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "panel_2_text",
+                "label": "Text"
+            },
+            {
+                "type": "header",
+                "content": "Panel 3"
+            },
+            {
+                "type": "select",
+                "id": "panel_3_icon",
+                "options": [
+                { "value": "advice", "label": "Advice"},
+                { "value": "arrow-down", "label": "Arrow Down"},
+                { "value": "arrow-left", "label": "Arrow Left"},
+                { "value": "arrow-right", "label": "Arrow Right"},
+                { "value": "arrow-up", "label": "Arrow Up"},
+                { "value": "bars", "label": "Bars"},
+                { "value": "bed", "label": "Bed"},
+                { "value": "bespoke-service", "label": "Bespoke Service"},
+                { "value": "brochure2", "label": "Brochure2"},
+                { "value": "brush-square", "label": "Brush Square"},
+                { "value": "caret-down", "label": "Caret Down"},
+                { "value": "caret-left", "label": "Caret Left"},
+                { "value": "caret-right", "label": "Caret Right"},
+                { "value": "caret-up", "label": "Caret Up"},
+                { "value": "check-circle", "label": "Check Circle"},
+                { "value": "check", "label": "Check"},
+                { "value": "chevron-down", "label": "Chevron Down"},
+                { "value": "chevron-left", "label": "Chevron Left"},
+                { "value": "chevron-right", "label": "Chevron Right"},
+                { "value": "chevron-up", "label": "Chevron Up"},
+                { "value": "circulation", "label": "Circulation"},
+                { "value": "close", "label": "Close"},
+                { "value": "comfort", "label": "Comfort"},
+                { "value": "customisable", "label": "Customisable"},
+                { "value": "delivery-lg", "label": "Delivery Lg"},
+                { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                { "value": "delivery-time", "label": "Delivery Time"},
+                { "value": "delivery", "label": "Delivery"},
+                { "value": "delivery2", "label": "Delivery2"},
+                { "value": "discover", "label": "Discover"},
+                { "value": "documents", "label": "Documents"},
+                { "value": "documents2", "label": "Documents2"},
+                { "value": "double-quote", "label": "Double Quote"},
+                { "value": "facebook-f", "label": "Facebook F"},
+                { "value": "finance", "label": "Finance"},
+                { "value": "finance2", "label": "Finance2"},
+                { "value": "headboards", "label": "Headboards"},
+                { "value": "headset", "label": "Headset"},
+                { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                { "value": "heart-outline", "label": "Heart Outline"},
+                { "value": "light-bulb", "label": "Light Bulb"},
+                { "value": "linkedin-in", "label": "Linkedin In"},
+                { "value": "maintenance", "label": "Maintenance"},
+                { "value": "minus", "label": "Minus"},
+                { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                { "value": "parts", "label": "Parts"},
+                { "value": "play-circle", "label": "Play Circle"},
+                { "value": "plus", "label": "Plus"},
+                { "value": "posture", "label": "Posture"},
+                { "value": "recycle-lg", "label": "Recycle Lg"},
+                { "value": "sales", "label": "Sales"},
+                { "value": "search", "label": "Search"},
+                { "value": "secure-checkout", "label": "Secure Checkout"},
+                { "value": "shopping-bag", "label": "Shopping Bag"},
+                { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                { "value": "star-fill", "label": "Star Fill"},
+                { "value": "star-outline", "label": "Star Outline"},
+                { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                { "value": "twitter", "label": "Twitter"},
+                { "value": "uk-map", "label": "Uk Map"},
+                { "value": "union-jack", "label": "Union Jack"},
+                { "value": "user-check", "label": "User Check"},
+                { "value": "user", "label": "User"},
+                { "value": "warranty", "label": "Warranty"},
+                { "value": "widths", "label": "Widths"},
+                { "value": "wireless", "label": "Wireless"}
+                ],
+                "label": "Icon"
+            },
+            {
+                "type": "text",
+                "id": "panel_3_heading",
+                "label": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "panel_3_text",
+                "label": "Text"
+            },
+            {
+                "type": "header",
+                "content": "Panel 4"
+            },
+            {
+                "type": "select",
+                "id": "panel_4_icon",
+                "options": [
+                { "value": "advice", "label": "Advice"},
+                { "value": "arrow-down", "label": "Arrow Down"},
+                { "value": "arrow-left", "label": "Arrow Left"},
+                { "value": "arrow-right", "label": "Arrow Right"},
+                { "value": "arrow-up", "label": "Arrow Up"},
+                { "value": "bars", "label": "Bars"},
+                { "value": "bed", "label": "Bed"},
+                { "value": "bespoke-service", "label": "Bespoke Service"},
+                { "value": "brochure2", "label": "Brochure2"},
+                { "value": "brush-square", "label": "Brush Square"},
+                { "value": "caret-down", "label": "Caret Down"},
+                { "value": "caret-left", "label": "Caret Left"},
+                { "value": "caret-right", "label": "Caret Right"},
+                { "value": "caret-up", "label": "Caret Up"},
+                { "value": "check-circle", "label": "Check Circle"},
+                { "value": "check", "label": "Check"},
+                { "value": "chevron-down", "label": "Chevron Down"},
+                { "value": "chevron-left", "label": "Chevron Left"},
+                { "value": "chevron-right", "label": "Chevron Right"},
+                { "value": "chevron-up", "label": "Chevron Up"},
+                { "value": "circulation", "label": "Circulation"},
+                { "value": "close", "label": "Close"},
+                { "value": "comfort", "label": "Comfort"},
+                { "value": "customisable", "label": "Customisable"},
+                { "value": "delivery-lg", "label": "Delivery Lg"},
+                { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                { "value": "delivery-time", "label": "Delivery Time"},
+                { "value": "delivery", "label": "Delivery"},
+                { "value": "delivery2", "label": "Delivery2"},
+                { "value": "discover", "label": "Discover"},
+                { "value": "documents", "label": "Documents"},
+                { "value": "documents2", "label": "Documents2"},
+                { "value": "double-quote", "label": "Double Quote"},
+                { "value": "facebook-f", "label": "Facebook F"},
+                { "value": "finance", "label": "Finance"},
+                { "value": "finance2", "label": "Finance2"},
+                { "value": "headboards", "label": "Headboards"},
+                { "value": "headset", "label": "Headset"},
+                { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                { "value": "heart-outline", "label": "Heart Outline"},
+                { "value": "light-bulb", "label": "Light Bulb"},
+                { "value": "linkedin-in", "label": "Linkedin In"},
+                { "value": "maintenance", "label": "Maintenance"},
+                { "value": "minus", "label": "Minus"},
+                { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                { "value": "parts", "label": "Parts"},
+                { "value": "play-circle", "label": "Play Circle"},
+                { "value": "plus", "label": "Plus"},
+                { "value": "posture", "label": "Posture"},
+                { "value": "recycle-lg", "label": "Recycle Lg"},
+                { "value": "sales", "label": "Sales"},
+                { "value": "search", "label": "Search"},
+                { "value": "secure-checkout", "label": "Secure Checkout"},
+                { "value": "shopping-bag", "label": "Shopping Bag"},
+                { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                { "value": "star-fill", "label": "Star Fill"},
+                { "value": "star-outline", "label": "Star Outline"},
+                { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                { "value": "twitter", "label": "Twitter"},
+                { "value": "uk-map", "label": "Uk Map"},
+                { "value": "union-jack", "label": "Union Jack"},
+                { "value": "user-check", "label": "User Check"},
+                { "value": "user", "label": "User"},
+                { "value": "warranty", "label": "Warranty"},
+                { "value": "widths", "label": "Widths"},
+                { "value": "wireless", "label": "Wireless"}
+                ],
+                "label": "Icon"
+            },
+            {
+                "type": "text",
+                "id": "panel_4_heading",
+                "label": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "panel_4_text",
+                "label": "Text"
+            }
+            ]
+        }
+    ]
+}
+{% endschema %}

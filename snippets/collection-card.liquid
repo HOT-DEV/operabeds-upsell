@@ -1,0 +1,45 @@
+{% comment %}
+    Collection Card snippet.
+{% endcomment %}
+
+{%- if collection != blank -%}
+    {%- liquid
+        assign collection_url = collection.url
+        assign collection_title = collection_title | default: collection.title
+        assign collection_description = collection_description | default: collection.description
+        assign collection_image = collection_image | default: collection.image
+
+        assign collection_image_xs = 'https://via.placeholder.com/376x180'
+        assign collection_image_lg = 'https://via.placeholder.com/472x260'
+        assign collection_image_xxxl = 'https://via.placeholder.com/398x312'
+
+        if collection_image != blank
+            assign collection_image_xs = collection_image | img_url: '400x'
+            assign collection_image_lg = collection_image | img_url: '450x'
+            assign collection_image_xxxl = collection_image | img_url: '680x'
+        endif
+    -%}
+    <div class="c-collection-card">
+        <picture class="c-collection-card__media js-lazy" data-iesrc="{{ collection_image_xxxl | url }}" data-alt="{{ collection_image.alt | default: collection_title | escape }}">
+            <source srcset="{{ collection_image_xs | url }}" media="(max-width: 575px)">
+            <source srcset="{{ collection_image_lg | url }}" media="(min-width: 575px) and (max-width: 1670px)">
+            <source srcset="{{ collection_image_xxxl | url }}" media="(min-width: 1670px)">
+            {% comment %} <img alt="" /> {% endcomment %}
+        </picture>
+        <div class="c-collection-card__content">
+            {%- if sub_heading != blank -%}
+                <small class="text-14 text-uppercase font-weight-semibold tracking-widest mb-4">{{- sub_heading -}}</small>
+            {%- endif -%}
+            {%- if collection_title != blank -%}
+                <a href="{{ collection_url | url }}" aria-label="{{ collection_title | escape }}" title="{{ collection_title | escape }}" class="mb-3 text-36 text-lg-24 leading-tight font-weight-normal tracking-normal stretched-link text-decoration-none">
+                    {{- collection_title | escape -}}
+                </a>
+            {%- endif -%}
+            {%- if collection_description != blank -%}
+                <div class="mt-2 mt-lg-3 mb-n4 text-14 font-weight-normal leading-tight">
+                    {{- collection_description | safe -}}
+                </div>
+            {%- endif -%}
+        </div>
+    </div>
+{%- endif -%}

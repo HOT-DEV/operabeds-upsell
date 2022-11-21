@@ -1,0 +1,552 @@
+{% comment %}
+    The Product section template.
+{% endcomment %}
+
+{%- liquid
+    
+    assign current_variant = product.selected_or_first_available_variant
+    assign attached_product_images = product.images | where: 'attached_to_variant?', true
+    assign unattached_product_images = product.images | where: 'attached_to_variant?', false
+    assign product_type_downcase = product.type | downcase
+
+    for tag in product.tags
+        assign tag_downcase = tag | downcase
+        assign tag_key = tag | split: '_' | first | downcase
+        assign tag_value = tag | split: '_' | last
+        if tag_key == 'badge'
+            assign tag_ribbon_value = tag_value
+        elsif tag_key == 'ribbon'
+            assign tag_ribbon_category = tag_value
+        endif
+    endfor
+
+    assign trade_customer_logged_in = false
+    assign trade_customer_tag = settings.trade_customer_tag_bold_app
+    if customer and customer.tags contains trade_customer_tag
+        assign trade_customer_logged_in = true
+    endif
+-%}
+
+<section class="s-product" data-section-type="product" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xxl-10">
+                {%-
+                    render 'breadcrumb',
+                    class: 'my-8',
+                    show_back_link: true
+                -%}
+                <div class="s-product__grid mb-8 mb-md-20">
+                    <div class="s-product__primary mb-7 mb-lg-0">
+                        <h1 class="s-product__title mb-3 text-30 leading-tight font-weight-medium text-elephant">
+                            {{- product.title | escape -}}
+                        </h1>
+                        <p class="s-product__sku mb-4 text-14 leading-tight text-abbey text-uppercase" {%- if current_variant.sku.size == 0 -%}hidden{%- endif -%}>
+                            {{- 'SKU:' | escape -}}
+                            <span data-product-sku>
+                                {{- current_variant.sku -}}
+                            </span>
+                        </p>
+                        {%- if product.description -%}
+                            <div class="s-product__description">
+                                {{- product.description | safe -}}
+                            </div>
+                        {%- endif -%}
+                    </div>
+                    <div class="s-product__secondary mb-14 mb-lg-0">
+                        <div class="s-product__media">
+                            <div class="s-product__media__primary">
+                                <div data-product-image-ribbon class="s-product__media__primary__ribbon c-ribbon" hidden>
+                                    {{- 'Your Configuration' | escape -}}
+                                </div>
+                                <div class="s-product__media__primary__slider swiper-container" data-product-media-slider>
+                                    <div class="swiper-wrapper">
+                                        {%- for unattached_product_image in unattached_product_images -%}
+                                            {%- liquid
+                                                assign image_xs = unattached_product_image | img_url: '376x242'
+                                                assign image_sm = unattached_product_image | img_url: '480x310'
+                                                assign image_md = unattached_product_image | img_url: '608x393'
+                                                assign image_lg = unattached_product_image | img_url: '480x310'
+                                                assign image_xl = unattached_product_image | img_url: '594x385'
+                                                assign image_xxl = unattached_product_image | img_url: '498x322'
+                                                assign image_xxxl = unattached_product_image | img_url: '657x425'
+                                                assign image_hd = unattached_product_image | img_url: '812x525'
+                                            -%}
+                                            <div class="swiper-slide">
+                                                <picture class="js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ unattached_product_image.alt | escape }}">
+                                                    <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                                                    <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                                    <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                                    <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                                                    <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                                                    <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                                                    <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px) and (max-width: 1919px)">
+                                                    <source srcset="{{ image_hd | url }}" media="(min-width: 1920px)">
+                                                    {% comment %} <img alt="" /> {% endcomment %}
+                                                </picture>
+                                            </div>
+                                        {%- else -%}
+                                            <div class="swiper-slide">
+                                                <picture class="js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ 'Placeholder Image' | escape }}">
+                                                    <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                                                    <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                                    <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                                    <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                                                    <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                                                    <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                                                    <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px) and (max-width: 1919px)">
+                                                    <source srcset="{{ image_hd | url }}" media="(min-width: 1920px)">
+                                                    {% comment %} <img alt="" /> {% endcomment %}
+                                                </picture>
+                                            </div>
+                                        {%- endfor -%}
+                                    </div>
+                                    <button class="s-product__media__primary__slider__btn s-product__media__primary__slider__btn--prev d-none d-md-block" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}" data-product-media-prev>
+                                        <svg aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-chevron-left"></use>
+                                        </svg>
+                                    </button>
+                                    <button class="s-product__media__primary__slider__btn s-product__media__primary__slider__btn--next d-none d-md-block" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-product-media-next>
+                                        <svg aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-chevron-right"></use>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="s-product__media__primary__controls mt-8 d-md-none">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-10">
+                                            <div class="row flex-nowrap align-items-center">
+                                                <div class="col-auto">
+                                                    <button class="s-product__media__primary__controls__btn" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}" data-product-media-prev>
+                                                        <svg aria-hidden="true" role="presentation">
+                                                            <use xlink:href="#sprite-chevron-left"></use>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="s-product__media__primary__controls__pagination" data-product-media-pagination></div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button class="s-product__media__primary__controls__btn" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-product-media-next>
+                                                        <svg aria-hidden="true" role="presentation">
+                                                            <use xlink:href="#sprite-chevron-right"></use>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="s-product__media__secondary d-none d-md-block">
+                                <div class="row mt-2 mb-n2 mx-n1">
+                                    {%- for unattached_product_image in unattached_product_images -%}
+                                        <div class="col-3 mb-2 px-1">
+                                            <a class="" href="" role="button" data-product-media-thumbnail>
+                                                <img class="js-lazy" width="196" height="115" data-src="{{ unattached_product_image | img_url: '196x115' }}" data-alt="{{ unattached_product_image.alt | escape }}">
+                                            </a>
+                                        </div>
+                                    {%- endfor -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="s-product__tertiary">
+                        {%- form 'product', product, data-product-form: '', data-product-handle: product.handle, data-product-variant: current_variant.id, class: 'mt-lg-8' -%}
+                            <input name="quantity" type="hidden" value="1" />
+
+                            {%- if product.has_only_default_variant -%}
+                                <input name="id" type="hidden" value="{{ current_variant.id }}" />
+                            {%- else -%}
+                                <div class="s-product__options pb-4 pb-md-12">
+
+                                    {% comment %} JavaScript Options {% endcomment %}
+                                    {%- for option in product.options_with_values -%}
+                                        {%- liquid
+                                            assign options_index = forloop.index0
+                                            assign split_character = ' &amp; '
+                                            assign options_name = option.name | escape
+                                            assign split_options = options_name | split: split_character | uniq
+
+                                            assign is_split_option = false
+                                            if options_name contains split_character
+                                                assign is_split_option = true
+                                            endif
+                                        -%}
+                                        {%- for split_option in split_options -%}
+                                            {%- liquid
+                                                assign split_options_index = forloop.index0
+                                                assign split_options_name = split_option | strip | default: 'Option'
+                                                assign split_options_name_downcase = split_options_name | downcase
+                                                assign split_options_layout = 'select'
+
+                                                if split_options_name_downcase == 'fabric' or split_options_name_downcase contains 'colour' or split_options_name_downcase contains 'material'
+                                                    assign split_options_layout = 'swatch'
+                                                elsif split_options_name_downcase == 'legs' or split_options_name_downcase contains 'headboard' 
+                                                    assign split_options_layout = 'tile'
+                                                elsif split_options_name_downcase == 'width' or split_options_name_downcase == 'version' or split_options_name_downcase == 'smart base' or split_options_name_downcase contains 'rails'
+                                                    assign split_options_layout = 'tab'
+                                                endif
+                                            -%}
+                                            {%-
+                                                render 'product-option',
+                                                class: '',
+                                                option: option,
+                                                options_index: options_index,
+                                                split_options: split_options,
+                                                split_options_index: split_options_index,
+                                                split_options_name: split_options_name,
+                                                split_options_layout: split_options_layout,
+                                                is_split_option: is_split_option,
+                                                split_character: split_character,
+                                            -%}
+                                        {%- endfor -%}
+                                    {%- endfor -%}
+
+                                    {% comment %} NoScript Options {% endcomment %}
+                                    <noscript>
+                                        <div class="s-product__option">
+                                            <div class="row justify-content-between align-items-center mb-4">
+                                                <div class="col-auto">
+                                                    <label class="s-product__option__label" for="productOptions">
+                                                        {{- 'Options' | escape -}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <select class="s-product__option__select" id="productOptions" name="id">
+                                                {%- for variant in product.variants -%}
+                                                    <option value="{{ variant.id }}"{% if variant.id == current_variant.id %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>
+                                                        {{ variant.title | escape | replace: '&amp;', '/' | escape }} - {{ variant.price | money }}
+                                                    </option>
+                                                {%- endfor -%}
+                                            </select>
+                                        </div>
+                                    </noscript>
+
+                                </div>
+                            {%- endif -%}
+
+                            <div class="s-product__summary mx-n4 py-6 px-4 mx-sm-0 py-lg-8 px-lg-10 mb-8 mb-md-3">
+                                <div class="row mb-8">
+                                    <div class="col-7">
+
+                                        <p class="mb-2 text-20 leading-none font-weight-semibold">
+                                            {{- 'Your Configuration' | escape -}}
+                                        </p>
+                                        <ul class="s-product__summary__list text-14" data-product-summary>
+                                            {%- for option in product.options_with_values -%}
+                                                {%- if option.selected_value != blank and option.selected_value != 'Default Title' -%}
+                                                    {%- liquid
+                                                        assign options_index = forloop.index0
+                                                        assign options_name = option.name | escape
+                                                        assign split_options = options_name | split: split_character | uniq
+
+                                                        assign is_split_option = false
+                                                        if options_name contains split_character
+                                                            assign is_split_option = true
+                                                        endif
+                                                    -%}
+                                                    {%- for split_option in split_options -%}
+                                                        {%- liquid
+                                                            assign split_options_index = forloop.index0
+                                                            assign split_options_name = split_option | strip | default: 'Option'
+                                                            assign rendered_split_options = ''
+                                                        -%}
+                                                        <li>
+                                                            <strong>
+                                                                {{- split_options_name | append: ':' | escape -}}
+                                                            </strong>
+                                                            {%- for value in option.values -%}
+                                                                {%- liquid
+                                                                    assign split_values = value | escape | split: split_character
+                                                                    assign split_selected_values = option.selected_value | escape | split: split_character
+                                                                    assign matching_split_value = split_values[split_options_index]
+                                                                    assign matching_split_selected_value = split_selected_values[split_options_index]
+                                                                    assign is_selected = false
+                                                                    if matching_split_value == matching_split_selected_value
+                                                                        assign is_selected = true
+                                                                    endif
+                                                                -%}
+                                                                {%- if is_selected -%}
+                                                                    {%- unless rendered_split_options contains matching_split_value -%}
+                                                                        {%-
+                                                                            render 'product-option-value-presenter',
+                                                                            value: matching_split_value
+                                                                        -%}
+                                                                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                                                                    {%- endunless -%}
+                                                                {%- endif -%}
+                                                            {%- endfor -%}
+                                                        </li>
+                                                    {%- endfor -%}
+                                                {%- endif -%}
+                                            {%- endfor -%}
+                                        </ul>
+                                    </div>
+                                    <div class="col-5 ml-auto text-14 leading-tight">
+                                        <p class="mb-2 text-20 leading-none font-weight-semibold">
+                                            {%- if trade_customer_logged_in -%}
+                                                {{- 'Trade Price' | escape -}}
+                                            {%- else -%}
+                                                {{- 'Your Price' | escape -}}
+                                            {%- endif -%}
+                                        </p>
+                                        <div class="mb-2 text-14 leading-tight">
+                                         	 {% if current_variant.compare_at_price > current_variant.price %}
+                                          <span style="text-decoration: line-through">{{ 'was '}}</span><span class="money" style="text-decoration: line-through" data-product-price-exc-vat-original>{{ current_variant.compare_at_price | money_without_trailing_zeros }}</span>
+                                                  {% endif %} 
+                                            <div class="text-36 leading-tight font-weight-bold">
+                                                
+                                         	 {% if current_variant.compare_at_price > current_variant.price %}
+                                                
+                                              	<span class="money" data-product-id="{{ product.id }}" data-product-price-exc-vat style="color:#751212">
+                                                    {{- current_variant.price | money_without_trailing_zeros -}}
+                                                </span> 
+                                              
+                                             {% else %} 
+                                              
+                                              <span class="money" data-product-id="{{ product.id }}" data-product-price-exc-vat>
+                                                    {{- current_variant.price | money_without_trailing_zeros -}}
+                                                </span>
+                                              
+                                              {% endif %}
+                                            </div>
+{%comment%} -- hide was / save string --
+                                          	{%- if trade_customer_logged_in == false -%}
+                                                <span {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}>
+                                                    <span>was </span>
+                                                    <span data-product-price-exc-vat-original>
+                                                        {%- if current_variant.compare_at_price > current_variant.price -%}
+                                                            {{- current_variant.compare_at_price | money_without_trailing_zeros -}}
+                                                        {%- endif -%}
+                                                    </span>
+                                                </span>
+                                                <span {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}>
+                                                    <span>save </span>
+                                                    <span data-product-price-exc-vat-diff>
+                                                        {%- if current_variant.compare_at_price > current_variant.price -%}
+                                                            {{- current_variant.compare_at_price | minus: current_variant.price | money_without_trailing_zeros -}}
+                                                        {%- endif -%}
+                                                    </span>
+                                                </span>
+                                            {%- endif -%}
+{%endcomment%}                                          
+                                        </div>
+                                        {%- if trade_customer_logged_in == false -%}
+                                            <p class="mb-0">
+                                                {{- 'With VAT Relief' | escape -}}
+                                            </p>
+
+                                            {%- if settings.finance_product_item_enabled -%}
+                                                <p class="mb-0" data-finance-container data-product-price="{{ current_variant.price }}">
+                                                    only <span data-finance-monthly></span> per month*
+                                                </p>
+                                            {%- endif -%}
+                                        {%- endif -%}
+                                    </div>
+                                </div>
+                              
+                              
+                              
+                                <div class="row align-items-end text-14 leading-tight">
+                                    {%- if product_type_downcase == 'comfort bed' or product_type_downcase == 'care bed' -%}
+                                        <div class="col-7">
+                                            <p class="mb-0">
+                                                {{- 'template.product.mattress_message' | t -}}
+                                            </p>
+                                        </div>
+                                    {%- endif -%}
+                                    {%- if trade_customer_logged_in == false -%}
+                                        <div class="col-5 ml-auto">
+                                            <div class="mb-2 text-14 leading-tight">                                        
+                                              
+                                         	 {% if current_variant.compare_at_price > current_variant.price %}                                              
+                                              
+                                                <div class="text-24 leading-tight font-weight-bold">
+                                                    <span data-product-price-inc-vat>
+                                                        {{- current_variant.price | times: 1.2 | money_without_trailing_zeros -}}
+                                                    </span>
+                                                  
+                                             {% else %}    
+                                                  
+                                                <div class="text-24 leading-tight font-weight-bold">
+                                                    <span data-product-price-inc-vat>
+                                                        {{- current_variant.price | times: 1.2 | money_without_trailing_zeros -}}
+                                                    </span>                                                  
+                                             {% endif %}
+                                                  
+                                                </div>
+{%comment%} -- hide was / save string --
+                                              <span {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}>
+                                                    <span>was </span>
+                                                    <span data-product-price-inc-vat-original>
+                                                        {%- if current_variant.compare_at_price > current_variant.price -%}
+                                                            {{- current_variant.compare_at_price | times: 1.2 | money_without_trailing_zeros -}}
+                                                        {%- endif -%}
+                                                    </span>
+                                                </span>
+                                                <span {% unless current_variant.compare_at_price > current_variant.price %}hidden{% endunless %}>
+                                                    <span>save </span>
+                                                    <span data-product-price-inc-vat-diff>
+                                                        {%- if current_variant.compare_at_price > current_variant.price -%}
+                                                            {{- current_variant.compare_at_price | minus: current_variant.price | times: 1.2 | money_without_trailing_zeros -}}
+                                                        {%- endif -%}
+                                                    </span>
+                                                </span>
+{%endcomment%}                                              
+                                            </div>
+                                            <p class="mb-0">
+                                                {{- 'inc. VAT' | escape -}}
+                                            </p>
+                                            {%- if settings.finance_product_item_enabled -%}
+                                                <p class="mb-0" data-finance-container data-product-price="{{ current_variant.price | times: 1.2 }}">
+                                                        only <span data-finance-monthly></span> per month*
+                                                </p>
+                                            {%- endif -%}
+                                        </div>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+
+                            <div class="s-product__add-to-cart mt-8 mb-7 mt-md-3 mb-md-6">
+                                <button class="c-add-to-cart-btn" type="submit" name="add"{% unless current_variant.available %} disabled{% endunless %} data-product-submit>
+                                    <svg aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-secure-checkout"></use>
+                                    </svg>
+                                    <span data-product-submit-text>
+                                        {%- if current_variant.available -%}
+                                            {% comment %} {{ 'template.product.add_to_cart' | t }} {% endcomment %}
+                                            Add to Secure Basket
+                                        {%- else -%}
+                                            {% comment %} {{ 'template.product.sold_out' | t }} {% endcomment %}
+                                            Sold Out
+                                        {%- endif -%}
+                                    </span>
+                                </button>
+                            </div>
+
+                            {%- assign product_price_min_in_pence = product.price_min | divided_by: 100.00 -%}
+                            {%- if section.settings.show_klarna_settings and section.settings.show_klarna_minimim_value >= product_price_min_in_pence -%}
+                                <div class="s-product__finance">
+                                    <div class="row flex-nowrap align-items-end">
+                                        <div class="col text-elephant">
+                                            {%- if section.settings.klarna_finance_message -%}
+                                                <p class="m-0 d-block d-xxl-inline text-14 leading-tight font-weight-normal">
+                                                    {{ section.settings.klarna_finance_message | escape }}
+                                                </p>
+                                            {%- endif -%}
+
+                                            {%- if section.settings.klarna_finance_rate_message -%}
+                                                <p class="m-0 d-block d-xxl-inline text-14 leading-tight font-weight-bold">
+                                                    {{- section.settings.klarna_finance_rate_message | escape -}}.
+                                                </p>
+                                            {%- endif -%}
+
+                                            {%- if section.settings.klarna_finance_link_url -%}
+                                                <p class="m-0 d-block text-14 leading-tight font-weight-bold">
+                                                    <a href="{{ section.settings.klarna_finance_link_url }}" aria-label="{{ section.settings.klarna_finance_link_text | escape }}" title="{{ section.settings.klarna_finance_link_text | escape }}">
+                                                        {{ section.settings.klarna_finance_link_text | escape }}
+                                                    </a>
+                                                </p>
+                                            {%- endif -%}
+                                        </div>
+                                        <div class="col-auto ml-lg-auto">
+                                            <img class="s-product__finance__klarna js-lazy" data-src="{{ 'klarna-logo.svg' | asset_url }}" data-alt="{{ 'Klarna' | escape }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            {%- endif -%}
+
+                            <div class="s-product__cta mt-3 pt-3 mt-md-4 mt-md-4">
+                                <p class="m-0 text-18 text-center text-lg-16 text-lg-left text-elephant">
+                                    <span class="d-block d-md-inline">
+                                        {{- 'Prefer to purchase over the phone?' | escape -}}
+                                    </span>
+                                    <span class="d-block d-md-inline font-weight-bold">
+                                        {%- render 'presenter-phone-number'
+                                            _phone_number:  settings.company_phone,
+                                            _template:      section.settings.template_telephone,
+                                        -%}
+                                    </span>
+                                </p>
+                            </div>
+                        {%- endform -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {%-
+        render 'product-cross-sell',
+        product: product
+    -%}
+</section>
+
+{% schema %}
+{
+    "name": "Product",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Show Klarna?"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_klarna_settings",
+            "default": true,
+            "label": "Show Klarna"
+        },
+        {
+            "type": "number",
+            "id": "show_klarna_minimim_value",
+            "default": 0,
+            "label": "Minimum Value for Klarna to show (in whole pounds)",
+            "placeholder": "150"
+        },
+        {
+            "type": "header",
+            "content": "Klarna Messages"
+        },
+        {
+            "type": "text",
+            "id": "klarna_finance_message",
+            "default": "Finance options available",
+            "label": "Finance Options Message"
+        },
+        {
+            "type": "text",
+            "id": "klarna_finance_rate_message",
+            "default": "6.9% APR Representative",
+            "label": "Rate Message"
+        },
+        {
+            "type": "header",
+            "content": "Klarna More Information"
+        },
+        {
+            "type": "url",
+            "id": "klarna_finance_link_url",
+            "label": "Link URL"
+        },
+        {
+            "type": "text",
+            "id": "klarna_finance_link_text",
+            "default": "Learn more about finance options",
+            "label": "Link text"
+        },
+        {
+            "type": "header",
+            "content": "Telephone Number"
+        },
+        {
+            "type": "text",
+            "id": "template_telephone",
+            "label": "Telephone",
+            "default": "Call us on {number}",
+            "info": "{number} is automatically replaced with the theme's company telephone number"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

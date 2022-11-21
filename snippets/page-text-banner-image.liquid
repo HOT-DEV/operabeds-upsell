@@ -1,0 +1,36 @@
+<div class="c-text-banner">
+    {%- liquid
+        assign image = _settings.image
+        assign image_alt = _settings.image.alt | default: _settings.heading
+
+        assign img_xs = image | img_url: '576x320'
+        assign img_sm = image | img_url: '768x320'
+        assign img_md = image | img_url: '1024x380'
+        assign img_lg = image | img_url: '1280x492'
+        assign img_xl = image | img_url: '1440x492'
+        assign img_xxl = image | img_url: '1670x492'
+        assign img_xxxl = image | img_url: '1920x492'
+    -%}
+    <picture class="c-text-banner__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+        <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+        <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+        <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+        <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+        <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+        <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+        <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+        {% comment %} <img alt="" /> {% endcomment %}
+    </picture>
+    <div class="c-text-banner__overlay" aria-hidden="true" role="presentation"></div>
+    <div class="c-text-banner__content h-100">
+        <div class="container site-padding h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12 text-center text-white">
+                    <p class="m-0 text-24 text-lg-36 font-weight-normal leading-tight">
+                        {{- _settings.heading | escape -}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

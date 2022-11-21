@@ -1,0 +1,199 @@
+{% comment %}
+    The FAQ Section template.
+{% endcomment %}
+
+<section data-section-type="page-faq" data-section-id="{{ section.id }}" aria-labelledby="page-title">
+    <header class="c-page-header">
+        {%- liquid
+            assign img_xs = 'https://via.placeholder.com/576x476'
+            assign img_sm = 'https://via.placeholder.com/768x476'
+            assign img_md = 'https://via.placeholder.com/1024x476'
+            assign img_lg = 'https://via.placeholder.com/1280x540'
+            assign img_xl = 'https://via.placeholder.com/1440x600'
+            assign img_xxl = 'https://via.placeholder.com/1670x600'
+            assign img_xxxl = 'https://via.placeholder.com/1920x600'
+
+            if section.settings.image_mobile != blank
+                assign img_xs = section.settings.image_mobile | img_url: '600x'
+                assign img_sm = section.settings.image_mobile | img_url: '800x'
+            endif
+
+            if section.settings.image_tablet != blank
+                assign img_md = section.settings.image_tablet | img_url: '1100x'
+            endif
+
+            if section.settings.image_desktop != blank
+                assign img_lg = section.settings.image_desktop | img_url: '1300x'
+                assign img_xl = section.settings.image_desktop | img_url: '1500x'
+                assign img_xxl = section.settings.image_desktop | img_url: '1800x'
+                assign img_xxxl = section.settings.image_desktop | img_url: '2048x'
+            endif
+        -%}
+        <picture class="c-page-header__bg js-lazy" data-iesrc="{{ img_xxxl | url }}" data-alt="{{ block.settings.image_desktop.alt | escape }}">
+            <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+            <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+            <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+            <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+            <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+            <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+            <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+            {% comment %} <img alt="" /> {% endcomment %}
+        </picture>
+        <div class="c-page-header__content h-100">
+            <div class="container site-padding h-100">
+                <div class="row h-100 align-items-center justify-content-center">
+                    <div class="col-12 text-center text-white">
+                        {%- if section.settings.strapline != blank -%}
+                            <p class="mb-5 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                                {{- section.settings.strapline | escape -}}
+                            </p>
+                        {%- endif -%}
+                        <h1 class="m-0 text-36 text-lg-46 font-weight-medium leading-tight" id="page-title">
+                            {{- section.settings.heading | default: page.title | escape -}}
+                        </h1>
+                        {%- if section.settings.search_enabled -%}
+                            <form class="c-search-form mt-8 mt-lg-14" role="search" data-faq-search>
+                                <div class="c-search-form__fields">
+                                    <input class="c-search-form__input" name="query" type="text" placeholder="{{ 'What are you looking for' | escape }}" aria-label="{{ 'Search FAQs' | escape }}" data-faq-search-input>
+                                    <button class="c-search-form__submit" aria-label="{{ 'Submit' | escape }}">
+                                        <svg focusable="false" aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-search"></use>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                        {%- endif -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="c-page-header__overlay" aria-hidden="true" role="presentation"></div>
+    </header>
+    <div class="container site-padding my-12 mt-lg-14 mb-lg-24">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                {%- if page.content != blank -%}
+                    <div class="c-rte mb-12 mb-lg-14">
+                        {{- page.content -}}
+                    </div>
+                {%- endif -%}
+                {%- if section.settings.sort_enabled -%}
+                    <div class="row">
+                        <div class="col-12 col-md-auto ml-md-auto">
+                            <div class="c-sortby">
+                                <label class="c-sortby__label" for="faq-sort">
+                                    {{- 'Sort by' | escape -}}
+                                </label>
+                                <select class="c-sortby__select" id="faq-sort" name="sort_by" data-faq-sort>
+                                    <option value="featured" selected="selected">Featured</option>
+                                    <option value="title-ascending">A-Z</option>
+                                    <option value="title-descending">Z-A</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                {%- endif -%}
+                <div class="c-accordion mt-12 mt-lg-14"  data-accordion-multiple="true">
+                    {%- for block in section.blocks -%}
+                        <div class="c-accordion__block" data-accordion data-accordion-block>
+                            <button class="c-accordion__toggle" id="faq-toggle-{{ forloop.index }}" type="button" aria-controls="faq-content-{{ forloop.index }}" aria-expanded="false" data-accordion-toggle>
+                                <span class="c-accordion__toggle__text">
+                                    {{- block.settings.title | escape -}}
+                                </span>
+                                <svg class="c-accordion__toggle__plus" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-down"></use>
+                                </svg>
+                                <svg class="c-accordion__toggle__minus" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-right"></use>
+                                </svg>
+                            </button>
+                            <div class="c-accordion__content" id="faq-content-{{ forloop.index }}" hidden>
+                                <div class="text-14 text-abbey c-rte">
+                                    {{- block.settings.content | safe -}}
+                                </div>
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+                <div class="c-search-form__error mt-12 mt-lg-14" hidden data-faq-search-error>
+                    <p class="m-0">
+                        {{- 'No results were found.' | escape -}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "FAQs",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content",
+            "info": "Manage content."
+        },
+        {
+            "type": "text",
+            "id": "strapline",
+            "label": "Strapline"
+        },
+        {
+            "type": "textarea",
+            "id": "heading",
+            "label": "Heading"
+        },
+        {
+            "type": "checkbox",
+            "id": "search_enabled",
+            "label": "Enable Search?",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "sort_enabled",
+            "label": "Enable Sort?",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Image",
+            "info": "Add a background image to the header."
+        },
+        {
+            "type": "image_picker",
+            "id": "image_desktop",
+            "label": "Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_tablet",
+            "label": "Tablet Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_mobile",
+            "label": "Mobile Image"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "FAQ",
+            "type": "faq",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Question"
+                },
+                {
+                    "type": "richtext",
+                    "id": "content",
+                    "label": "Answer"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

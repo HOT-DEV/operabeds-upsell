@@ -1,0 +1,113 @@
+{% comment %}
+    The contact form section.
+	4PE - 1/12/2021
+{% endcomment %}
+
+<section class="s12-contact py-10 py-md-20" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row justify-content-sm-center">
+            <div class="col-sm-10 col-md-8">
+                <div class="bg-white py-12 py-md-24 px-6 px-md-38 text-center">
+                    <h2 class="text-26 text-lg-36 font-weight-semibold leading-tight text-elephant p-0 mb-6">
+                        {{ section.settings.title }}</h2>
+                    <div class="row justify-content-md-center mb-4">
+                        <div class="col-md-8">{{ section.settings.description }}</div>
+                    </div>
+
+                    {%- form 'contact', class: 'c-form c-form-alt', id: 'care-organisations-form', aria-label: 'Care Organisations form' -%}
+                    <input type="hidden" name="contact[form sent from]" value="Beds for care organisations (page)">                  
+                    {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+                    {%- if _form_options.size > 0 -%}
+                    <div class="c-form-field mb-6">
+                        <label for="subject">Enquiry</label>
+                        <select id="subject" name="contact[subject]" class="c-form-input" required>
+                            <option>{{- 'Select type of enquiry' | escape -}}</option>
+                            {%- for option in _form_options -%}
+                            <option>{{- option -}}</option>
+                            {%- endfor -%}
+                        </select>
+                    </div>
+                    {%- endif -%}
+                    <div class="c-form-field mb-6">
+                        <label for="name">Name</label>
+                        <input
+                            class="c-form-input {% if show_errors == true and form.errors contains 'name' %} c-input--error{% endif %}"
+                            id="name" name="contact[name]" placeholder="Enter your full name" type="text"
+                            {%- if form.name -%} value="{{ form.name }}" {%- endif -%} required />
+                    </div>
+                    <div class="c-form-field mb-6">
+                        <label for="email">E-Mail Address</label>
+                        <input
+                            class="c-form-input {% if show_errors == true and form.errors contains 'email' %} c-input--error{% endif %}"
+                            id="email" name="contact[email]" placeholder="Enter your email address" type="email"
+                            {%- if form.email -%} value="{{ form.email }}" {%- endif -%} required />
+                    </div>
+                    <div class="c-form-field mb-6">
+                        <label for="phone">Phone</label>
+                        <input
+                            class="c-form-input {% if show_errors == true and form.errors contains 'phone' %} c-input--error{% endif %}"
+                            id="phone" name="contact[phone]" placeholder="Enter your phone number" type="number"
+                            {%- if form.phone -%} value="{{ form.phone }}" {%- endif -%} />
+                    </div>
+                    <div class="c-form-field mb-6">
+                        <label for="organisation">Organisation</label>
+                        <input
+                            class="c-form-input {% if show_errors == true and form.errors contains 'organisation' %} c-input--error{% endif %}"
+                            id="organisation" name="contact[organisation]" placeholder="Enter your organisation"
+                            type="text" {%- if form.organisation -%} value="{{ form.organisation }}" {%- endif -%} />
+                    </div>
+                    <div class="c-form-field textarea mb-6">
+                        <label for="Message">How can we help?</label>
+                        <textarea
+                            class="c-form-input {% if show_errors == true and form.errors contains 'message' %} c-input--error{% endif %}"
+                            id="message" name="contact[message]" placeholder="Let us know how we can help you" required>
+            {%- if form.body -%}
+                {{- form.body -}}
+            {%- endif -%}
+        </textarea>
+                    </div>
+                    <div class="d-flex justify-content-sm-center">
+                        <button type="submit" class="c-form-contact-submit c-btn c-btn--blue">
+                            {{ section.settings.btn_label }}
+                        </button>
+                    </div>
+                    {%- if form.posted_successfully? -%}
+                    <div class="bg-mossgreen">
+                        <p class="c-alert c-alert--success text-tropical text-center text-16 mt-6 p-2" role="alert">
+                            Thank you! Your request has been received and we will contact you soon.
+                        </p>
+                    </div>
+                    {%- endif -%}
+                    {%- endform -%}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "S12 - Contact form",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Form Title",
+			"default": "Get in touch with Opera"
+        },        {
+            "type": "richtext",
+            "id": "description",
+			"label": "Form Description",
+			"default": "<p>Fill out this short form and we’ll be back in touch with you within 2 working hours.</p>"
+        },
+        {
+            "type": "text",
+            "id": "btn_label",
+            "label": "Button - Label",
+			"default": "Send message"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

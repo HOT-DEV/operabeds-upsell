@@ -1,0 +1,13 @@
+{% comment %}
+    The cart template.
+{% endcomment %}
+
+{{ 'cart-with-upsell.css' | asset_url | stylesheet_tag }}
+
+{%- section 'cart' -%}
+
+    {%- if cart.item_count > 0 -%}
+    {%- section 'cart-upsell' -%}
+    {%- endif -%}
+
+{%- render 'help-cta', background: 'bg-pale-oyster', colour: 'text-white' -%}

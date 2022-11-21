@@ -1,0 +1,29 @@
+{% comment %}
+    The Vacancy Page template.
+{% endcomment %}
+
+<section aria-labelledby="page-title">
+    <header>
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    {%- include 'breadcrumb' -%}
+                </div>
+                <div class="col-12">
+                    <h1 class="mb-0" id="page-title">{{- page.title | escape }}</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 mb-4 mb-md-0">
+                {%- if page.content != blank -%}
+                    <div class="c-rte">
+                        {{- page.content -}}
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</section>

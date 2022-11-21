@@ -1,0 +1,157 @@
+{% comment %}
+    The Cart template.
+{% endcomment %}
+{%- liquid
+    assign show_vat_relief = true
+    assign show_po_number = false
+    assign trade_customer_tag = settings.trade_customer_tag_bold_app
+    if customer and customer.tags contains trade_customer_tag
+        assign show_vat_relief = false
+        assign show_po_number = true
+        assign trade_customer_logged_in = true
+    endif
+-%}
+<section class="t-cart-wrapper" aria-labelledby="page-title">
+    <div class="container site-padding my-6">
+        <h1 class="text-26 text-lg-46 text-blue-diane font-weight-normal" id="page-title">{{- 'template.cart.title' | t -}}</h1>
+        {%- if cart.item_count > 0 -%}
+            <div class="row flex-md-nowrap mb-md-4">
+                <div class="col-md-5">
+                    <p class="text-14 font-weight-normal text-blue-diane d-none d-md-block mb-0">Product</p>
+                </div>
+                <div class="col-12 col-md-2 flex-grow-1 text-md-center">
+                    <p class="text-14 font-weight-normal text-blue-diane d-none d-md-block mb-0">Unit Price</p>
+                </div>
+                <div class="col-12 col-md-2 flex-grow-1 text-md-center">
+                    <p class="text-14 font-weight-normal text-blue-diane d-none d-md-block mb-0">Quantity</p>
+                </div>
+                <div class="col-12 col-md-2 flex-grow-1 text-md-center">
+                    <p class="text-14 font-weight-normal text-blue-diane d-none d-md-block mb-0">Total</p>
+                </div>
+                <div class="col-12 col-md-1">
+                </div>
+            </div>
+            <form id="cart_checkout" action="/cart" method="post" data-cart-form>
+                {%- for item in cart.items -%}
+                    {%- render 'cart-item',
+                        item: item
+                        _index: forloop.index,
+                        _index0: forloop.index0,
+                        _last: forloop.last,
+                    -%}
+                {%- endfor -%}
+
+                <div class="row mt-6" data-mczr="{% if item.properties._mczr_designId %}item-{{ item.properties._mczr_designId }}{% else %}item-not-mczr{% endif %}">
+                    <div class="col-12 mt-3 mb-8">
+                        <div class="t-cart-notes">
+                            <div class="c-form-field c-form-field--white-bg">
+                                <label for="CartSpecialInstructions" class="c-heading-sm">{{ 'template.cart.note_label' | t }}</label>
+                                <textarea placeholder="{{ 'template.cart.note_placeholder' | t }}" name="note" id="CartSpecialInstructions" class="c-form-input">{{ cart.note }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row">
+                {%- if section.settings.vat_relief_visible and show_vat_relief -%}
+                    <div class="col-lg-8">
+                        {%- render 'cart-vat-relief' -%}
+                    </div>
+                    <div class="col-lg-4">
+                        {%- render 'cart-summary', cart, show_po_number: show_po_number, -%}
+                    </div>
+                {%- else -%}
+                    <div class="col-lg-4 offset-lg-8">
+                        {%- render 'cart-summary', cart, show_po_number: show_po_number, -%}
+                    </div>
+                {%- endif -%}
+            </div>
+        {%- else -%}
+            <div class="row flex-md-nowrap mb-md-4">
+                <div class="col-12 col-md-8 mb-3 mb-md-0">
+                    <p>{{ 'template.cart.empty' | t }}</p>
+                    <p>{{ 'template.cart.continue_browsing_html' | t }}</p>
+                </div>
+            </div>
+        {%- endif -%}
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": [
+        {
+            "type": "header",
+            "content": "Options"
+        },
+        {
+            "type": "checkbox",
+            "id": "vat_relief_visible",
+            "label": "Show VAT relief form?",
+            "info": "VAT relief text & link can be edited in theme languages",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_notes",
+            "label": "Enable Notes for customer",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Vat Relief Heading"
+        },
+        {
+            "type": "text",
+            "id": "vat_relief_heading",
+            "label": "Entitled to VAT Relief?"
+        },
+        {
+            "type": "header",
+            "content": "Form Text"
+        },
+        {
+            "type": "header",
+            "content": "Vat Eligibility Link"
+        },
+        {
+            "type": "text",
+            "id": "vat_relief_link_text",
+            "label": "Link Text",
+            "default": "Find out if you are eligible for VAT relief."
+        },
+        {
+            "type": "url",
+            "id": "vat_relief_link_url",
+            "label": "Link Url"
+        },
+        {
+            "type": "text",
+            "id": "vat_relief_link_accessibility",
+            "label": "Link Accessibility Label",
+            "default": "Are you eligible?"
+        },
+        {
+            "type": "richtext",
+            "id": "vat_relief_text_html",
+            "label": "Vat Relief Text",
+            "default": "<p>If you are entitled to VAT Relief you can remove VAT during the checkout process.<\/p><p>I understand that, by completing this form and processing this order, I am digitally signing to agree that the details I have provided above qualify me for relief from value added tax.<\/p><p>If you are in any doubt as to whether you are eligible to receive goods or services zero-rated for VAT you should consult VAT Notice 701\/7 VAT reliefs for disabled people or contact the National Advice Service on 0300 200 3700 before signing the declaration. <a href=\"https:\/\/www.gov.uk\/financial-help-disabled\/vat-relief\">For more information read HMRC's website.<\/a><\/p>"
+        },
+        {
+            "type": "header",
+            "content": "Charity"
+        },
+        {
+            "type": "richtext",
+            "id": "charity_text_html",
+            "label": "Link Text",
+            "default": "<p><strong>Claiming as a charity?<\/strong> Call us on 0333 222 8584<\/p>"
+        }
+  ],
+  "blocks": [
+  ]
+}
+{% endschema %}
+{% render "cart-script.mczr" %}

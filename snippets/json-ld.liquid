@@ -1,0 +1,447 @@
+{% comment %}
+    The JSON-LD snippet.
+{% endcomment %}
+{%- liquid 
+  assign debug = true
+  assign tax_products_include_vat = settings.taxes_products_include_tax
+  assign taxesApplyMultiplier = settings.tax_settings_enabled
+  assign vatMultiplier = settings.taxes_vat_multiplier | divided_by: 100.00 | plus: 1
+  assign current_variant = product.selected_or_first_available_variant
+  if taxesIncluded == false 
+    if taxesApplyMultiplier
+      assign price = current_variant.price | times: vatMultiplier
+    else
+      assign price = current_variant.price | divided_by: vatMulitplier
+    endif
+  else 
+    assign price = current_variant.price
+  endif
+  assign logo = settings.microdata_logo
+  assign featuredImage = settings.microdata_featured_image 
+  assign shopUrl = shop.url 
+  assign shopName = shop.name 
+  assign shopTelephone = shop.phone 
+  assign shopEmail = shop.email 
+  assign legalName = settings.microdata_legal_name 
+  if logo != blank 
+    assign logoMaster = logo | img_url: 'master' 
+  endif 
+  if featuredImage != blank 
+    assign featuredImageWithSize = featuredImage | img_url: 'master' 
+  endif 
+  assign vatID = settings.company_vat_number 
+  assign taxID = settings.company_number 
+-%}
+{%- assign socialLinksArray = settings.social_facebook_link | append: ',' 
+                | append: settings.social_twitter_link | append: ',' 
+                | append: settings.social_pinterest_link | append: ',' 
+                | append: settings.social_instagram_link | append: ',' 
+                | append: settings.social_snapchat_link | append: ',' 
+                | append: settings.social_tumblr_link | append: ',' 
+                | append: settings.social_youtube_link | append: ',' 
+                | append: settings.social_vimeo_link | append: ',' 
+                | append: settings.social_google_link | append: ',' 
+                | append: settings.social_linkedin_link 
+                | replace: ',,', ',' | split: ',' | uniq 
+-%}
+{% capture render %}
+  {%- if markup == 'organisation' -%}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type":"Organization",
+      "name":{{ shopName | json }},
+      "url":{{ shopUrl | json }},
+      {%- if taxID != blank -%}"taxID":{{ taxID | json }},{%- endif -%}
+      {%- if vatID != blank -%}"vatID":{{ vatID | json }},{%- endif -%}
+      {%- if legalName != blank -%}"legalName": {{- legalName | json -}},{%- endif -%}
+      {%- if logoMaster != blank -%}"logo": {{ "https:" | append: logoMaster | json }},{%- endif -%}
+      {%- if featuredImage != blank -%}"image": {{ "https:" | append: featuredImageWithSize | json }},{%- endif -%}
+      {%- if shop.address -%}
+      "address":
+      {
+        "@type": "PostalAddress",
+        "streetAddress": {{ shop.address.street | json }},
+        "addressLocality": {{ shop.address.city | json }},
+        "postalCode": {{ shop.address.zip | json }}
+      },
+      {%- endif -%}
+      "contactPoint":
+      {
+        "@type":"ContactPoint",
+        "contactType":"customer support",
+        "telephone":{{ shopTelephone | json }},
+        "email":{{ shopEmail | json }}
+      }
+      {%- if socialLinksArray.size > 0 -%}
+      ,
+      "sameAs":
+      [
+        {%- for social in socialLinksArray -%}
+          {%- if social != blank -%}
+            {{- social | json -}}
+            {%- if forloop.last == false -%},{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+      {%- endif -%}
+    }
+    </script>
+  {%- elsif markup == 'localbusiness' -%}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "LocalBusiness",
+      "name": {{ shopName | json }},
+      "url": {{ shopUrl | json }}
+      {%- if logoMaster != blank -%},"logo": {{ "https:" | append: logoMaster | json }}{%- endif -%}
+      {%- if featuredImage != blank -%},"image": {{ "https:" | append: featuredImageWithSize | json }}{%- endif -%}
+      ,
+      "address": {
+        "@type" : "PostalAddress",
+        "streetAddress": "{{ shop.address.street }}",
+        "addressLocality": "{{ shop.address.city }}",
+        "postalCode": "{{ shop.address.zip }}",
+        "telephone" : "{{ shopTelephone }}"
+        }
+        {%- if settings.show_opening_hours -%}
+        ,
+        "openingHours": {{ settings.opening_hours | json }}
+        {%- endif -%}
+      {%- if settings.microdata_map != blank -%}
+      ,
+      "hasmap" : {{ settings.microdata_map | json }}
+      {%- endif -%}
+      {%- if socialLinksArray.size > 0 -%}
+      ,
+      "sameAs":
+      [
+        {%- for social in socialLinksArray -%}
+          {%- if social != blank -%}
+            {{- social | json -}}
+            {%- if forloop.last == false -%},{%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+      {%- endif -%}
+    }
+    </script>
+  {%- elsif markup == 'webpage' -%}
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "{{ shopUrl }}",
+      "name": "{{ shopName }}",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ shopUrl }}/search?q={search_term}",
+        "query-input": "required name=search_term" }
+        }
+    </script>
+  {%- elsif markup == 'product' -%}
+    {%- if product.handle == 'romeo-smart-adjustable-bed' or product.handle == 'adjustable-bed-grab-rail-single-bed' or product.handle == 'bar-bumpers-with-mesh-vision-panel' or product.handle == 'eden-smart-adjustable-bed' or product.handle == 'yorke-smart-adjustable-bed' or product.handle == 'borg-smart-adjustable-bed' or product.handle == 'saxby-smart-adjustable-bed' or product.handle == 'stratton-smart-adjustable-bed' or product.handle == 'dalta-smart-adjustable-bed' or product.handle == 'kensington-smart-adjustable-bed' or product.handle == 'motionluxe-adjustable-smart-base' or product.handle == 'nurse-call-floor-sensor-mat-deluxe-6401' or product.handle == 'opera-classic-extension-platform' or product.handle == 'signature-bed-extension-platform' or product.handle == 'overbed-table-on-castors' or product.handle == 'premium-overbed-table' or product.handle == 'signature-profiling-bed' or product.handle == 'signature-low-footboard-profiling-bed' or product.handle == 'signature-comfort-profiling-bed' or product.handle == 'signature-comfort-dual-profiling-bed' or product.handle == 'signature-profiling-bed-upholstered' or product.handle == 'signature-bariatric-bed' or product.handle == 'solo-profiling-bed' or product.handle == 'solo-comfort-profiling-bed' or product.handle == 'solo-comfort-plus-profiling-bed' or product.handle == 'rotobed-home-rotating-chair-bed' or product.handle == 'rotobed-free-rotating-chair-bed' or product.handle == 'rotobed-safesleep-mattress' or product.handle == 'huntingtons-bed-package' or product.handle == 'impulse-pressure-cushion' or product.handle == 'eclipse-air-mattress-system' or product.handle == 'autoturn-lateral-turning-system' or product.handle == 'cool-gel-adjustable-mattress' or product.handle == 'pedisafe-heel-protectors' or product.handle == 'opera-seclude-mattress' or product.handle == 'opera-vandal-mental-health-mattress' or product.handle == 'simplicity-specialist-care-chair' or product.handle == 'altitude-chair' or product.handle == 'adara-riser-recliner-chair' or product.handle == 'talitha-riser-recliner-chair' or product.handle == 'shower-commode-chair-tcd014-15-22-25' or product.handle == 'shower-commode-chair-tilt-in-space' or product.handle == 'shower-cradle' or product.handle == 'shower-chair' or product.handle == 'aquatec-dual-vip-with-tilt-and-recline' or product.handle == 'shower-trolley' or product.handle == 'toilet-seat-frame' or product.handle == 'birdie-evo-150-hoist' or product.handle == 'birdie-evo-180-hoist' or product.handle == 'bath-hoist' or product.handle == 'stand-assist-hoist' or product.handle == 'slide-sheets-tubular' or product.handle == 'able-assist-transfer-aid' or product.handle == 'toileting-high-extensor-sling' -%}
+    <script type="application/ld+json">
+    {
+      "@context":"http://schema.org/",
+      "@type":"Product",
+      "name":{{ product.title | json }},
+      "image":"https:{{ product.featured_image | img_url }}",
+      "description":"{{ product.description | replace_newlines | strip_newlines | strip_html | truncatewords: '40' }}",
+      "brand": {
+        "@type":"Thing",
+        "name":"{{ product.vendor }}"
+      },
+      {% if current_variant.barcode != blank %}
+      "mpn":{{ current_variant.barcode | json }},
+      {% else %}
+      "mpn":{{ current_variant.sku | json }},
+      {% endif %}
+      "sku":{{ current_variant.sku | json }},
+      "offers": {
+        "@type":"Offer",
+        "priceCurrency":{{ shop.currency | json }},
+        "price":{{ price | times: 1.2 | money_without_currency | json }},
+        "itemCondition": "http://schema.org/NewCondition",
+        "availability":{%- if product.available -%}"http://schema.org/InStock"{%- else -%}http://schema.org/OutOfStock{%- endif -%},
+        "url": "{{ shopUrl }}/product/{{product.handle}}",
+        "seller": {
+          "@type": "Organization",
+          "name":{{ shopName | json }}
+        },
+        {% assign daysToSeconds = settings.product_microdata_display_until | times: 86400  %}
+        "priceValidUntil":{{ "now" | date: '%s' | plus: daysToSeconds | date: '%FT%T%z' | json }}
+      }{%- if product__reviews-count > 0 -%},
+      "aggregateRating": {
+        "@type": "aggregateRating",
+        "ratingValue": {{ averageRating | json }},
+        "reviewCount": {{ product__reviews-count | json }}
+      }{%- endif -%}
+    }
+    </script>
+    {%- else -%}
+    <script type="application/ld+json">
+    {
+      "@context":"http://schema.org/",
+      "@type":"Product",
+      "name":{{ product.title | json }},
+      "image":"https:{{ product.featured_image | img_url }}",
+      "description":"{{ product.description | replace_newlines | strip_newlines | strip_html | truncatewords: '40' }}",
+      "brand": {
+        "@type":"Thing",
+        "name":"{{ product.vendor }}"
+      },
+      {% if current_variant.barcode != blank %}
+      "mpn":{{ current_variant.barcode | json }},
+      {% else %}
+      "mpn":{{ current_variant.sku | json }},
+      {% endif %}
+      "sku":{{ current_variant.sku | json }},
+      "offers": {
+        "@type":"Offer",
+        "priceCurrency":{{ shop.currency | json }},
+        "price":{{ price | times: 1.2 | money_without_currency | replace: ',', '.' | json }},
+        "itemCondition": "http://schema.org/NewCondition",
+        "availability":{%- if product.available -%}"http://schema.org/InStock"{%- else -%}http://schema.org/OutOfStock{%- endif -%},
+        "url": "{{ shopUrl }}/product/{{product.handle}}",
+        "seller": {
+          "@type": "Organization",
+          "name":{{ shopName | json }}
+        },
+        {% assign daysToSeconds = settings.product_microdata_display_until | times: 86400  %}
+        "priceValidUntil":{{ "now" | date: '%s' | plus: daysToSeconds | date: '%FT%T%z' | json }}
+      }{%- if product__reviews-count > 0 -%},
+      "aggregateRating": {
+        "@type": "aggregateRating",
+        "ratingValue": {{ averageRating | json }},
+        "reviewCount": {{ product__reviews-count | json }}
+      }{%- endif -%}
+    }
+    </script>
+    {%- endif -%}
+  {%- elsif markup == 'breadcrumb' -%}
+    {%- if collection and collection.url != blank -%} 
+      <script type="application/ld+json">
+        {
+        "@context": "http://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement":
+        [
+        {%- unless template == 'index' or template == 'list-collections' -%}
+            {%- if template contains 'page' -%}
+                {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ page.url }}",
+                  "name": "{{ page.title }}"
+                  }
+              }
+            {%- elsif template contains 'product' -%}
+                {%- if collection.url -%}
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ collection.url }}",
+                  "name": "{{ collection.title }}"
+                  }
+              },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ product.url }}",
+                  "name": "{{ product.title }}"
+                  }
+              }
+                {%- else -%}
+                {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ product.url }}",
+                  "name": "{{ product.title }}"
+                  }
+              }
+            {%- endif -%}
+            {%- elsif template contains 'collection' and collection.handle -%}
+                {%- if current_tags -%}
+                {%- capture url -%}/collections/{{ collection.handle }}{%- endcapture -%}
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ url }}",
+                  "name": "{{ collection.title }}"
+                  }
+              }
+                {%- assign pos = 2 -%}
+                {%- assign tagUrl = collection.url -%}
+                {%- assign niceName = '' -%}
+                {%- for tag in current_tags -%}
+                  {%- assign split = tag | split: '_' -%}
+                  {%- assign cat = split.first -%}
+                  {%- assign val = split.last -%}
+                  {%- if niceName == '' -%}
+                    {%- assign niceName = cat | append: ': ' | append: val -%}
+                  {%- else -%}
+                    {%- assign niceName = niceName | append: ' and ' | append: cat | append: ': ' | append: val -%}
+                  {%- endif -%}
+                  {%- if tagUrl == collection.url -%}
+                    {%- assign tagUrl = tagUrl | append: '/' | append: tag | downcase -%}
+                  {%- else -%}
+                    {%- assign tagUrl = tagUrl | append: '+' | append: tag | downcase -%}
+                  {%- endif -%}
+                  {%- if forloop.last == false -%}
+                  ,{
+                  "@type": "ListItem",
+                  "position": {{ pos }},
+                  "item":
+                  {
+                    "@id": "{{ shopUrl }}{{ tagUrl }}",
+                    "name": "{{ niceName }}"
+                    }
+                  }
+                  {%- assign pos = pos | plus: 1 -%}
+                  {%- else -%}
+                  ,{
+                  "@type": "ListItem",
+                  "position": {{ pos }},
+                  "item":
+                  {
+                    "@id": "{{ shopUrl }}{{ tagUrl }}",
+                    "name": "{{ niceName }}"
+                    }
+                  }
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- else -%}
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ collection.url }}",
+                  "name": "{{ collection.title }}"
+                  }
+              }
+                {%- endif -%}
+            {%- elsif template == 'blog' -%}
+                {%- if current_tags -%}
+            {%- assign tagJoin = current_tags | join: " + " -%}
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ blog.url }}",
+                  "name": "{{ blog.title }}"
+                  }
+              },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ blog.url | append: '/' | append: tagJoin }}",
+                  "name": "{{ tagJoin }}"
+                  }
+              }
+                {%- else -%}
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ blog.url }}",
+                  "name": "{{ blog.title }}"
+                  }
+              }
+                {%- endif -%}
+            {%- elsif template == 'article' -%}
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ blog.url }}",
+                  "name": "{{ blog.title }}"
+                  }
+              },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}{{ article.url }}",
+                  "name": "{{ article.title }}"
+                  }
+              }
+            {%- elsif template == 'cart' -%}
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ shopUrl }}/cart",
+                  "name": "{{ 'cart.general.title' | t }}"
+                  }
+            }
+            {%- else -%}
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item":
+                {
+                  "@id": "{{ canonical_url }}",
+                  "name": "{{ page_title }}"
+                  }
+            }
+            {%- endif -%}
+        {%- endunless -%}
+        ]
+        }
+      </script>
+    {%- endif -%}
+  {%- elsif markup == 'blogpost' -%}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{{ article.title }}",
+      "description": "{%- if article.excerpt == blank -%}{{ article.content | strip_newlines | strip_html | truncatewords: 50 }}{%- else -%}{{ article.excerpt | strip_newlines | strip_html }}{%- endif -%}",
+      "datePublished": "{{ article.published_at | date: '%FT%T%z' }}",
+      "dateModified": "{{ article.published_at | date: '%FT%T%z' }}",
+      "mainEntityOfPage": "True",{%- if article.image != blank -%}
+      "image": {
+      "@type": "imageObject",
+      "url": "https:{{ article.image | img_url }}"
+      },{%- endif -%}
+      "publisher": {
+        "@type": "Organization",
+        "name": "Publisher name"{%- if logo != blank -%},
+        "logo": {
+          "@type": "imageObject",
+          "url": "https:{{ logo | img_url: 'master' }}"
+        }{%- endif -%}
+      },
+      "author": {
+        "@type": "Person",
+        "name": "{{ article.author }}"
+      },
+      "articleBody": {{ article.content | strip_html | json }}
+    }
+    </script>
+  {%- endif -%}
+{%- endcapture -%}
+{% if debug %}
+  {{ render }}
+{% else %}
+  {{ render | replace: '  ', '' | strip_newlines }}
+{% endif %}

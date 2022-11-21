@@ -1,0 +1,204 @@
+{% comment %}
+    The Product Related Products section template.
+
+    NOTES:
+    Classes are set to the "featured-product" section in order to re-use HTML and CSS
+    data-section-type is set the "featured-products" in order to re-use the JavaScript
+{% endcomment %}
+
+{%- paginate collections.all.products by 500 -%}
+{%- liquid
+    assign debug = false
+    assign more_text = section.settings.more_text
+    assign metafield_collection = collections[product.metafields.accentuate.related_collections]
+    assign related_products = null
+
+    if collection
+        assign featured_collection = collection
+    endif
+
+    if collection
+        assign more_link = collection.url
+    elsif metafield_collection
+        assign featured_collection = metafield_collection
+    else
+        assign more_link = featured_collection.url
+    endif
+
+    assign metafield_products = product.metafields.accentuate.related_products | split: '|'
+
+    assign master_product_handle = product.handle
+
+    for metafield_product in metafield_products
+        assign found_product = collections.all.products | where: 'handle', metafield_product
+
+        if found_product and found_product.first.handle != master_product_handle
+            assign product_obj = found_product | uniq
+            assign related_products = related_products | concat: product_obj
+        endif
+    endfor
+
+    unless related_products
+        assign related_products = featured_collection.products
+    endunless
+
+    assign product_limit = section.settings.products_limit
+    assign needs_more = product_limit | minus: related_products.size
+    if needs_more > 0
+        for found_product in featured_collection.products limit: needs_more
+            if found_product.handle != master_product_handle
+                assign product_obj = found_product | uniq
+                assign related_products = related_products | concat: product_obj
+            endif
+        endfor
+    endif
+
+    if related_products.size > 0
+        assign related_products = related_products | uniq
+    endif
+
+-%}
+{%- endpaginate -%}
+
+{%- if debug -%}
+    <code style="color: red; padding-top: 20px; display:block;">
+        metafield_products:
+        {{ metafield_products | json }}<br />
+
+        metafield_collection:
+        {{ metafield_collection | json }}<br />
+
+
+        featured_collection:
+        {{ featured_collection | json }}<br />
+
+        related_products to show:
+        {{ related_products | json }}
+        {{ related_products | map: 'handle' | json | default: 'No match' }}
+    </code>
+{%- endif -%}
+
+{%- if related_products.size > 0 -%}
+    <section class="s-featured-products my-16 my-lg-20 my-xl-26" data-section-type="featured-products" data-section-id="{{ section.id }}">
+        <div class="container site-padding">
+            <div class="row align-items-md-center">
+                <div class="col-12 col-md-auto">
+                    <h2 class="m-0 u-heading-md text-center text-lg-left text-elephant">
+                        {{- section.settings.title | escape -}}
+                    </h2>
+                </div>
+                {%- if featured_collection -%}
+                    <div class="d-none col-md-auto ml-md-auto d-md-flex flex-md-row flex-md-nowrap align-items-md-center">
+                        <a class="c-text-btn text-14" href="{{ more_link | url_escape }}" aria-label="{{ more_text | escape }}" title="{{ more_text | escape }}">
+                            {{- more_text | escape -}}
+                        </a>
+                        {%- if related_products.size > 0 -%}
+                            <div class="d-none d-md-flex flex-md-row flex-md-nowrap align-items-md-center ml-8">
+                                <button class="s-featured-products__btn swiper-button-prev" type="button" aria-label="{{ 'Next slide' | escape }}" data-featured-products-slider-prev>
+                                    <svg aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-chevron-left"></use>
+                                    </svg>
+                                </button>
+                                <button class="s-featured-products__btn swiper-button-next ml-2" type="button" aria-label="{{ 'Next slide' | escape }}" data-featured-products-slider-next>
+                                    <svg aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-chevron-right"></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+        {%- if related_products.size > 0 -%}
+            <div class="s-featured-products__slider mt-7 mt-md-12">
+                <div class="container site-padding pr-0 pr-sm-4">
+                    <div class="swiper-container pr-4 pr-sm-0" data-featured-products-slider>
+                        <div class="swiper-wrapper">
+                            {%- for product in related_products limit: 6 -%}
+                                {%- unless related_product == master_product_handle -%}
+                                    <div class="swiper-slide">
+                                        {%-
+                                            render 'product-item',
+                                            class: 'w-100 h-100',
+                                            product: product
+                                        -%}
+                                    </div>
+                                {%- endunless -%}
+                            {%- endfor -%}
+                        </div>
+                    </div>
+                </div>
+                <div class="container site-padding">
+                    <div class="row flex-nowrap align-items-center mt-8 d-md-none">
+                        <div class="col-auto">
+                            <button class="s-featured-products__prev swiper-button-prev" type="button" aria-label="{{ 'Previous slide' | escape }}" data-featured-products-slider-prev>
+                                <svg aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-chevron-left"></use>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="col">
+                            <div class="s-featured-products__pagination swiper-pagination" data-featured-products-slider-pagination></div>
+                        </div>
+                        <div class="col-auto">
+                            <button class="s-featured-products__next swiper-button-next" type="button" aria-label="{{ 'Next slide' | escape }}" data-featured-products-slider-next>
+                                <svg aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-chevron-right"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {%- endif -%}
+        <div class="container site-padding">
+            <div class="row justify-content-center mt-11 d-md-none">
+                <div class="col-12 text-center">
+                    <a class="c-btn c-btn--dark c-btn--2" href="{{ more_link | url_escape }}" aria-label="{{ 'View All Products' | escape }}" title="{{ 'View All Products' | escape }}">
+                        {{- 'View All Products' | escape -}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Related Products",
+    "settings": [
+        {
+            "type":"header",
+            "content": "Content Addition Note",
+            "info": "Product specific data can be added through App 'Accentuate'."
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Similar Products"
+        },
+        {
+            "type": "text",
+            "id": "more_text",
+            "label": "More Text",
+            "default": "View all products"
+        },
+        {
+            "type":"header",
+            "content": "Product Limit",
+            "info": "Product limit"
+        },
+        {
+            "type": "range",
+            "id": "products_limit",
+            "min": 1,
+            "max": 12,
+            "step": 1,
+            "label": "Product limit",
+            "default": 6
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

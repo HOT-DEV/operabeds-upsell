@@ -1,0 +1,1124 @@
+{% comment %}
+    Product Option snippet.
+{% endcomment %}
+
+{{ 'smart-base-selector.css' | asset_url | stylesheet_tag }}
+{{ 'upgrade-info-popup.css' | asset_url | stylesheet_tag }}
+
+<style>
+    .container-upgrade {
+        display: grid;
+    }
+
+    .s-product__options {flex-direction: column; gap: 1.25rem 2rem;}
+</style>
+{%- liquid
+    assign rendered_split_options = ''
+    assign split_options_name_downcase = split_options_name | downcase
+    assign product_1_name =         product.metafields.accentuate.compare1_feature_name
+    assign product_2_name =         product.metafields.accentuate.compare2_feature_name
+    assign product_3_name =         product.metafields.accentuate.compare3_feature_name
+    assign compare_modal_image =    product.metafields.accentuate.compare_modal_image
+-%}
+{%- if split_options_name_downcase == 'smart base' -%}
+<div class="container-upgrade mb-md-n7">
+
+    <div class="col-12">
+
+        <div class="row align-items-center justify-content-between mt-xl-4 mb-3 pt-4"
+            style="border-top: 1px solid rgba(37, 61, 82, 0.2);">
+            <div class="s-product__option__label">{{ settings.adj_upgrade_title }}</div>
+        </div>
+    </div>
+
+    {%- for value in option.values -%}
+    {%- liquid
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+    -%}
+
+    {% if value == "Standard" %}
+    <div class="col-12 text-elephant py-2 mb-2">
+        <div class="row top-row align-items-center">
+            <label class=""
+                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                <div class="col-auto position-relative d-flex align-items-center" style="margin-left: 2px;">
+                    <input type="radio"
+                        id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                        name="options[{{ split_options_name | escape }}]" type="radio"
+                        value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                        data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                    <span class="upgrade-checkmark"></span>
+                    <h3 class="text-16 font-weight-semibold leading-tight mb-0 pl-10" style="margin-top: 3px;">
+                        {{ settings.adj_upgrade_o1 }}</h3>
+                </div>
+            </label>
+            <div class="upgrade-info-popup" onclick="myFunction()">
+                <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M15 1.875C18.4812 1.875 21.8198 3.25791 24.2814 5.7195C26.743 8.18109 28.1259 11.5197 28.1259 15.0009C28.1259 18.4822 26.743 21.8208 24.2814 24.2824C21.8198 26.744 18.4812 28.1269 15 28.1269C11.5187 28.1269 8.18011 26.744 5.71852 24.2824C3.25693 21.8208 1.87402 18.4822 1.87402 15.0009C1.87402 11.5197 3.25693 8.18109 5.71852 5.7195C8.18011 3.25791 11.5187 1.875 15 1.875V1.875ZM16.9687 9.93375C17.9437 9.93375 18.735 9.25687 18.735 8.25375C18.735 7.25062 17.9418 6.57375 16.9687 6.57375C15.9937 6.57375 15.2062 7.25062 15.2062 8.25375C15.2062 9.25687 15.9937 9.93375 16.9687 9.93375ZM17.3118 20.4844C17.3118 20.2838 17.3812 19.7625 17.3418 19.4662L15.8006 21.24C15.4818 21.5756 15.0825 21.8081 14.895 21.7462C14.8099 21.7149 14.7388 21.6543 14.6945 21.5752C14.6501 21.4962 14.6355 21.4039 14.6531 21.315L17.2218 13.2C17.4318 12.1706 16.8543 11.2313 15.63 11.1113C14.3381 11.1113 12.4368 12.4219 11.28 14.085C11.28 14.2838 11.2425 14.7787 11.2818 15.075L12.8212 13.2994C13.14 12.9675 13.5112 12.7331 13.6987 12.7969C13.7911 12.83 13.8668 12.8981 13.9096 12.9864C13.9523 13.0748 13.9587 13.1763 13.9275 13.2694L11.3812 21.345C11.0868 22.29 11.6437 23.2163 12.9937 23.4263C14.9812 23.4263 16.155 22.1475 17.3137 20.4844H17.3118Z"
+                        fill="#0A2438" />
+                </svg>
+                <span class="popuptext" id="myPopupInfo">
+                    <div class="close-popup position-absolute" style="right:.5rem; top:.25rem;">&#10005</div>
+                    <p>The Standard Base comes with adjustable back/leg rest, Zero-Gravity and Anti-Snore settings.</p>
+                    <p class="mb-0">Upgrade to the Plus to add, back massage, lighting and app control or the Luxe for
+                        all previous features with the addition of full body massage, Alexa Pairing, Wall Hugging and
+                        more.</p>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {%- comment -%} // Hide first option if they only want the No upgrade option / 4PE
+    {% if value contains 'Motion™' or value contains 'Standard' %}
+    <div class="row bottom-row p-4">
+        <div class="col-6 col-lg-3 p-0 d-inline-flex align-items-center">
+            <div class="">
+                <svg class="mr-2" aria-hidden="true" role="presentation" style="width: 1.9rem; height: 1.9rem;">
+                    <use xlink:href="#sprite-massage-waves"></use>
+                </svg>
+            </div>
+            <div class="leading-none">
+                <span class="text-12 pr-2">
+                    {{ settings.feature_motion_1 }}
+                </span>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3 p-0 d-inline-flex align-items-center">
+            <div class="">
+                <svg class="mr-2" aria-hidden="true" role="presentation" style="width: 1.9rem; height: 1.9rem;">
+                    <use xlink:href="#sprite-massage-waves"></use>
+                </svg>
+            </div>
+            <div class="leading-none">
+                <span class="text-12 pr-2">
+                    {{ settings.feature_motion_2 }}
+                </span>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3 p-0 d-inline-flex align-items-center">
+            <div class="">
+                <svg class="mr-2" aria-hidden="true" role="presentation" style="width: 1.9rem; height: 1.9rem;">
+                    <use xlink:href="#sprite-massage-waves"></use>
+                </svg>
+            </div>
+            <div class="leading-none">
+                <span class="text-12 pr-2">
+                    {{ settings.feature_motion_3 }}
+                </span>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3 p-0 d-inline-flex align-items-center">
+            <div class="">
+                <svg class="mr-2" aria-hidden="true" role="presentation" style="width: 1.9rem; height: 1.9rem;">
+                    <use xlink:href="#sprite-massage-waves"></use>
+                </svg>
+            </div>
+            <div class="leading-none">
+                <span class="text-12">
+                    {{ settings.feature_motion_4 }}
+                </span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {%- endcomment -%}
+
+    {% elsif value contains 'MotionPlus™' or value contains 'Plus'  %}
+
+    <label class=""
+        for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+        <div class="col-12 bg-white text-elephant px-4 pt-4">
+            <div class="row top-row align-items-center">
+                <div class="col-auto d-flex align-items-center" style="margin-left: 2px;">
+                    <input type="radio"
+                        id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                        name="options[{{ split_options_name | escape }}]" type="radio"
+                        value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                        data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                    <span class="upgrade-checkmark"></span>
+
+                    <h3 class="text-16 font-weight-semibold leading-tight mb-0 pl-10" style="margin-top: 3px;">
+                        {%-
+                                    render 'product-option-value-presenter',
+                                    value: matching_split_value
+                                -%}
+                    </h3>
+                </div>
+            </div>
+
+            <div class="row bottom-row p-4">
+                <div class="upgrade-feature col-6 col-xl-3 p-0 d-inline-flex align-items-center">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="58.794" height="35.745"
+                            viewBox="0 0 58.794 35.745">
+                            <line id="Line_565" data-name="Line 565" y1="5.092" x2="8.585"
+                                transform="translate(1.028 15.844)" fill="none" stroke="#0a2438" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="1.5" />
+                            <path id="Path_788" data-name="Path 788" d="M7.242,16.242l1.465-5.468L3.573,9.2"
+                                transform="translate(1.023 5.01)" fill="none" stroke="#0a2438" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="1.5" />
+                            <path id="Path_789" data-name="Path 789"
+                                d="M26.6,36.419,10.314,9.775l9.917-7.319L33.586,24.873H55.241V36.419H26.64"
+                                transform="translate(2.803 -1.705)" fill="none" stroke="#0a2438" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="1.5" />
+                        </svg>
+                    </div>
+                    <div class="leading-none">
+                        <span class="text-12 pr-2">
+                            {{ settings.adj_upgrade_o2_f1 }}
+                        </span>
+                    </div>
+                </div>
+                <div class="upgrade-feature col-6 col-xl-3 p-0 d-inline-flex align-items-center">
+                    <div class="">
+                        <svg id="Group_2537" data-name="Group 2537" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" width="39.531" height="39.799"
+                            viewBox="0 0 39.531 39.799">
+                            <defs>
+                                <clipPath id="clip-path">
+                                    <rect id="Rectangle_1328" data-name="Rectangle 1328" width="39.531" height="39.531"
+                                        fill="none" stroke="#112336" stroke-width="1" />
+                                </clipPath>
+                            </defs>
+                            <g id="Group_2532" data-name="Group 2532">
+                                <g id="Group_2531" data-name="Group 2531" clip-path="url(#clip-path)">
+                                    <line id="Line_559" data-name="Line 559" x2="3.857"
+                                        transform="translate(0.482 19.766)" fill="none" stroke="#112336"
+                                        stroke-linejoin="round" stroke-width="1.5" />
+                                </g>
+                            </g>
+                            <line id="Line_560" data-name="Line 560" x2="2.727" y2="2.727"
+                                transform="translate(6.13 6.13)" fill="none" stroke="#112336" stroke-linejoin="round"
+                                stroke-width="1.5" />
+                            <g id="Group_2534" data-name="Group 2534">
+                                <g id="Group_2533" data-name="Group 2533" clip-path="url(#clip-path)">
+                                    <line id="Line_561" data-name="Line 561" y2="3.857"
+                                        transform="translate(19.766 0.482)" fill="none" stroke="#112336"
+                                        stroke-linejoin="round" stroke-width="1.5" />
+                                </g>
+                            </g>
+                            <line id="Line_562" data-name="Line 562" x1="2.727" y2="2.727"
+                                transform="translate(30.674 6.13)" fill="none" stroke="#112336" stroke-linejoin="round"
+                                stroke-width="1.5" />
+                            <g id="Group_2536" data-name="Group 2536" transform="translate(8.838 8.838)">
+                                <g id="Group_2539" data-name="Group 2539">
+                                    <line id="Line_563" data-name="Line 563" x1="3.857"
+                                        transform="translate(26.354 10.927)" fill="none" stroke="#112336"
+                                        stroke-linejoin="round" stroke-width="1.5" />
+                                    <line id="Line_564" data-name="Line 564" x2="8.999"
+                                        transform="translate(6.428 30.211)" fill="none" stroke="#112336"
+                                        stroke-linejoin="round" stroke-width="1.5" />
+                                    <path id="Path_776" data-name="Path 776"
+                                        d="M35.6,24.677a10.927,10.927,0,1,0-15.427,9.95V40.1h9V34.628A10.921,10.921,0,0,0,35.6,24.677Z"
+                                        transform="translate(-13.75 -13.75)" fill="none" stroke="#112336"
+                                        stroke-width="1.5" />
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="leading-none">
+                        <span class="text-12 pr-2">
+                            {{ settings.adj_upgrade_o2_f2 }}
+                        </span>
+                    </div>
+                </div>
+                <div class="upgrade-feature col-6 col-xl-3 p-0 d-inline-flex align-items-center pt-4 pt-xl-0">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="38.57" height="23.677"
+                            viewBox="0 0 38.57 23.677">
+                            <g id="Group_2540" data-name="Group 2540" transform="translate(0 0.75)">
+                                <path id="Path_777" data-name="Path 777"
+                                    d="M.75,33.643A8.912,8.912,0,0,0,7.324,30.75a8.917,8.917,0,0,0,12.6.55q.287-.263.55-.55a8.931,8.931,0,0,0,12.618.542l.092-.085a8.871,8.871,0,0,0,6.135,2.436"
+                                    transform="translate(-0.75 -11.467)" fill="none" stroke="#112336"
+                                    stroke-linejoin="round" stroke-width="1.5" />
+                                <path id="Path_778" data-name="Path 778"
+                                    d="M.75,18.643A8.912,8.912,0,0,0,7.324,15.75a8.917,8.917,0,0,0,12.6.55q.287-.263.55-.55a8.931,8.931,0,0,0,12.618.543l.092-.086a8.871,8.871,0,0,0,6.135,2.436"
+                                    transform="translate(-0.75 -6.108)" fill="none" stroke="#112336"
+                                    stroke-linejoin="round" stroke-width="1.5" />
+                                <path id="Path_779" data-name="Path 779"
+                                    d="M.75,3.643A8.912,8.912,0,0,0,7.324.75a8.917,8.917,0,0,0,12.6.55q.287-.263.55-.55a8.931,8.931,0,0,0,12.618.543l.092-.086a8.871,8.871,0,0,0,6.135,2.436"
+                                    transform="translate(-0.75 -0.75)" fill="none" stroke="#112336"
+                                    stroke-linejoin="round" stroke-width="1.5" />
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="leading-none">
+                        <span class="text-12 pr-2">
+                            {{ settings.adj_upgrade_o2_f3 }} </span>
+                    </div>
+                </div>
+                <div class="upgrade-feature col-6 col-xl-3 p-0 d-inline-flex align-items-center pt-4 pt-xl-0">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="21.378" height="31.316"
+                            viewBox="0 0 21.378 31.316">
+                            <g id="Group_2542" data-name="Group 2542" transform="translate(-1469.75 -937.966)">
+                                <line id="Line_557" data-name="Line 557" x2="19.878"
+                                    transform="translate(1470.5 963.563)" fill="none" stroke="#112336"
+                                    stroke-miterlimit="10" stroke-width="1.5" />
+                                <line id="Line_558" data-name="Line 558" x2="19.878"
+                                    transform="translate(1470.5 942.692)" fill="none" stroke="#112336"
+                                    stroke-miterlimit="10" stroke-width="1.5" />
+                                <rect id="Rectangle_1326" data-name="Rectangle 1326" width="19.878" height="29.816"
+                                    rx="5" transform="translate(1470.5 938.716)" fill="none" stroke="#112336"
+                                    stroke-linecap="square" stroke-miterlimit="10" stroke-width="1.5" />
+                                <g id="Group_2541" data-name="Group 2541" transform="translate(1474.931 947.595)">
+                                    <path id="Path_774" data-name="Path 774"
+                                        d="M10.918,21.3c.995,1.693,2.552,3.73,3.453,3.73a3.2,3.2,0,0,0,1.89-.831,3.5,3.5,0,0,1,2.071-.895,7.412,7.412,0,0,1,2.821.844l.159.075V24a8.832,8.832,0,0,0-.1-1.127,4.941,4.941,0,0,0-.746-1.95l-.026-.031.016.016a5.039,5.039,0,0,0-.464-.588c-.034-.034-.065-.069-.1-.1a5.524,5.524,0,0,0-4.089-1.6,5.5,5.5,0,0,0-4.089,1.6c-.038.038-.075.078-.111.118a4.887,4.887,0,0,0-.452.578l.018-.018a.332.332,0,0,0-.028.034c-.081.122-.155.248-.223.377"
+                                        transform="translate(-10.296 -18.616)" fill="#0a2438" />
+                                    <path id="Path_775" data-name="Path 775"
+                                        d="M17.7,28.117a2.73,2.73,0,0,0-1.509.712,4.043,4.043,0,0,1-2.452,1.014c-.889,0-1.908-.8-3.114-2.438-.287-.391-.548-.78-.767-1.123-.034.144-.069.291-.093.446a8.792,8.792,0,0,0-.1,1.1c0,.058,0,.115,0,.171v.162a8.741,8.741,0,0,0,.1,1.128,4.925,4.925,0,0,0,.746,1.95c.016.02.026.031.026.031l-.017-.016a4.968,4.968,0,0,0,.463.59c.034.034.066.069.1.1a5.521,5.521,0,0,0,4.09,1.6,5.515,5.515,0,0,0,4.091-1.6c.038-.038.075-.078.112-.118a5.091,5.091,0,0,0,.452-.578l-.018.018s.01-.011.028-.034a4.917,4.917,0,0,0,.744-1.947s.011-.059.026-.176a8.353,8.353,0,0,0-2.906-.99"
+                                        transform="translate(-9.667 -22.472)" fill="#0a2438" />
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="leading-none">
+                        <span class="text-12">
+                            {{ settings.adj_upgrade_o2_f4 }} </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </label>
+
+
+    {% elsif value contains 'MotionLuxe™' or value contains 'Luxe'  %}
+
+    <label class=""
+        for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+        <div class="col-12 bg-white text-elephant px-4 pt-4">
+            <div class="row top-row align-items-center">
+                <div class="col-auto d-flex align-items-center" style="margin-left: 2px;">
+                    <input type="radio"
+                        id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                        name="options[{{ split_options_name | escape }}]" type="radio"
+                        value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                        data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                    <span class="upgrade-checkmark"></span>
+
+                    <h3 class="text-16 font-weight-semibold leading-tight mb-0 pl-10" style="margin-top: 3px;">
+                        {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                    </h3>
+                </div>
+            </div>
+
+            <div class="row bottom-row p-4">
+                <div class="upgrade-feature col-6 col-xl-3 p-0 d-inline-flex align-items-center">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+                            <g id="Group_2544" data-name="Group 2544" transform="translate(-1157 -1070)">
+                                <g id="Group_2546" data-name="Group 2546" transform="translate(81 135)">
+                                    <g id="Rectangle_1314" data-name="Rectangle 1314" transform="translate(1076 935)"
+                                        fill="none" stroke="#0a2438" stroke-width="1.5">
+                                        <rect width="26" height="26" stroke="none" />
+                                        <rect x="0.75" y="0.75" width="24.5" height="24.5" fill="none" />
+                                    </g>
+                                </g>
+                                <path id="Path_780" data-name="Path 780" d="M-734-5112.177v11.86"
+                                    transform="translate(1904 6189)" fill="none" stroke="#0a2438" stroke-width="1.5" />
+                                <path id="Path_781" data-name="Path 781" d="M-734-5112.177v11.86"
+                                    transform="translate(-3936.247 1816.753) rotate(90)" fill="none" stroke="#0a2438"
+                                    stroke-width="1.5" />
+                            </g>
+                        </svg>
+
+                    </div>
+                    <div class="leading-none">
+                        <span class="text-12 pr-2">
+                            {{ settings.adj_upgrade_o3_f1 }} </span>
+                    </div>
+                </div>
+                <div class="upgrade-feature col-6 col-xl-3 p-0 d-inline-flex align-items-center">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="38.57" height="23.677"
+                            viewBox="0 0 38.57 23.677">
+                            <g id="Group_2543" data-name="Group 2543" transform="translate(0 0.75)">
+                                <path id="Path_777" data-name="Path 777"
+                                    d="M.75,33.643A8.912,8.912,0,0,0,7.324,30.75a8.917,8.917,0,0,0,12.6.55q.287-.263.55-.55a8.931,8.931,0,0,0,12.618.542l.092-.085a8.871,8.871,0,0,0,6.135,2.436"
+                                    transform="translate(-0.75 -11.467)" fill="none" stroke="#112336"
+                                    stroke-linejoin="round" stroke-width="1.5" />
+                                <path id="Path_778" data-name="Path 778"
+                                    d="M.75,18.643A8.912,8.912,0,0,0,7.324,15.75a8.917,8.917,0,0,0,12.6.55q.287-.263.55-.55a8.931,8.931,0,0,0,12.618.543l.092-.086a8.871,8.871,0,0,0,6.135,2.436"
+                                    transform="translate(-0.75 -6.108)" fill="none" stroke="#112336"
+                                    stroke-linejoin="round" stroke-width="1.5" />
+                                <path id="Path_779" data-name="Path 779"
+                                    d="M.75,3.643A8.912,8.912,0,0,0,7.324.75a8.917,8.917,0,0,0,12.6.55q.287-.263.55-.55a8.931,8.931,0,0,0,12.618.543l.092-.086a8.871,8.871,0,0,0,6.135,2.436"
+                                    transform="translate(-0.75 -0.75)" fill="none" stroke="#112336"
+                                    stroke-linejoin="round" stroke-width="1.5" />
+                            </g>
+                        </svg>
+
+                    </div>
+                    <div class="leading-none">
+                        <span class="text-12 pr-2">
+                            {{ settings.adj_upgrade_o3_f2 }} </span>
+                    </div>
+                </div>
+                <div class="upgrade-feature col-6 col-xl-3 p-0 d-inline-flex align-items-center pt-4 pt-xl-0">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35.089" height="31.25"
+                            viewBox="0 0 35.089 31.25">
+                            <g id="Group_2545" data-name="Group 2545" transform="translate(-1490 -1065.42)">
+                                <path id="Path_782" data-name="Path 782"
+                                    d="M-6.981-2.968A4.467,4.467,0,0,1-5.862-.006a4.464,4.464,0,0,1-1.12,2.963m3.36-10.473A10.052,10.052,0,0,1-.264-.006,10.051,10.051,0,0,1-3.623,7.505M-8.1,17.911H-28.255V15.4a4.478,4.478,0,0,1,3.21-4.3,24.438,24.438,0,0,1,6.867-1.03,24.513,24.513,0,0,1,6.858,1.044,4.482,4.482,0,0,1,3.219,4.3ZM-23.777-.006a5.6,5.6,0,0,1,5.6-5.6,5.6,5.6,0,0,1,5.6,5.6c0,3.092-2.506,6.719-5.6,6.719S-23.777,3.086-23.777-.006ZM-.262-12.014A15.645,15.645,0,0,1,5.334-.006,15.647,15.647,0,0,1-.264,12"
+                                    transform="translate(1519.005 1078.008)" fill="none" stroke="#112336"
+                                    stroke-width="1.5" />
+                            </g>
+                        </svg>
+
+                    </div>
+                    <div class="leading-none">
+                        <span class="text-12 pr-2">
+                            {{ settings.adj_upgrade_o3_f3 }} </span> </div>
+                </div>
+                <div class="upgrade-feature col-6 col-xl-3 p-0 d-inline-flex align-items-center pt-4 pt-xl-0">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30.476" height="30.426"
+                            viewBox="0 0 30.476 30.426">
+                            <g id="Group_2548" data-name="Group 2548" transform="translate(-1549.705 -1067.803)">
+                                <path id="Path_783" data-name="Path 783"
+                                    d="M1.648,3.3a.512.512,0,0,1-.366-.152L-6.6-4.74a.514.514,0,0,1,0-.728l7.881-7.881a.52.52,0,0,1,.733,0,.515.515,0,0,1,0,.729L-5.5-5.1l7.513,7.52a.516.516,0,0,1-.367.88"
+                                    transform="translate(1556.75 1088.117)" fill="#0a2438" stroke="#0a2438"
+                                    stroke-width="0.5" />
+                                <path id="Path_784" data-name="Path 784"
+                                    d="M3.195.2H-12.567a.515.515,0,0,1-.518-.515.515.515,0,0,1,.518-.516H3.195a.516.516,0,0,1,.519.516A.516.516,0,0,1,3.195.2"
+                                    transform="translate(1563.085 1083.326)" fill="#0a2438" stroke="#0a2438"
+                                    stroke-width="0.5" />
+                                <path id="Path_785" data-name="Path 785"
+                                    d="M1.648,5.873H-6.231a.515.515,0,0,1-.519-.515v-28.9a.515.515,0,0,1,.519-.515H1.648a.515.515,0,0,1,.518.515v28.9a.515.515,0,0,1-.518.515M-5.714,4.841H1.129V-23.023H-5.714Z"
+                                    transform="translate(1577.765 1092.106)" fill="#0a2438" stroke="#0a2438"
+                                    stroke-width="0.5" />
+                            </g>
+                        </svg>
+
+                    </div>
+                    <div class="leading-none">
+                        <span class="text-12">
+                            {{ settings.adj_upgrade_o3_f4 }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </label>
+
+    {% endif %}
+
+
+    {%- endfor -%}
+</div>
+
+{%- else -%}
+
+<div class="js s-product__option{% if class %} {{ class }}{% endif %}">
+    <div class="row justify-content-between align-items-center mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <label class="s-product__option__label"
+                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}">
+                {%- if split_options_name == 'Width' or split_options_name == 'Material' or split_options_name == 'Fabric' or split_options_name == 'Smart Base' or split_options_name == 'Headboard'-%}
+                {{-'Choose '-}}{{- split_options_name | escape -}}
+                {%- else -%}
+                {{- split_options_name | escape -}}
+                {%- endif -%}
+            </label>
+
+
+            {%- if split_options_name_downcase == 'smart base' -%}
+            <div class="d-flex align-items-center mb-0">
+                <span class="d-none d-sm-block mr-4">
+                    <button class="c-text-btn" data-modal-open="{{ collection_h1 | escape }}"
+                        data-modal-title="{{ collection_h1 | escape }}"
+                        data-modal-content-selector="#compare">Compare</button>
+                </span>
+                <template id="compare">
+                    <img src="{{ 'smart-base-comparison.png' | asset_img_url: 'master' }}" />
+                </template>
+
+                <span class="mb-0 text-14">
+                    <button id="slideLeft" type="button" style="border:none; background-color: transparent;">
+                        <svg class="mr-2" aria-hidden="true" role="presentation" style="width: 1.5rem; height: 1.5rem;">
+                            <use xlink:href="#sprite-arrow-left"></use>
+                        </svg>
+                    </button>
+                    <button id="slideRight" type="button" class="pr-0"
+                        style="border:none; background-color: transparent;">
+                        <svg class="ml-1" aria-hidden="true" role="presentation" style="width: 1.5rem; height: 1.5rem;">
+                            <use xlink:href="#sprite-arrow-right"></use>
+                        </svg>
+                    </button>
+                </span>
+            </div>
+            {%- endif -%}
+        </div>
+
+        {%- if split_options_name_downcase == 'smart base' -%}
+        <div class="col-12 d-flex d-sm-none justify-content-end align-items-center mt-1 pr-2">
+            <span>
+                <button class="c-text-btn" data-modal-open="{{ collection_h1 | escape }}"
+                    data-modal-title="{{ collection_h1 | escape }}"
+                    data-modal-content-selector="#compare">Compare</button>
+            </span>
+            <template id="compare">
+                <img src="{{ 'smart-base-comparison.png' | asset_img_url: 'master' }}" />
+            </template>
+        </div>
+        {%- endif  -%}
+
+        {%- if split_options_name == 'Drawers' -%}
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <p class="text-14 pb-0 mb-0">{{'Positioned to the left or right as you look at the bed from the foot-end.'}}
+            </p>
+        </div>
+        {%- endif  -%}
+    </div>
+
+    {%- case split_options_layout -%}
+    {%- when 'swatch' -%}
+    {% comment %} Swatches {% endcomment %}
+    <div class="s-product__option__swatches">
+        {%- for value in option.values -%}
+        {%- liquid
+                        assign swatch_image = blank
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                        if split_options_name == 'Fabric'
+                            unless matching_split_value contains 'Fabric'
+                                assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                            else
+                                assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                            endunless
+                        else
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                        endif
+                        assign swatch_image = image_name | file_img_url: 'small' | downcase
+                    -%}
+        {%- unless rendered_split_options contains matching_split_value -%}
+        <div class="s-product__option__swatch">
+            <input
+                id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                name="options[{{ split_options_name | escape }}]" type="radio"
+                value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+            <label
+                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                {%- if swatch_image != blank -%}style="background-image: url({{ swatch_image }});" {%- endif -%}>
+                <span>
+                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                </span>
+            </label>
+        </div>
+        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+        {%- endunless -%}
+        {%- endfor -%}
+
+        {%- comment -%} Enable Button for Bespoke Design Service popup on products in Adjustable Beds for desktop
+        version / 4PE {%- endcomment -%}
+        {% for c in product.collections %}
+        {% if c.title == 'Adjustable Beds' %}
+        <div class="btn-bespoke-design_large">
+            <a href="#bespoke-design-service">
+                <svg aria-hidden="true" role="presentation">
+                    <use xlink:href="#sprite-bespoke-service"></use>
+                </svg>
+                Bespoke Design Service</a>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    {%- comment -%} Enable Button for Bespoke Design Service popup on products in Adjustable Beds for mobile version /
+    4PE {%- endcomment -%}
+    {% for c in product.collections %}
+    {% if c.title == 'Adjustable Beds' %}
+    <div class="btn-bespoke-design_small">
+        <a href="#bespoke-design-service">
+            <svg aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-bespoke-service"></use>
+            </svg>
+            Bespoke Design Service</a>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {%- when 'tab' -%}
+    {% comment %} Tabs OB006 {% endcomment %}
+    <div class="s-product__option__tabs">
+        {%- for value in option.values -%}
+        {%- liquid
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                    -%}
+
+        {%- unless rendered_split_options contains matching_split_value or split_options_name_downcase == 'smart base' -%}
+
+        {% if split_options_name == 'Width' and split_values contains 'Single (3ft)' or split_values contains '90cm/3ft' %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-single-bed'%}
+                    <p class="text-center text-10 mt-2 mb-0">
+                        {{-'90<sup>cm</sup> / 3<sup>FT</sup>'-}}
+                    </p>
+                </label>
+
+            </div>
+            <p class="text-center text-14 mt-2 mb-1 text-elephant">
+                {{-'Single'-}}
+            </p>
+
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains 'Small Single (2ft6)' %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-single-bed'%}
+                    <p class="text-center text-10 mt-2 mb-0">
+                        {{-'2<sup>FT</sup>6'-}}
+                    </p>
+                </label>
+
+            </div>
+            <p class="text-center text-14 mt-2 mb-1 text-elephant">
+                {{-'Small Single'-}}
+            </p>
+
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains '105cm/3ft6' %}
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    <img src="{{ 'bed_width_3ft6.png' | asset_img_url: 'x48' }}">
+                    <p class="text-center text-10 mt-2 mb-0">
+                        {{-'105<sup>cm</sup> / 3<sup>FT</sup>6'-}}
+                    </p>
+                </label>
+
+            </div>
+            <p class="text-center text-14 mt-2 mb-1 text-elephant">
+                {{-'Wide Single'-}}
+            </p>
+
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains 'Small Double (4ft)' or split_values contains '120cm/4ft' %}
+
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-smalldouble-bed'%}
+                    <p class="text-center text-10 mt-2 mb-0">
+                        {{-'120<sup>cm</sup> / 4<sup>FT</sup>'-}}
+                    </p>
+                </label>
+
+            </div>
+            <p class="text-center text-14 mt-2 mb-1 text-elephant">
+                {{-'Small Double'-}}
+            </p>
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains 'King Dual (5ft)' or split_values contains 'King Dual (2 x 2ft6)'  %}
+
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-kingdual-bed'%}
+                    <p class="text-center text-10 mt-2 mb-0">
+                        {{-'150<sup>cm</sup> / 5<sup>FT</sup>'-}}
+                    </p>
+                </label>
+
+            </div>
+            <p class="text-center text-14 mt-2 mb-1 text-elephant">
+                {{-'King Dual'-}}
+            </p>
+        </div>
+
+        {% elsif split_options_name == 'Width' and split_values contains 'Super King Dual (6ft)' or split_values contains 'Super King Dual (2 x 3ft)' %}
+
+
+        <div class="option-width-wrapper mb-2 mb-lg-0">
+            <div class="s-product__option__tab__width">
+                <input
+                    id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                    name="options[{{ split_options_name | escape }}]" type="radio"
+                    value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                    data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                <label
+                    for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                    {% render 'icon-superkingdual-bed'%}
+                    <p class="text-center text-10 mt-2 mb-0">
+                        {{-'180<sup>cm</sup> / 6<sup>FT</sup>'-}}
+                    </p>
+                </label>
+
+            </div>
+            <p class="text-center text-14 mt-2 mb-1 text-elephant">
+                {{-'Super King Dual'-}}
+            </p>
+        </div>
+
+        {% else %}
+
+        <div class="s-product__option__tab">
+            <input
+                id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                name="options[{{ split_options_name | escape }}]" type="radio"
+                value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+            <label
+                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                <span>
+                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                </span>
+            </label>
+        </div>
+
+        {% endif %}
+
+        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+        {%- endunless -%}
+        {%- endfor -%}
+
+    </div>
+
+    {% comment %}
+    ==== START OF THE SMART BASE SELECTOR by 4PE ====
+    {% endcomment %}
+    {%- when 'smart' -%}
+    <div class="custom-container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper" id="smartbase">
+
+                {%- for value in option.values -%}
+                {%- liquid
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                    -%}
+
+                {% if split_options_name == 'Smart Base' %}
+
+                <div class="s-product__option__tabs" id="smartbase">
+                    <div class="c-smartbase-card h-100 text-left m-0 pr-2">
+                        <input
+                            id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                            name="options[{{ split_options_name | escape }}]" type="radio"
+                            value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                            data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+
+                        <label
+                            for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}">
+                            <div class="d-flex flex-row justify-content-between">
+                                <div class="smart-base-title p-0 m-0">
+                                    <h3 class="text-16 font-weight-semibold leading-tight"> <span>
+                                            {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                                        </span>
+                                    </h3>
+                                </div>
+
+                                <div class="smart-base-checkbox">
+
+                                </div>
+                            </div>
+
+                            {% if value contains 'Motion™' or value contains 'Standard' %}
+                            <div class="mt-3">
+                                <ul class="c-check-list d-flex flex-column">
+                                    {% if settings.feature_motion_1 != blank %}
+                                    <li class="mb-3"
+                                        {% if settings.feature_motion_checkmark1 == true %}style="padding-left:0px;"
+                                        {% endif %}>
+                                        {% if settings.feature_motion_checkmark1 != true %}
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        {% endif %}
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motion_1 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motion_2 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motion_2 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motion_3 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motion_3 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motion_4 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motion_4 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motion_5 != blank %}
+                                    <li class="mb-0">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motion_5 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+
+                            {% if value contains 'MotionPlus™' or value contains 'Plus' %}
+                            <div class="mt-3">
+                                <ul class="c-check-list d-flex flex-column">
+                                    {% if settings.feature_motionplus_1 != blank %}
+                                    <li class="mb-3"
+                                        {% if settings.feature_motionplus_checkmark1 == true %}style="padding-left:0px;"
+                                        {% endif %}>
+                                        {% if settings.feature_motionplus_checkmark1 != true %}
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        {% endif %}
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionplus_1 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motionplus_2 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionplus_2 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motionplus_3 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionplus_3 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motionplus_4 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionplus_4 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motionplus_5 != blank %}
+                                    <li class="mb-0">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionplus_5 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+
+                            {% if value contains 'MotionLuxe™' or value contains 'Luxe' %}
+                            <div class="mt-3">
+                                <ul class="c-check-list d-flex flex-column">
+                                    {% if settings.feature_motionluxe_1 != blank %}
+                                    <li class="mb-3"
+                                        {% if settings.feature_motionluxe_checkmark1 == true %}style="padding-left:0px;"
+                                        {% endif %}>
+                                        {% if settings.feature_motionluxe_checkmark1 != true %}
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        {% endif %}
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionluxe_1 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motionluxe_2 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionluxe_2 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motionluxe_3 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionluxe_3 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motionluxe_4 != blank %}
+                                    <li class="mb-3">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionluxe_4 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                    {% if settings.feature_motionluxe_5 != blank %}
+                                    <li class="mb-0">
+                                        <svg aria-hidden="true" role="presentation" style="color: #006A5B;">
+                                            <use xlink:href="#sprite-check"></use>
+                                        </svg>
+                                        <span class="font-weight-medium text-14">
+                                            {{ settings.feature_motionluxe_5 }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </label>
+                    </div>
+
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% comment %}
+    ==== END OF THE SMART BASE SELECTOR by 4PE ====
+    {% endcomment %}
+
+    {%- when 'tile' -%}
+    {% comment %} Tiles {% endcomment %}
+    <div class="s-product__option__tiles">
+        {%- for value in option.values -%}
+        {%- liquid
+                        assign swatch_image = blank
+                        assign split_values = value | escape | split: split_character
+                        assign split_selected_values = option.selected_value | escape | split: split_character
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                        assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                        assign swatch_image = image_name | file_img_url: 'small' | downcase
+                    -%}
+
+        {%- liquid
+                    	if product.handle == 'divan-adjustable-bed' and matching_split_value contains 'Emerald'
+                        	assign swatch_image = 'swatch-emerald-headboard.png' | file_img_url: 'small' | downcase
+                        endif
+                    	if product.handle == 'divan-adjustable-bed' and matching_split_value contains 'Pearl'
+                        	assign swatch_image = 'swatch-pearl-headboard.png' | file_img_url: 'small' | downcase
+                        endif                        
+                    	if product.handle contains 'edel-adjustable-bed' and matching_split_value contains 'Pearl'
+                        	assign swatch_image = 'swatch-pearl-headboard.png' | file_img_url: 'small' | downcase
+                        endif    
+                    	if product.handle contains 'edel-adjustable-bed' and matching_split_value contains 'Emerald'
+                        	assign swatch_image = 'swatch-emerald-headboard.png' | file_img_url: 'small' | downcase
+                        endif    
+                    	if product.handle contains 'edel-adjustable-bed' and matching_split_value contains 'Opal'
+                        	assign swatch_image = 'swatch-opal-headboard.png' | file_img_url: 'small' | downcase
+                        endif   
+                    	if product.handle contains 'edel-dual-adjustable-bed' and matching_split_value contains 'Pearl'
+                        	assign swatch_image = 'swatch-pearl-headboard.png' | file_img_url: 'small' | downcase
+                        endif    
+                    	if product.handle contains 'edel-dual-adjustable-bed' and matching_split_value contains 'Emerald'
+                        	assign swatch_image = 'swatch-emerald-headboard.png' | file_img_url: 'small' | downcase
+                        endif    
+                    	if product.handle contains 'edel-dual-adjustable-bed' and matching_split_value contains 'Opal'
+                        	assign swatch_image = 'swatch-opal-headboard.png' | file_img_url: 'small' | downcase
+                        endif           
+                    	if product.title contains 'Adjustable Bed' and matching_split_value contains 'Pearl'
+                        	assign swatch_image = 'swatch-pearl-headboard.png' | file_img_url: 'small' | downcase
+                        endif    
+                    	if product.title contains 'Adjustable Bed' and matching_split_value contains 'Emerald'
+                        	assign swatch_image = 'swatch-emerald-headboard.png' | file_img_url: 'small' | downcase
+                        endif    
+                    	if product.title contains 'Adjustable Bed' and matching_split_value contains 'Opal'
+                        	assign swatch_image = 'swatch-opal-headboard.png' | file_img_url: 'small' | downcase
+                        endif                           
+              		-%}
+
+        {%- unless rendered_split_options contains matching_split_value -%}
+        <div class="s-product__option__tile">
+            <input
+                id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                name="options[{{ split_options_name | escape }}]" type="radio"
+                value="{{ matching_split_value | escape }}" {% if is_split_option %}
+                data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+            <label
+                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                {%- if swatch_image != blank -%}style="background-image: url({{ swatch_image }});" {%- endif -%}>
+                <span>
+                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                </span>
+            </label>
+        </div>
+        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+        {%- endunless -%}
+        {%- endfor -%}
+    </div>
+
+    {%- else -%}
+    {% comment %} Select {% endcomment %}
+    <select class="s-product__option__select"
+        id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}"
+        name="options[{{ split_options_name | escape }}]" {% if is_split_option %} data-product-split-option{% endif %}>
+        {%- for value in option.values -%}
+        {%- liquid
+                        assign split_values = value | escape | split: split_character
+                        assign split_selected_values = option.selected_value | escape | split: split_character
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+                    -%}
+        {%- unless rendered_split_options contains matching_split_value -%}
+        <option value="{{ matching_split_value | escape }}" {% if is_selected %} selected{% endif %}>
+            {{- matching_split_value | escape -}}
+        </option>
+        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+        {%- endunless -%}
+        {%- endfor -%}
+    </select>
+    {%- endcase -%}
+</div>
+{%- endif -%}
+
+<script>
+    const buttonRight = document.getElementById('slideRight');
+    const buttonLeft = document.getElementById('slideLeft');
+
+    buttonRight.onclick = function () {
+      document.getElementById('smartbase').scrollLeft += 200;
+    };
+    buttonLeft.onclick = function () {
+      document.getElementById('smartbase').scrollLeft -= 200;
+    };
+</script>
+
+{{ 'upgrade-info-popup.js' | asset_url | script_tag }}

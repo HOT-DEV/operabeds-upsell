@@ -1,0 +1,69 @@
+{%- comment -%}
+Usage:
+{%- render 'navigation-items-icons'
+    block_settings: found_icon_block
+-%}
+{%- endcomment -%}
+{%- if block_settings -%}
+    <ul class="footer">
+        <li>
+            {%-
+                render 'trustpoint',
+                icon: block_settings.panel_1_icon,
+                text: block_settings.panel_1_text,
+            -%}
+        </li>
+        <li>
+            {%-
+                render 'trustpoint',
+                icon: block_settings.panel_2_icon,
+                text: block_settings.panel_2_text,
+            -%}
+        </li>
+        <li>
+            {%-
+                render 'trustpoint',
+                icon: block_settings.panel_3_icon,
+                text: block_settings.panel_3_text,
+            -%}
+        </li>
+        <li>
+            {%-
+                render 'trustpoint',
+                icon: block_settings.panel_4_icon,
+                text: block_settings.panel_4_text,
+            -%}
+        </li>
+    </ul>
+{%- else -%}
+    <ul class="footer">
+        <li>
+            {%-
+                render 'trustpoint',
+                icon: 'finance2',
+                text: 'Finance Options'
+            -%}
+        </li>
+        <li>
+            {%-
+                render 'trustpoint',
+                icon: 'bed',
+                text: '10-Day Home Trial'
+            -%}
+        </li>
+        <li>
+            {%-
+                render 'trustpoint',
+                icon: 'delivery2',
+                text: 'Delivery Information'
+            -%}
+        </li>
+        <li>
+            {%-
+                render 'trustpoint',
+                icon: 'documents2',
+                text: 'Online Needs Assessment'
+            -%}
+        </li>
+    </ul>
+{%- endif -%}

@@ -1,0 +1,18 @@
+{% comment %}
+    Blocklink snippet.
+{% endcomment %}
+
+{%- if href != blank and icon != blank and text != blank -%}
+    <a class="c-blocklink" href="{{ href | escape_url }}" aria-label="{{ text | escape }}" title="{{ text | escape }}">
+        {%- if icon != blank -%}
+            <svg class="c-blocklink__icon" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-{{ icon | handleize }}"></use>
+            </svg>
+        {%- endif -%}
+        {%- if text != blank -%}
+            <span class="c-blocklink__text">
+                {{- text | escape -}}
+            </span>
+        {%- endif -%}
+    </a>
+{%- endif -%}

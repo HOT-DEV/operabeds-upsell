@@ -1,0 +1,276 @@
+{% comment %}
+The Footer section template.
+{% endcomment %}
+
+{%- liquid
+    assign footer_about_menu = linklists[section.settings.footer_about_menu]
+    assign footer_tools_menu = linklists[section.settings.footer_tools_menu]
+    assign footer_support_menu = linklists[section.settings.footer_support_menu]
+    assign footer_legal_menu = linklists[section.settings.footer_legal_menu]
+
+    assign newsletter_label = 'sections.footer.newsletter_label' | t
+-%}
+
+<footer data-section-type="footer" data-section-id="{{ section.id }}" role="contentinfo">
+    <div class="site-footer__top">
+        <div class="container site-padding pt-17 pb-20 py-lg-27">
+            <div class="row">
+                <div class="col-12 col-xl-3">
+                    <img class="site-footer__logo" src="{{ 'opera-beds-logo.svg' | asset_url }}" alt="{{ settings.company_legal_name | escape }}">
+                    {%- if settings.brand_strapline != blank -%}
+                        <p class="mt-4 mb-0 text-18 font-weight-medium">
+                            {{- settings.brand_strapline | replace: ',', ',<br />' -}}
+                        </p>
+                    {%- endif -%}
+
+                    <h4 class="mt-12 mb-4 mb-lg-3 text-14 font-weight-bold text-uppercase tracking-widest text-white">
+                        {{- 'sections.footer.social_heading' | t -}}
+                    </h4>
+                    {%- render 'social-links' -%}
+                </div>
+                <div class="col-12 col-xl-6 mt-11 mb-13 m-xl-0">
+                    <div class="site-footer__menus" data-footer-menus>
+                        {%- if footer_about_menu.links.size > 0 -%}
+                            <div class="site-footer__menus__block pl-lg-4 pl-xl-6">
+                                <div class="site-footer__menus__block__toggle" id="footer-accordion-1-toggle" aria-controls="footer-accordion-1-content" aria-expanded="false">
+                                    <h4 class="mb-0 mb-xl-5 text-14 font-weight-bold text-uppercase tracking-widest text-pale-oyster">
+                                        {{- section.settings.footer_about_menu_title | escape -}}
+                                    </h4>
+                                    <svg focusable="false" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-chevron-down"></use>
+                                    </svg>
+                                </div>
+                                <div class="site-footer__menus__block__content" id="footer-accordion-1-content" aria-labelledby="footer-accordion-1-toggle">
+                                    <ul role="menu">
+                                        {%- for menu_item in footer_about_menu.links -%}
+                                            <li role="presentation">
+                                                <a href="{{ menu_item.url | url_escape }}" aria-label="{{ menu_item.title | escape }}" title="{{ menu_item.title | escape }}" role="menuitem">
+                                                    {{ menu_item.title | escape }}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                        {%- if footer_tools_menu.links.size > 0 -%}
+                            <div class="site-footer__menus__block pl-lg-4 pl-xl-6">
+                                <div class="site-footer__menus__block__toggle" id="footer-accordion-2-toggle" aria-controls="footer-accordion-2-content" aria-expanded="false">
+                                    <h4 class="mb-0 mb-xl-5 text-14 font-weight-bold text-uppercase tracking-widest text-pale-oyster">
+                                        {{- section.settings.footer_tools_menu_title | escape -}}
+                                    </h4>
+                                    <svg focusable="false" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-chevron-down"></use>
+                                    </svg>
+                                </div>
+                                <div class="site-footer__menus__block__content" id="footer-accordion-2-content" aria-labelledby="footer-accordion-2-toggle">
+                                    <ul role="menu">
+                                        {%- for menu_item in footer_tools_menu.links -%}
+                                            <li role="presentation">
+                                                <a href="{{ menu_item.url | url_escape }}" aria-label="{{ menu_item.title | escape }}" title="{{ menu_item.title | escape }}" role="menuitem">
+                                                    {{ menu_item.title | escape }}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                        {%- if footer_support_menu.links.size > 0 -%}
+                            <div class="site-footer__menus__block pl-lg-4 pl-xl-6">
+                                <div class="site-footer__menus__block__toggle" id="footer-accordion-3-toggle" aria-controls="footer-accordion-3-content" aria-expanded="false">
+                                    <h4 class="mb-0 mb-xl-5 text-14 font-weight-bold text-uppercase tracking-widest text-pale-oyster">
+                                        {{- section.settings.footer_support_menu_title | escape -}}
+                                    </h4>
+                                    <svg focusable="false" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-chevron-down"></use>
+                                    </svg>
+                                </div>
+                                <div class="site-footer__menus__block__content" id="footer-accordion-3-content" aria-labelledby="footer-accordion-3-toggle">
+                                    <ul role="menu">
+                                        {%- for menu_item in footer_support_menu.links -%}
+                                            <li role="presentation">
+                                                <a href="{{ menu_item.url | url_escape }}" aria-label="{{ menu_item.title | escape }}" title="{{ menu_item.title | escape }}" role="menuitem">
+                                                    {{ menu_item.title | escape }}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+                <div class="col-12 col-xl-3">
+                    <h4 class="mb-5 text-14 font-weight-bold text-uppercase tracking-widest text-pale-oyster">
+                        {{- 'sections.footer.contact_heading' | t -}}
+                    </h4>
+                    {%- if settings.company_address != blank -%}
+                        <address class="d-block mb-5 text-18 font-weight-medium">
+                            {{- settings.company_address | newline_to_br -}}
+                        </address>
+                    {%- endif -%}
+                    {%- if settings.opening_hours != blank -%}
+                        <p class="mb-0 text-15 font-weight-medium">
+                            {{- 'sections.footer.opening_title' | t -}}
+                        </p>
+                        <p class="mb-10 text-15 font-weight-medium">
+                            {{- settings.opening_hours | newline_to_br -}}
+                        </p>
+                    {%- endif -%}
+                    {%- if settings.company_phone != blank -%}
+                        <p class="mb-12 text-24 font-weight-medium">
+                            {{- 'sections.footer.telephone_title' | t -}}
+                            <a href="{{ settings.company_phone | strip | replace: ' ', '' | prepend: 'tel:' }}">
+                                <span class="rTapNumber413992">{{- settings.company_phone | strip | escape -}}</span>
+                            </a>
+                        </p>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+        <div class="site-footer__middle">
+            <div class="container site-padding py-5">
+                <div class="site-footer__banners">
+                    <div class="swiper-container" data-footer-banners>
+                        <div class="swiper-wrapper">
+                            {%- for block in section.blocks -%}
+                                {%- if block.settings.image != blank -%}
+                                    <div class="swiper-slide">
+                                        {%- if block.settings.link != blank -%}
+                                            <a href="{{ block.settings.link | url_escape }}">
+                                        {%- endif -%}
+                                                <img class="site-footer__banners__img site-footer__banners__img--nfb" src="{{ block.settings.image | img_url: '182x' }}" alt="{{ block.settings.alt | escape }}">
+                                        {%- if block.settings.link != blank -%}
+                                            </a>
+                                        {%- endif -%}
+                                    </div>
+                                {%- endif -%}
+                            {%- endfor -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+
+    <div class="site-footer__bottom">
+        <div class="container site-padding py-8 py-lg-4">
+            <div class="row">
+                <div class="col-12 col-lg-auto mb-10 mb-lg-0">
+                    <p class="site-footer__copyright">
+                        <span>
+                            {{- 'sections.footer.copyright_html' | t: company_name: settings.company_legal_name -}}
+                        </span>
+                        <span>
+                            {{- 'sections.footer.company_number_html' | t: company_number: settings.company_number -}}
+                        </span>
+                        <span>
+                            {{- 'sections.footer.vat_number_html' | t: company_vat_number: settings.company_vat_number -}}
+                        </span>
+                    </p>
+                </div>
+                {%- if footer_support_menu.links.size > 0 -%}
+                    <div class="col-12 col-lg-auto ml-lg-auto">
+                        <ul class="site-footer__inline-list" aria-label="{{ 'Footer Links' | escape }}" role="menu">
+                            {%- for menu_item in footer_legal_menu.links -%}
+                                <li role="presentation">
+                                    <a href="{{ menu_item.url | url_escape }}" aria-label="{{ menu_item.title | escape }}" title="{{ menu_item.title | escape }}" role="menuitem">
+                                        {{ menu_item.title | escape }}
+                                    </a>
+                                </li>
+                            {%- endfor -%}
+                        </ul>
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% schema %}
+{
+    "name": {
+        "de": "Fußzeile",
+        "en": "Footer",
+        "es": "Pie de página",
+        "fr": "Pied de page",
+        "it": "Footer",
+        "ja": "フッター",
+        "pt-BR": "Rodapé"
+    },
+    "settings": [
+        {
+        "type": "header",
+        "content": "Menus"
+        },
+        {
+            "type": "text",
+            "id": "footer_about_menu_title",
+            "label": "Menu 1 Heading"
+        },
+        {
+        "type": "link_list",
+        "id": "footer_about_menu",
+        "label": "Menu 1",
+        "default": "footer"
+        },
+        {
+            "type": "text",
+            "id": "footer_tools_menu_title",
+            "label": "Menu 2 Heading"
+        },
+        {
+        "type": "link_list",
+        "id": "footer_tools_menu",
+        "label": "Menu 2",
+        "default": "footer"
+        },
+        {
+            "type": "text",
+            "id": "footer_support_menu_title",
+            "label": "Menu 3 Heading"
+        },
+        {
+        "type": "link_list",
+        "id": "footer_support_menu",
+        "label": "Menu 3",
+        "default": "footer"
+        },
+        {
+        "type": "link_list",
+        "id": "footer_legal_menu",
+        "label": "Legals",
+        "default": "footer"
+        }
+    ],
+    "max_blocks": 10,
+    "blocks": [
+        {
+            "type": "logo_image",
+            "name": "Logo",
+            "settings": [
+                {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image"
+                },
+                {
+                "type": "text",
+                "id": "alt",
+                "label": "Alt Text"
+                },
+                {
+                "type": "url",
+                "id": "link",
+                "label": "Link",
+                "info": "Optional"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

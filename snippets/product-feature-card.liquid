@@ -1,0 +1,21 @@
+{% comment %}
+    Product Feature Card snippet.
+{% endcomment %}
+
+<div class="product-feature-card bg-athens-gray p-10{% if class %} {{ class }}{% endif %}">
+    {%- if icon != blank -%}
+        <svg class="product-feature-card__icon mb-5" aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-{{ icon | handleize }}"></use>
+        </svg>
+    {%- endif -%}
+    {%- if heading != blank -%}
+        <h3 class="mb-4 mb-md-6 text-16 font-weight-medium leading-tight tracking-widest text-uppercase text-blue-diane">
+            {{- heading | escape -}}
+        </h3>
+    {%- endif -%}
+    {%- if content != blank -%}
+        <div class="mb-n4 text-14 text-abbey">
+            {{- content | safe -}}
+        </div>
+    {%- endif -%}
+</div>

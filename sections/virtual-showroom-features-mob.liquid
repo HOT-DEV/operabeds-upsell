@@ -1,0 +1,96 @@
+{% comment %}
+	Features section for mobile devices by 4PE for Virtual Showroom Visit page.
+	
+	TO-DO
+	* Add temporary svg's code to spritesheet
+	* Replace temporary_svg with svg's from spritesheet
+	* Update code with svg / use
+{% endcomment %}
+
+<section class="vs-features-mob my-8 d-lg-none" data-section-id="{{ section.id }}">
+ 
+             <div class="container site-padding overflow-hidden">
+                <div class="s-collection__trustpoints vs-features-mob mb-8">
+                    <div class="swiper-wrapper">
+            			{%- for block in section.blocks -%}
+                            <div class="swiper-slide">
+                                <div class="s-collection__trustpoints__slide">
+                                  		{{- block.settings.temporary_svg -}}
+           							 <p class="m-0 text-14 font-weight-medium text-uppercase tracking-widest text-elephant px-12">                                  
+										{{- block.settings.description -}}
+                                  	 </p>
+                                </div>
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+                <div class="s-collection__trustpoints__nav row w-100 flex-nowrap justify-content-between m-0 p-0">
+                  <div class="col-auto pl-0">
+                    <button aria-label="Previous Slide" class="vs-nav-prev swiper-arrow">
+                        <svg role="img">
+                            <use xlink:href="#sprite-chevron-left"></use>
+                        </svg>
+                    </button>
+                  </div>
+                  <div class="col-auto swiper-pagination" data-collection-trustpoints-slider-pagination></div>                 
+                  <div class="col-auto pr-0">                  
+                    <button aria-label="Next Slide" class="vs-nav-next swiper-arrow">
+                        <svg role="img">
+                            <use xlink:href="#sprite-chevron-right"></use>
+                        </svg>
+                    </button>
+                  </div>  
+                </div>
+            </div> 
+</section> 
+
+ 
+<script>
+    var swiper = new Swiper(".vs-features-mob", {
+      slidesPerView: 1,
+      loop: true,
+      autoplay: true,
+      navigation: {
+        nextEl: ".vs-nav-next",
+        prevEl: ".vs-nav-prev", },
+        pagination: {
+        el: '.swiper-pagination',
+        clickable: true,          
+      },
+    });
+
+</script>
+
+
+
+  
+{% schema %}
+{
+    "name": "VS - Slider (Mobile only)",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "icon-with-text",
+            "name": "Icon with text",
+            "settings": [  
+                {
+                    "type": "textarea",
+                    "id": "temporary_svg",
+                    "label": "Temporary svg code from XD design (don't edit this)"
+                },                                        
+                {
+                    "type": "textarea",
+                    "id": "description",
+                    "label": "Description"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}
+

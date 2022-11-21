@@ -1,0 +1,17 @@
+{% comment %}
+    Search Form snippet
+{% endcomment %}
+
+<form class="c-search-inline" action="/search" method="get" role="search">
+    <input type="hidden" name="type" value="product,page" />
+    <label class="text-14 text-uppercase tracking-widest sr-only" for="search">Search</label>
+    <div class="c-search-inline__group">
+        <input class="c-form-input" type="search" name="q" placeholder="Search" value="{{ search.terms }}" aria-label="Search " />
+        <button class="c-icon-btn" type="submit">
+            <svg class="icon" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-search"></use>
+            </svg>
+            <span class="sr-only">{{ 'template.header.search' | t | escape }}</span>
+        </button>
+    </div>
+</form>

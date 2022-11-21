@@ -1,0 +1,39 @@
+{%- liquid
+    assign blog = _blog
+    assign title = _blog.title
+    assign image = _image | default: blog.articles.first.image
+    assign image_alt = image.alt | default: title
+-%}
+<a href="{{ blog.url }}" aria-label="{{ title }}" class="c-blog-card">
+    <div class="c-blog-card__media">
+        {%- liquid
+            assign image = _image | default: blog.articles.first.image
+            assign image_alt = image.alt | default: title
+            if image != blank
+                assign image_xs = image | img_url: '376x242', crop: 'center'
+                assign image_sm = image | img_url: '480x242', crop: 'center'
+                assign image_md = image | img_url: '292x242', crop: 'center'
+                assign image_lg = image | img_url: '304x242', crop: 'center'
+                assign image_xl = image | img_url: '283x242', crop: 'center'
+                assign image_xxl = image | img_url: '316x242', crop: 'center'
+                assign image_xxxl = image | img_url: '438x242', crop: 'center'
+            endif
+        -%}
+        <picture class="c-blog-card__media__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+            <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+            <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+            <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+            <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+            <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+            <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+            <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+            {% comment %} <img alt="" /> {% endcomment %}
+        </picture>
+    </div>
+    <div class="c-blog-card__body">
+        <div class="c-blog-card__content">
+            <h3 class="text-20 text-white font-weight-semibold leading-tight">{{- blog.title | escape -}}</h3>
+            <p class="mb-0 text-white">{{ blog.articles_count }} Articles</p>
+        </div>
+    </div>
+</a>

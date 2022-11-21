@@ -1,0 +1,56 @@
+{% if settings.show_trustbar == true %}
+{% unless product %}
+<div class="trustbar-header">
+  <div class="inner site-padding">
+    {%- comment -%}Column 1 {%- endcomment -%}
+    {% if settings.trustbar_1_title != blank %}
+    <a href="{{ settings.trustbar_1_link }}" class="block" title="{{ settings.trustbar_1_title }}">
+      <svg class="c-trustpoint__icon c-trustpoint__icon--md" aria-hidden="true" role="presentation">
+        <use xlink:href="#sprite-{{ settings.trustbar_1_icon }}"></use>
+      </svg>
+      <p>
+        {{ settings.trustbar_1_title }}
+      </p>
+    </a>
+    {% endif %}
+    {%- comment -%}Column 2 {%- endcomment -%}
+    {% if settings.trustbar_2_title != blank %}
+    <div class="block-divider"></div>
+    <a href="{{ settings.trustbar_2_link }}" class="block" title="{{ settings.trustbar_2_title }}" target="_blank">
+      <div class="stars">
+        {% render 'icon-trustpilot-5-stars' %}
+      </div>
+      <p>
+        {{ settings.trustbar_2_title }}
+      </p>
+    </a>
+    {% endif %}
+    {%- comment -%}Column 3 {%- endcomment -%}
+    {% if settings.trustbar_3_title != blank %}
+    <div class="block-divider"></div>
+    <a href="{{ settings.trustbar_3_link }}" class="block" title="{{ settings.trustbar_3_title }}">
+      <svg class="c-trustpoint__icon c-trustpoint__icon--md" aria-hidden="true" role="presentation">
+        <use xlink:href="#sprite-{{ settings.trustbar_3_icon }}"></use>
+      </svg>
+
+      <p>
+        {{ settings.trustbar_3_title }}
+      </p>
+    </a>
+    {% endif %}
+    {%- comment -%}Column 4 {%- endcomment -%}
+    {% if settings.trustbar_4_title != blank %}
+    <div class="block-divider"></div>
+    <a href="{{ settings.trustbar_4_link }}" class="block" title="{{ settings.trustbar_4_title }}">
+      <svg class="c-trustpoint__icon c-trustpoint__icon--md" aria-hidden="true" role="presentation">
+        <use xlink:href="#sprite-{{ settings.trustbar_4_icon }}"></use>
+      </svg>
+      <p>
+        {{ settings.trustbar_4_title }}
+      </p>
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% endunless %}
+{% endif %}

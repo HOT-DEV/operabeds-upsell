@@ -1,0 +1,193 @@
+{% comment %}
+    The Blog section template.
+{% endcomment %}
+{%- paginate blog.articles by section.settings.posts_per_page -%}
+    {%- liquid
+        assign offset = 0
+        assign featured_article = blog.metafields.accentuate.blog_featured_article | default: blog.articles.first
+        assign blog_articles = blog.articles | offset: offset
+
+        assign posts_per_row = section.settings.posts_per_row
+
+        assign blog_name = blog.handle
+        assign blog_gallery = false
+        if blog_name contains 'gallery'
+            assign blog_gallery = true
+        else
+            assign blog_gallery = false
+        endif
+    -%}
+
+    <section data-section-type="blog" data-section-id="{{ section.id }}" aria-labelledby="page-title" aria-describedby="page-description">
+        <header class="pt-10 pb-12 pt-md-15 pb-md-20">
+            <div class="container site-padding">
+                <h1 class="mb-10 mb-md-13 text-36 font-weight-normal text-elephant text-center" id="page-title">{{- blog.title | escape -}}</h1>
+                {%- comment -%}
+                    Featured article will be shown on page 1
+                {%- endcomment -%}
+                {%- if featured_article -%}
+                    {%- render 'article-card-featured', article: featured_article -%}
+                {%- endif -%}
+            </div>
+        </header>
+        <div class="bg-porcelain2 py-10 pt-md-12 pb-md-24">
+            <div class="container site-padding">
+                <div class="row justify-content-center">
+                    {%- if blog_gallery == false -%}
+                        {%- if section.settings.enable_sidebar -%}
+                            <div class="col-12 col-lg-3">
+                                <div class="blog-sidebar">
+                                    {%- if section.settings.enable_tags == true and blog.all_tags.size > 0 -%}
+                                        <button type="button" id="blog-filters-toggle" class="d-lg-none">
+                                            Filter by Category
+                                            <svg aria-hidden="true" role="presentation">
+                                                <use xlink:href="#sprite-caret-down"></use>
+                                            </svg>
+                                        </button>
+                                        <aside class="c-blog-filters" id="blog-filters">
+                                            <h3 class="text-18 font-weight-normal text-elephant mb-6">{{- 'Select Categories' | escape -}}</h3>
+                                            {%- if blog.all_tags.size > 0 -%}
+                                                <ul role="menu">
+                                                    {%- for tag in blog.all_tags -%}
+                                                        {%- if current_tags contains tag -%}
+                                                            <li class="is-active" role="presentation">
+                                                                {{- tag | link_to_tag: tag -}}
+                                                                <svg aria-hidden="true">
+                                                                    <use xlink:href="#sprite-check"></use>
+                                                                </svg>
+                                                            </li>
+                                                        {%- else -%}
+                                                            <li role="presentation">
+                                                                {{- tag | link_to_tag: tag -}}
+                                                            </li>
+                                                        {%- endif -%}
+                                                    {%- endfor -%}
+                                                    {%- if current_tags -%}
+                                                        <li>
+                                                            <a href="{{ blog.url }}" title="{{ 'template.blog.clear_tags' | t }}">
+                                                                {{- 'template.blog.clear_tags' | t -}}
+                                                            </a>
+                                                        </li>
+                                                    {%- endif -%}
+                                                </ul>
+                                            {%- else -%}
+                                                <p>{{- 'template.blog.no_tags' | t -}}</p>
+                                            {%- endif -%}
+                                        </aside>
+                                    {%- endif -%}
+                                    {%- if section.settings.enable_subscribe == true -%}
+                                        <aside class="{% if section.settings.enable_tags %}mt-4{% endif %}">
+                                            <h3 class="mb-2">{{- 'template.blog.subscribe_link' | t -}}</h3>
+                                            {% form 'customer', id: 'newsletterSignup', class: 'site-footer__form' %}
+                                                {%- if form.posted_successfully? -%}
+                                                    <div class="note note--success">{{ 'general.newsletter.form.success_message' | t }}</div>
+                                                {%- else -%}
+                                                {% if form.errors %}
+                                                    {{ form.errors | default_errors }}
+                                                {% endif %}
+                                                <input type="hidden" name="contact[tags]" value="{{ 'general.newsletter.form.tags' | t }}" />
+                                                <input type="hidden" name="contact[context]" value="{{ 'general.newsletter.form.context' | t }}" />
+
+                                                <div class="site-footer__form__fields">
+                                                    <input class="site-footer__form__input" type="email" placeholder="{{- 'sections.footer.newsletter_input_placeholder' | t -}}" value="{% if customer %}{{ customer.email }}{% endif %}" name="contact[email]" autocorrect="off" autocapitalize="off" />
+                                                    <button class="site-footer__form__btn" type="submit" aria-label="{{- 'sections.footer.newsletter_button_label' | t -}}">
+                                                        <svg focusable="false" aria-hidden="true" role="presentation">
+                                                            <use xlink:href="#sprite-chevron-right"></use>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                {%- endif -%}
+                                            {% endform %}
+                                        </aside>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    {%- endif -%}
+                    <div class="col-12{% if section.settings.enable_sidebar and blog_gallery == false %} col-lg-8 offset-lg-1{% endif %}">
+                        <div class="row mb-n4">
+                            {%- for article in blog.articles limit: limit offset: offset  -%}
+                                {%- if featured_article.id == article.id -%}
+                                    {%- continue -%}
+                                {%- endif -%}
+                                {%- if blog_gallery == true -%}
+                                    <div class="col-12 col-sm-6 col-lg-4 mb-6">
+                                {%- else -%}
+                                    <div class="col-12 col-sm-6{% if posts_per_row >= 3 %} col-lg-4{% endif %}{% if posts_per_row >= 4 %} col-xl-3{% endif %} mb-6">
+                                {%- endif -%}
+
+                                    {%- include 'article-card', article: article -%}
+                                </div>
+                            {%- endfor -%}
+                        </div>
+                        {%- if paginate.pages > 1 -%}
+                            <div class="mt-10">
+                                {%- include 'pagination' -%}
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endpaginate -%}
+{% schema %}
+{
+    "name": {
+        "de": "Blog",
+        "en": "Blog",
+        "es": "Blog",
+        "fr": "Blog",
+        "it": "Blog",
+        "ja": "ブログ",
+        "pt-BR": "Blog"
+    },
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content"
+        },
+        {
+            "type": "range",
+            "id": "posts_per_page",
+            "min": 2,
+            "max": 24,
+            "step": 1,
+            "label": "Posts per page",
+            "default": 13
+        },
+        {
+            "type": "range",
+            "id": "posts_per_row",
+            "min": 2,
+            "max": 4,
+            "step": 1,
+            "label": "Posts per row",
+            "default": 2
+        },
+        {
+            "type": "header",
+            "content": "Sidebar"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_sidebar",
+            "default": true,
+            "label": "Enable sidebar"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_tags",
+            "default": true,
+            "label": "Enable tags"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_subscribe",
+            "default": false,
+            "label": "Enable subscribe"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

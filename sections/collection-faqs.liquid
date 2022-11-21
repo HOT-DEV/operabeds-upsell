@@ -1,0 +1,66 @@
+{% comment %}
+    The Collection FAQs section template.
+{% endcomment %}
+{%- liquid
+    assign string_replacement = '{title}'
+    assign section_title = section.settings.title | replace: string_replacement, collection.title
+    assign accentuate_panels = collection.metafields.accentuate.question
+-%}
+
+{%- if accentuate_panels -%}
+    <section class="my-16 mt-md-24 my-xxl-32" data-section-type="collection-faqs" data-section-id="{{ section.id }}">
+        <div class="container site-padding">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
+                    <h2 class="mb-12 mb-md-14 mb-lg-16 text-26 text-lg-32 font-weight-semibold leading-tight text-elephant">
+                        {{- section_title | escape -}}
+                    </h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-10">
+                    <div class="c-accordion" data-accordion data-accordion-multiple="false">
+                        {%- for accentuate_panel in accentuate_panels -%}
+                            <button class="c-accordion__toggle" id="collection-faq-toggle-{{ forloop.index }}" type="button" aria-controls="collection-faq-content-{{ forloop.index }}" aria-expanded="false" data-accordion-toggle>
+                                <span class="c-accordion__toggle__text">
+                                    {{ collection.metafields.accentuate.question[forloop.index0] | escape }}
+                                </span>
+                                <svg class="c-accordion__toggle__plus" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-down"></use>
+                                </svg>
+                                <svg class="c-accordion__toggle__minus" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-right"></use>
+                                </svg>
+                            </button>
+                            <div class="c-accordion__content" id="collection-faq-content-{{ forloop.index }}" hidden>
+                                <div class="text-14 text-abbey c-rte">
+                                    {{ collection.metafields.accentuate.answer[forloop.index0] }}
+                                </div>
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "FAQs",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "info": "You can include {title} which will add the title into the heading",
+            "default": "Frequently Asked Questions About {title}"
+        },
+        {
+            "type":"header",
+            "content": "Content can be added through the 'App Accentuate'"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

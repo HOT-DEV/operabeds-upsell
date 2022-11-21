@@ -1,0 +1,76 @@
+{% liquid
+    if _last == true
+        assign border = 'show-border'
+    else
+        assign border = ''
+    endif
+%}
+<div class="t-cart-item {{ border -}}">
+    <div class="row flex-md-nowrap align-items-stretch">
+        <div class="col-md-6 col-lg-5 order-1">
+            <div class="t-cart-item__details">
+                <a href="{{ item.url | within: collections.all }}" class="t-cart-item__image">
+                    {%- liquid
+                        if item.image
+                            assign prod_img = item.image
+                            echo prod_img | img_url: '256x' | img_tag: item.title
+                        elsif item.product.images.size > 1
+                            assign prod_img = item.product.images | first
+                            echo prod_img | img_url: '256x' | img_tag: item.title
+                        else
+                            echo item | img_url: '256x' | img_tag: item.title
+                        endif
+                    -%}
+                </a>
+                <a href="{{ item.url }}" title="{{ item.product.title }}" class="t-cart-item__title text-18 text-blue-diane mb-2">
+                    {{- item.product.title -}}
+                </a>
+                <p class="t-cart-item__sku text-14 text-uppercase text-abbey mb-0">{{ item.sku }}</p>
+                {%- if item.product.handle != 'gift-card' -%}
+                    {%- unless item.variant.title contains 'Default' -%}
+                        <p class="t-cart-item__variant mt-3 mt-md-2 mb-0 text-16 text-blue-diane">
+                            {{ item.variant.title }}
+                        </p>
+                    {%- endunless -%}
+                {%- endif -%}
+            </div>
+        </div>
+        <div class="col-12 col-md-2 flex-grow-1 d-none d-xl-flex order-xl-2 text-md-center align-items-xl-center justify-content-xl-center">
+            <p class="t-cart-item__price mb-0 text-24 text-blue-diane font-weight-normal">
+              <span class="money" data-line-index="{{ _index0 }}">{{ item.price | money }}    
+                {% if item.variant.compare_at_price > item.price %}
+                <span class="money" style="font-size:14px; text-decoration:line-through;">{{ item.variant.compare_at_price | money_without_trailing_zeros }}</span></span>
+            	{% endif %}
+          	</p>
+        </div>
+        <div class="col-12 col-md-3 col-lg-2 flex-grow-1 order-2 my-4 order-xl-3">
+            <div class="t-cart-item__qty"data-product-qty>
+                <button type="button" data-product-qty-minus>
+                    <span class="sr-only">{{ 'Minus' }}</span>
+                    <svg aria-hidden="true">
+                        <use xlink:href="#sprite-minus"></use>
+                    </svg>
+                </button>
+                <input type="number" id="updates_{{ item.key }}" name="updates[]" value="{{ item.quantity }}" min="0" step="1" onchange="this.form.submit();" required data-product-qty-input>
+                <button type="button" data-product-qty-plus>
+                    <span class="sr-only">{{ 'Plus' }}</span>
+                    <svg aria-hidden="true">
+                        <use xlink:href="#sprite-plus"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="col-8 col-md-2 flex-grow-1 order-3 order-xl-4 text-md-center d-flex align-items-center justify-content-md-center">
+            <p class="t-cart-item__price mb-0 text-24 text-blue-diane font-weight-normal" data-line-total>
+                <span class="money" data-line-total data-line-index="{{ _index0 }}">{{ item.line_price | money }}</span>
+            </p>
+        </div>
+        <div class="col-4 col-md-1 order-4 d-flex justify-content-end align-items-md-center order-xl-5">
+            <a href="/cart/change?line={{ _index }}&amp;quantity=0" class="t-cart-item__remove" type="button" aria-label="Remove product">
+                <svg aria-hidden="true">
+                    <use xlink:href="#sprite-close"></use>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+{% comment %}
+    The Collection Promotion section template.
+{% endcomment %}
+{%- liquid
+    assign image = section.settings.image
+    assign image_alt = section.settings.image.alt | default: 'Delivery Map'
+    assign image_xs = image | img_url: '600x'
+    assign image_sm = image | img_url: '800x'
+    assign image_md = image | img_url: '1100x'
+    assign image_lg = image | img_url: '1300x'
+    assign image_xl = image | img_url: '1500x'
+    assign image_xxl = image | img_url: '1800x'
+    assign image_xxxl = image | img_url: '2048x'
+-%}
+{%- if section.settings.title.size > 0 -%}
+    <section class="s-banner" data-section-type="collection-promotion" data-section-id="{{ section.id }}">
+        <div class="container site-padding">
+            <div class="s-banner__inner">
+                <picture class="s-banner__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ 'Alt text' | escape }}">
+                    <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                    <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                    <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                    <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                    <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                    <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+                    {% comment %} <img alt="" /> {% endcomment %}
+                </picture>
+                <div class="s-banner__content">
+                    <div class="container py-16 py-lg-18 px-6">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8 col-lg-6 col-xl-4">
+                                <p class="mb-6 text-14 leading-none tracking-widest font-weight-bold text-uppercase">
+                                    {{- section.settings.title | escape -}}
+                                </p>
+                                <h2 class="u-heading-md">
+                                    {{- section.settings.heading | escape -}}
+                                </h2>
+
+                                {{- section.settings.paragraph }}
+
+                                <a class="mt-10 c-btn-outline c-btn-outline--light c-btn--5" href="{{ section.settings.button_url }}" aria-label="{{ section.settings.button_text | escape }}" title="{{ section.settings.button_text | escape }}">
+                                    {{- section.settings.button_text | escape -}}
+                                    <svg class="c-btn-icon--caret" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-caret-right"></use>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Promotion",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Panel Content"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+        },
+        {
+            "type": "richtext",
+            "id": "paragraph",
+            "label": "Paragraph"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Text",
+            "default": "Learn more"
+        },
+        {
+            "type": "url",
+            "id": "button_url",
+            "label": "Link"
+        }
+    ],
+    "blocks": [
+
+    ]
+}
+{% endschema %}

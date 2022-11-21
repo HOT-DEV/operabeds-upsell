@@ -1,0 +1,120 @@
+{%- liquid
+    assign debug = false
+    assign vat_multiplier = settings.taxes_vat_multiplier | divided_by: 100.00 | plus: 1
+    assign totalPriceExVAT = cart.total_price
+    assign totalPriceIncVAT = cart.total_price | times: vat_multiplier
+    assign vatAmount = totalPriceIncVAT | minus: cart.total_price
+
+    if customer.tax_exempt
+        assign cart_vat = 0
+        assign cart_total = totalPriceExVAT
+    else
+        assign cart_vat = vatAmount
+        assign cart_total = totalPriceIncVAT
+    endif
+
+-%}
+{%- if debug -%}
+<pre>
+    vat_multiplier:      {{ vat_multiplier }}
+    totalPriceIncVAT:    {{ totalPriceIncVAT }}
+    totalPriceExVAT:     {{ totalPriceExVAT }}
+    vatAmount:           {{ vatAmount }}
+    customer.tax_exempt: {{ customer.tax_exempt }}
+</pre>
+{%- endif -%}
+
+<div class="t-cart-summary bg-white">
+    <dl class="justify-content-center align-items-center">
+        <span class="text-30 font-weight-medium">Summary</span>
+    </dl>
+    <hr class="my-3">
+    <dl>
+        <dt class="text-16 font-weight-medium">{{ 'template.cart.subtotal' | t }}</dt>
+        <dd class="text-20 font-weight-semibold">
+            {% comment %}
+            data-cart-total is actually the sub total as we're exVAT
+            {% endcomment %}
+            <span data-sub-total-price="{{ totalPriceExVAT }}">{{ totalPriceExVAT | money }}</span>
+
+            {% comment %}
+            this field is the one which will be updated by bold, we will use it to update our sub total
+            {% endcomment %}
+            <span class="money" hidden data-cart-total data-bold-subTotalPrice>{{ totalPriceExVAT | money }}</span>
+
+        </dd>
+    </dl>
+    <hr class="my-3">
+    <dl>
+        <dt class="text-16 font-weight-medium">{{ 'template.cart.vat_total' | t }} (20%)</dt>
+        <dd data-cart-vat data-vat-price="{{ cart_vat | round }}" class="text-20 font-weight-semibold text-right">
+            {{ cart_vat | money }}</dd>
+    </dl>
+    <hr class="mt-3 mb-6">
+
+
+    {%- comment -%}
+    VAT Popup
+    {%- endcomment -%}
+    <a class="vat-box-popup" href="#vat-relief">
+        <div class="vat-box mb-6 bg-elephant text-white">
+            <span class="text-14 text-sm-16 text-xxl-18 font-weight-semibold">Entitled to VAT Relief? <span
+                    class="text-underline-atc">Click Here</span></span>
+        </div>
+    </a>
+
+    <div class="payment-options-bg">
+        <dl class="">
+            <div class="col-6 pr-6 pl-0 text-12 font-weight-medium text-right text-capitalize">Pay today</div>
+            <div class="col-6 pl-6 pr-0 text-12 font-weight-medium text-capitalize">Pay later</div>
+        </dl>
+        <dl>
+
+            <div class="col-6 pr-6 pl-0 text-20 text-md-24 font-weight-bold text-right">
+
+                <dl class="total">
+                    <dt class="text-20 font-weight-bold"></dt>
+                    <dd data-total-price="{{ cart_total | round }}" class="mb-0 text-24 font-weight-bold">
+                        <span data-cart-total-price>{{ cart_total | money }}</span>
+                    </dd>
+                </dl>
+
+            </div>
+
+            <div class="col-6 pl-6 pr-0 text-16 text-md-18 font-weight-bold">
+                <span data-finance-container data-product-price="{{ cart_total }}">
+                    <span data-finance-monthly></span>
+                    <span class="text-12" id="klarna-mo" style="vertical-align: text-top;">/mo</span>
+                </span>
+            </div>
+        </dl>
+        <dl class="mb-6">
+            <div class="col-6 pr-6 pl-0 text-10 text-sm-12 font-weight-medium text-right text-capitalize"><span
+                    data-sub-total-price="{{ totalPriceExVAT }}">{{ totalPriceExVAT | money_without_trailing_zeros }}</span>
+                with VAT relief</div>
+            <div class="col-6 pl-6 pr-0 text-10 text-sm-12 font-weight-medium text-capitalize">with Klarna Finance</div>
+        </dl>
+    </div>
+
+    <ul class="t-cart-summary__payments">
+        {%- for type in shop.enabled_payment_types -%}
+        <li>
+            {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+        </li>
+        {%- endfor -%}
+    </ul>
+    <hr class="my-6">
+    <button class="c-btn2 t-cart-checkout" type="submit" name="checkout" id="checkout" form="cart_checkout">
+        <svg class="minus" aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-secure-checkout"></use>
+        </svg>
+        {{- 'Proceed to checkout' -}}
+    </button>
+
+</div>
+
+{%- liquid 
+    if show_po_number
+        render 'cart-purchase-order-number'
+    endif
+-%}

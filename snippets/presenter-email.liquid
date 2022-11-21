@@ -1,0 +1,18 @@
+{%- comment -%}
+Usage is like this:
+
+{%- render 'presenter-email' 
+    _email:             'email@domain.com',
+    _email_title:       'Sales team',
+    _template:          'Email us on <strong>{email}</strong>'
+-%}
+{%- endcomment -%}
+{%- liquid
+    assign email_no_spaces = _email | replace: ' ', ''
+    if _email_title.size > 0
+        assign email_title = 'title="' | append: _email_title | append: '"'
+    endif
+    assign content = '<a href="mailto:{email_no_spaces}" {email_title}>{email_no_spaces}</a>' | replace: '{email_no_spaces}', email_no_spaces | replace: '{email_title}', email_title
+    assign output = _template | replace: '{email}', content
+-%}
+{{ output }}

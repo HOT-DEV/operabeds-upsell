@@ -1,0 +1,81 @@
+{% comment %}
+    Vacancy Card snippet
+{% endcomment %}
+
+{%- liquid
+    assign truncate_words_limit = article_word_truncate_limit | default: 30
+    assign vacancy_url = _url
+    assign vacancy_strapline = _strapline
+    assign vacancy_title = _title
+    assign vacancy_description = _description | prepend: '<p>' | append: '</p>'
+    assign posted_date = _posted_date
+
+    assign image_xs = _image | img_url: '376x242'
+    assign image_sm = _image | img_url: '480x242'
+    assign image_md = _image | img_url: '292x242'
+    assign image_lg = _image | img_url: '304x242'
+    assign image_xl = _image | img_url: '283x242'
+    assign image_xxl = _image | img_url: '316x242'
+    assign image_xxxl = _image | img_url: '438x242'
+    assign image_alt = _image.alt | default: _title
+-%}
+<div class="c-vacancy-card{% if class != blank %} {{ class }}{% endif %}">
+    <div class="c-vacancy-card__media">
+        {% capture captured_image -%}
+            <picture class="c-vacancy-card__media__picture js-lazy" data-iesrc="{{ vacancy_image_xxxl }}" data-alt="{{ image_alt | default: vacancy_title | escape }}">
+                <source srcset="{{ image_xs }}" media="(max-width: 575px)">
+                <source srcset="{{ image_sm }}" media="(min-width: 576px) and (max-width: 767px)">
+                <source srcset="{{ image_md }}" media="(min-width: 768px) and (max-width: 1023px)">
+                <source srcset="{{ image_lg }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                <source srcset="{{ image_xl }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                <source srcset="{{ image_xxl }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                <source srcset="{{ image_xxxl }}" media="(min-width: 1670px)">
+                {% comment %} <img alt="" /> {% endcomment %}
+            </picture>
+        {%- endcapture -%}
+        {%- if vacancy_url -%}
+            <a href="{{ vacancy_url }}" aria-label="{{ vacancy_title | escape }}" title="{{ vacancy_title | escape }}">
+                {{ captured_image }}
+            </a>
+        {%- else -%}
+            {{ captured_image }}
+        {%- endif -%}
+        <div class="c-vacancy-card__media__text">
+            {{ 'Posted: ' | escape }}
+            {{ posted_date | time_tag: '%d/%m/%Y' }}
+        </div>
+    </div>
+    <div class="c-vacancy-card__body">
+        <div class="c-vacancy-card__content">
+            {%- if vacancy_strapline != blank -%}
+                <p class="mb-4 text-14 font-weight-medium leading-tight tracking-widest text-uppercase text-elephant">
+                    {{- vacancy_strapline | safe -}}
+                </p>
+            {%- endif -%}
+            {%- if vacancy_title != blank -%}
+                <h3 class="mb-5 text-20 text-lg-24 font-weight-semibold leading-tight text-blue-diane">
+                    <a class="" href="{{ vacancy_url }}" aria-label="{{ vacancy_title | escape }}" title="{{ vacancy_title | escape }}">
+                        {{- vacancy_title | escape -}}
+                    </a>
+                </h3>
+            {%- endif -%}
+            {%- if vacancy_description != blank -%}
+                <div class="text-14 text-abbey">
+                    {{- vacancy_description | safe -}}
+                </div>
+            {%- endif -%}
+        </div>
+        {%- if vacancy_url -%}
+            <div class="c-vacancy-card__footer">
+                <a class="c-vacancy-card__cta" href="{{ vacancy_url }}" aria-label="{{ 'View Vacancy' | escape }}" title="{{ 'View Vacancy' | escape }}">
+                    <span>
+                        {{- 'View Vacancy' | escape -}}
+                    </span>
+                    <svg aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-chevron-right"></use>
+                    </svg>
+                </a>
+            </div>
+        {%- endif -%}
+    </div>
+</div>

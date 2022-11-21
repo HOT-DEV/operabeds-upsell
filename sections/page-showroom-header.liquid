@@ -1,0 +1,37 @@
+{%- 
+    render 'page-header',
+    image_mobile:           null,
+    image_tablet:           null,
+    image_desktop:          section.settings.hero_image,
+    image_alt:              image_alt,
+    heading:                page.title,
+    strapline:              section.settings.page_strapline,
+    page_content:           page.content,
+    _add_header_element:    null,
+    _image_store:           null,
+-%}
+{% schema %}
+{
+    "name": "Showroom Header",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image",
+            "info": "image will be overriden by metafields (old website)"
+        },
+        {
+            "type": "textarea",
+            "id": "page_strapline",
+            "label": "Page Strapline (add line break for design)",
+            "default": "Page\r\nstrapline"
+        }
+    ],
+    "blocks": [
+    ]
+}
+{% endschema %}

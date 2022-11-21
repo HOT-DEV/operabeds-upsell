@@ -1,0 +1,225 @@
+{% comment %}
+    The Collection Products section template.
+{% endcomment %}
+
+{%- liquid
+    assign user_specified_collection_filters = collection.metafields.accentuate.collection_filters_allowed
+    if user_specified_collection_filters.size > 0
+        assign allowed_filters = user_specified_collection_filters | downcase
+    else
+        assign allowed_filters = 'Colour,Height,Width,Range,Style,Person' | downcase
+    endif
+
+    if collection.all_tags.size > 0
+        for tag in collection.all_tags
+            if tag contains '_'
+                assign tag_key = tag | split: '_' | first | downcase
+
+                if allowed_filters contains tag_key
+                    assign filter_category = tag  | split: '_' | first
+                    assign filter_categories = filter_categories | append: ',' | append: filter_category
+                endif
+            endif
+        endfor
+        assign filter_categories_array = filter_categories | remove_first: ',' | split: ',' | uniq
+        if filter_categories_array.size > 0
+            assign show_filters = true
+        else 
+            assign show_filters = false
+        endif
+        assign filter_count = filter_categories_array.size
+    endif
+
+    comment
+        If no upsell panel is visible then hide the heading...
+    endcomment
+    assign upsell_panels_visible = collection.metafields.accentuate.product_heading
+-%}
+<section class="" data-section-type="collection-products" data-section-id="{{ section.id }}" data-collection-handle="{{ collection.handle }}">
+    <div class="container site-padding {% if upsell_panels_visible %}pt-18 {% endif %} pb-5 pb-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="row mb-lg-5 mx-n2 flex-xl-nowrap align-items-xl-stretch">
+                    {%- if show_filters -%}
+                        <div class="col-12 col-md-6 col-xl mb-5 mb-lg-0 px-2">
+                            <div class="c-filters" data-filters>
+                                <button class="c-filters__toggle" id="filters-toggle" aria-controls="filters-overlay" aria-expanded="false" data-filters-toggle>
+                                    <span class="c-filters__toggle__label">
+                                        {{- 'Filters' | escape -}}
+                                    </span>
+                                    <span class="c-filters__toggle__addon">
+                                        {%- if current_tags.size > 0 -%}
+                                        <span class="c-filters__toggle__addon__count">
+                                            {{- current_tags.size | escape -}}
+                                        </span>
+                                        {%- endif -%}
+                                        <svg class="c-filters__toggle__addon__icon" aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-plus"></use>
+                                        </svg>
+                                    </span>
+                                </button>
+                                <div class="c-filters__overlay" id="filters-overlay" aria-labelledby="filters-toggle" data-filters-overlay>
+                                    <div class="c-filters__overlay__header mb-11">
+                                        <div class="row justify-content-between align-items-center">
+                                            <div class="col-auto">
+                                                <span class="d-block text-14 leading-tight tracking-wider font-weight-bold text-uppercase">
+                                                    {{- 'Filters' | escape -}}
+                                                </span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <button class="c-filters__close mr-n3" id="filters-close" aria-controls="filters-overlay" aria-expanded="false" data-filters-close>
+                                                    <svg class="c-filters__toggle__addon__icon" aria-hidden="true" role="presentation">
+                                                        <use xlink:href="#sprite-close"></use>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {%- render
+                                        'collection-filters',
+                                        collection: collection,
+                                        current_tags: current_tags,
+                                        _filter_categories_array: filter_categories_array
+                                    -%}
+                                </div>
+                            </div>
+                        </div>
+                    {%- endif -%}
+                    <div class="col-12 col-md-6 col-xl-auto px-2">
+                        <div class="c-sortby">
+                            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                            <label class="c-sortby__label" for="collection-sort">
+                                {{- 'Sort by' | escape -}}
+                            </label>
+                            <select class="c-sortby__select" id="collection-sort" name="sort_by" data-collection-sort>
+                                {%- for option in collection.sort_options -%}
+                                    {%- assign option_value_downcase = option.value | downcase -%}
+                                    {%- if option_value_downcase == "manual" or option_value_downcase contains "price" or option_value_downcase == "best-selling" -%}
+                                        <option value="{{ option.value }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name }}</option>
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <p class="m-0 text-14 text-center">
+                    {{- collection.products_count | prepend: 'Displaying ' | append: ' products' -}}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="bg-white">
+        <div class="container site-padding pb-lg-15 pt-lg-0">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="row mx-n3 mb-n6">
+                        {%- for product in collection.products -%}
+                            {%- assign collection_handle = collection.title | handleize -%}
+                            {%- if collection_handle == 'adjustable-beds' or collection_handle == 'hospital-beds' or collection_handle == 'profiling-care-beds' -%}
+                                {%- if section.settings.show_promo_panel and forloop.index == section.settings.promo_panel_index -%}
+                                    {%- liquid
+                                        if product
+                                            assign image = section.settings.promo_panel_image
+                                            assign image_xs = image | img_url: '437x560', crop: 'center'
+                                            assign image_sm = image | img_url: '437x560', crop: 'center'
+                                            assign image_md = image | img_url: '437x560', crop: 'center'
+                                            assign image_lg = image | img_url: '437x560', crop: 'center'
+                                        endif
+                                    -%}
+
+                                    <div class="col-12 col-sm-6 col-xxl-4 px-3 mb-6">
+                                        <div class="c-product-promo-tile" data-product-item>
+                                            <div class="c-product-promo-tile__media">
+                                                <picture class="c-product-promo-tile__media__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image.alt | default: product.title | escape }}">
+                                                    <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                                                    <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                                    <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                                    <source srcset="{{ image_lg | url }}" media="(min-width: 1024px)">
+                                                    {% comment %} <img alt="" /> {% endcomment %}
+                                                </picture>
+                                            </div>
+                                            <div class="c-product-promo-tile__content text-center">
+                                                <h3 class="text-18 font-weight-normal leading-tight text-white mb-8">
+                                                    {{- section.settings.promo_panel_heading | escape -}}
+                                                </h3>
+                                                <a class="c-btn-outline c-btn-outline--light stretched-link" href="{{ section.settings.promo_panel_cta_url }}" aria-label="{{ section.settings.promo_panel_heading | escape }}" title="{{ section.settings.promo_panel_heading | escape }}">
+                                                    {{- section.settings.promo_panel_cta_text | escape -}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                            {%- endif -%}
+                      
+                      
+                      		<div class="col-12 col-md-6 col-lg-4 px-3 mb-6">
+                                {%-
+                                    render 'product-item',
+                                    product: product,
+                                    class: 'w-100 h-100'
+                                -%}
+                            </div>
+                      
+                       
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Products",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Promo Panel"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_promo_panel",
+            "label": "Show Promo Panel?",
+            "info": "This will show up in the collections",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "promo_panel_index",
+            "label": "Where to show result",
+            "min": 1,
+            "max": 24,
+            "step": 1,
+            "default": 5
+        },
+        {
+            "type": "image_picker",
+            "id": "promo_panel_image",
+            "label": "Image"
+        },
+        {
+            "type": "text",
+            "id": "promo_panel_heading",
+            "label": "Heading",
+            "default": "Looking for something completely unique?"
+        },
+        {
+            "type": "text",
+            "id": "promo_panel_cta_text",
+            "label": "Text",
+            "default": "Learn more"
+        },
+        {
+            "type": "url",
+            "id": "promo_panel_cta_url",
+            "label": "Url"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

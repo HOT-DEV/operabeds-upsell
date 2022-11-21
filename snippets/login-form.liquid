@@ -1,0 +1,80 @@
+{%- comment -%}
+    Login form
+{%- endcomment -%}
+{%- liquid
+    assign show_create_link = _show_create_link
+-%}
+<div data-login>
+    {%- form 'customer_login', class: 'c-form', aria-label: 'Login form', data-login-form: '' -%}
+        <div class="c-form__content">
+            {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+
+            <div class="c-form-field mb-8">
+                <label class="" for="email">E-Mail Address</label>
+                <input class="c-form-input{% if show_errors == true and form.errors contains 'email' %} c-input--error{% endif %}" id="email" name="customer[email]" type="email" placeholder="email@example.com" autocorrect="off" autocapitalize="off" autocomplete="email" />
+            </div>
+
+            {%- if form.password_needed -%}
+                <div class="c-form-field mb-8">
+                    <label class="" for="password">Password</label>
+                    <input class="c-form-input{% if show_errors == true and form.errors contains 'password' %} c-input--error{% endif %}" id="password" name="customer[password]" type="password" />
+                </div>
+            {%- endif -%}
+
+            <div class="d-flex flex-row flex-wrap justify-content-between align-items-center mb-4">
+                <button class="c-btn mb-0" type="submit">Sign in</button>
+                <p class="mb-0">
+                    {% if form.password_needed %}
+                        <a href="#" data-login-form-toggle>Forgot your password?</a>
+                    {% endif %}
+                </p>
+            </div>
+
+            {%- if show_create_link -%}
+                <div class="d-flex flex-row flex-wrap justify-content-between align-items-center">
+                    {{ 'Create Account' | customer_register_link }}
+                    <a href="{{ shop.url | url }}">Return to the store</a>
+                </div>
+            {%- endif -%}
+        </div>
+    {%- endform -%}
+</div>
+
+{%- comment -%}
+    Recover Password form
+{%- endcomment -%}
+<div data-recover-password hidden>
+    {%- form 'recover_customer_password', class: 'c-form', aria-label: 'Recover Account form', data-recover-password-form: '' -%}
+        <div class="c-form__content">
+            {%- if form.posted_successfully? -%}
+                <p class="c-alert c-alert--success" role="alert">We've sent you an email with a link to update your password.</p>
+            {%- endif -%}    
+        
+            {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+
+            <div class="c-form-field mb-4">
+                <label class="c-label" for="recover-email">E-Mail Address</label>
+                <input class="c-form-input{% if show_errors == true and form.errors contains 'email' %} c-input--error{% endif %}" id="recover-email" name="email" type="email" placeholder="E-Mail Address" autocorrect="off" autocapitalize="off" autocomplete="email" />
+            </div>
+
+            <button class="c-btn mb-4" type="submit">Submit</button>
+
+            <p class="mb-0">
+                <a href="#" data-login-form-toggle>Cancel</a>
+            </p>
+        </div>
+    {%- endform -%}
+</div>
+
+{%- comment -%}
+    Guest Login form
+{%- endcomment -%}
+{%- if shop.checkout.guest_login -%}
+    <div data-guest-login>
+        {%- form 'guest_login', class="c-form", aria-label: 'Guest Login form', data-guest-login-form: '' -%}
+            <div class="c-form__content">
+                <button class="c-btn" type="submit">Continue as Guest</button>
+            </div>
+        {%- endform -%}
+    </div>
+{%- endif -%}

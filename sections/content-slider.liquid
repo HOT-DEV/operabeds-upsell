@@ -1,0 +1,142 @@
+{% comment %}
+    The Content Slider section template.
+{% endcomment %}
+{%- liquid
+    assign blocks_content_slider = section.blocks | where: 'type', 'content_slider'
+-%}
+{%- if blocks_content_slider -%}
+    <section class="s-content-slider" data-section-type="content-slider" data-section-id="{{ section.id }}" id="{{ section.settings.section_id }}">
+        <div class="s-content-slider__slider">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {%- for block in blocks_content_slider -%}
+                        {%- liquid
+                            assign image = block.settings.image
+                            assign image_base = image | img_url: '1x1'
+                            assign image_xs = image | img_url: '600x'
+                            assign image_sm = image | img_url: '800x'
+                            assign image_md = image | img_url: '1100x'
+                            assign image_lg = image | img_url: '1300x'
+                            assign image_xl = image | img_url: '1500x'
+                            assign image_xxl = image | img_url: '1800x'
+                            assign image_xxxl = image | img_url: '2048x'
+                        -%}
+                        {%- if block.settings.title.size > 0 or block.settings.paragraph.size > 0 -%}
+                            <div class="s-content-slider__slide swiper-slide" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                                {%- if image -%}
+                                    <div class="s-content-slider__slide__media">
+                                        <picture class="s-content-slider__slide__media__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image.alt | default: block.settings.title | escape }}">
+                                            <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                                            <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                            <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                            <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                                            <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                                            <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                                            <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+                                            <img src="{{ image_base | url }}" alt="{{ image.alt | default: block.settings.title | escape }}" />
+                                        </picture>
+                                    </div>
+                                {%- endif -%}
+                                <div class="container">
+                                    <div class="row align-items-lg-center">
+                                        <div class="col-12 col-md-8 col-lg-6 mb-8 mb-lg-0 offset-md-1 offset-xxl-2">
+                                            <div class="s-content-slider__slide__content px-6 py-14 px-xl-19 py-xl-16 bg-white text-center text-lg-left">
+                                                {%- if block.settings.title -%}
+                                                    <h3 class="mb-7 text-24 leading-tight font-weight-medium text-elephant">
+                                                        {{- block.settings.title | escape -}}
+                                                    </h3>
+                                                {%- endif -%}
+                                                {%- if block.settings.paragraph -%}
+                                                    <div class="mb-n4 text-abbey">
+                                                        {{- block.settings.paragraph | safe -}}
+                                                    </div>
+                                                {%- endif -%}
+                                                {%- if block.settings.button_url -%}
+                                                    <a class="mt-18 c-btn c-btn--4" href="{{ block.settings.button_url | url }}" aria-label="{{ block.settings.button_text | escape }}" title="{{ block.settings.button_text | escape }}">
+                                                        {{- block.settings.button_text | escape -}}
+                                                    </a>
+                                                {%- endif -%}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {%- endif -%}
+                    {%- endfor -%}
+                </div>
+            </div>
+            <div class="s-content-slider__controls">
+                <button class="s-content-slider__prev swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}">
+                    <svg aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-chevron-left"></use>
+                    </svg>
+                </button>
+                <div class="s-content-slider__pagination swiper-pagination"></div>
+                <button class="s-content-slider__next swiper-button-next" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}">
+                    <svg aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-chevron-right"></use>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Content Slider",
+    "settings": [
+    {
+        "type": "text",
+        "id": "section_id",
+        "label": "Section ID",
+        "info": "Use if you want to be able to link to this specfic section from another link"
+    }        
+    ],
+    "blocks": [
+        {
+            "type": "content_slider",
+            "name": "Content Slider",
+            "settings": [        
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "paragraph",
+                    "label": "Text"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "header",
+                    "content": "Buttons"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Text",
+                    "default": "View beds"
+                },
+                {
+                    "type": "url",
+                    "id": "button_url",
+                    "label": "Link"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Content Slider",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": []
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,257 @@
+{% comment %}
+    New collection hero template aligned with Matt design May/June 2022
+	Jesper Ahlbom last edit - 27.5.22
+{% endcomment %}
+
+{%- liquid
+    assign background_image = collection.image
+    assign col_video_id = collection.metafields.new.col_video_id
+    
+-%}
+{%- liquid
+    assign image = background_image
+    assign image_alt = image.alt | default: heading
+    assign image_xs = image | img_url: 'x400'
+    assign image_sm = image | img_url: 'x400'
+    assign image_md = image | img_url: 'x400'
+    assign image_lg = image | img_url: '960x482'
+    assign image_xl = image | img_url: '1080x586'
+    assign image_xxl = image | img_url: '995x586'
+    assign image_xxxl = image | img_url: '1195x586'
+    assign image_hd = image | img_url: '1360x586'
+-%}
+{%- if image != blank -%}
+<section class="mb-0 mb-lg-8 position-relative" data-section-id="{{ section.id }}" id="ja">
+    <div class="collection-customer-support container site-padding">
+        <div class="row align-items-center p-0 m-0">
+            <div class="text-area position-relative col-12 col-lg-6 p-0 my-12 my-lg-0 order-last bg-elephant text-white align-items-center justify-content-center">
+
+                
+              <div class="text-area__inner text-center text-lg-left">
+                    <p class="text-uppercase tracking-widest">We're here to help</p>
+                    <h2 class="text-30 text-lg-40 font-weight-normal">
+                        Call us on <span class="font-weight-bold">0330 127 1617</span> if you have any questions.
+                  	</h2>       
+                </div>
+                  
+                
+            </div>
+            <div class="block-image col-12 col-lg-6 p-0 position-relative order-first">
+                <picture class="s-product-video__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" id="ja"
+                    data-alt="{{ image_alt | escape }}">
+                    <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ image_sm | url }}" media="(max-width: 767px)">
+                    <source srcset="{{ image_md | url }}" media="(max-width: 1023px)">
+                    <source srcset="{{ image_lg | url }}" media="(max-width: 1279px)">
+                    <source srcset="{{ image_xl | url }}" media="(max-width: 1439px)">
+                    <source srcset="{{ image_xxl | url }}" media="(max-width: 1669px)">
+                    <source srcset="{{ image_xxxl | url }}" media="(max-width: 1919px)">
+                    <source srcset="{{ image_hd | url }}" media="(min-width: 1920px)">
+                    {% comment %} <img alt="" /> {% endcomment %}
+                </picture>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+
+
+.collection-customer-support::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 50%;
+    width: 100%;
+    height: 50%;
+    background-color: #F1F2F4;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+
+}
+
+.collection-customer-support, .text-area, .block-image {
+    height: 300px;
+}
+
+.text-area__inner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 70%;
+}
+
+  /* 27.5.22 */
+  
+  .block-right .s-product-video__picture#ja {border-radius: 0;}
+  
+  
+  .text-box p {margin-bottom: 0px;}
+  
+  
+  
+
+/* general / clean up */
+
+.t-collection #shopify-section-static-featured-links {
+  background-color: #FFFFFF;
+}
+  .s-product-video__inner {height: 400px!important; min-height:none!important;}
+
+/* col-video-block.liquid */
+
+  .s-product-video__content#col-video {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+  }
+
+  .block-right {height: 400px;}  
+  @media only screen and (max-width: 600px) {
+  .block-right {height: 200px;}
+  }
+  @media only screen and (max-width: 600px) {
+  .play-yt-btn svg {height: 4rem; width: auto;}
+  }
+
+/* Weightlessness 
+
+  @media only screen and (max-width: 1023.98px) {
+  .c-image-and-text__content#weightlessness,
+  .c-image-and-text__content#alexa,
+  .c-image-and-text__content#styledetail,
+  .c-image-and-text__content#suprememattress
+    
+  {padding: 1.5rem 1.25rem 0;}
+  }
+
+*/
+
+/* Alexa */
+
+  .c-article-card__cta#alexa svg {fill: #fff; height: 1rem;}
+
+/* Supreme Mattress */
+
+  .c-article-card__cta#mattress svg {fill: #0A2438; height: 1rem;}
+
+/* CTA's showcase sections */
+
+  .c-article-card__cta#col svg {height: 1rem;}
+
+/* Divider  */
+
+  .container-fluid#divider {border-bottom: 1px solid #E2E2E2;}
+
+/* col-features.liquid  */
+
+.col-features {
+    background-color: transparent;
+  	height: auto;
+}
+
+.col-features img {
+    width: 100%;
+    height: auto;
+}
+
+.swiper-features {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.swiper-slide#features {
+    text-align: center;
+    height: auto;
+}
+
+.swiper-slide#features img {
+    display: inline-flex;
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0px !important;
+}
+
+@media only screen and (max-width: 600px) {
+    .swiper-slide#features {
+        padding: 0 1.25rem;
+    }
+}
+
+.features-nav {
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
+.features-nav .s-testimonials__prev:disabled,
+.features-nav .s-testimonials__next:disabled {
+    opacity: 0.2;
+}
+
+@media only screen and (max-width: 1023.98px) {
+.s-collection__trustpoints__slide svg {
+height: 2rem!important;
+width: 2rem!important;}
+  }
+
+.s-testimonials__next svg, .s-testimonials__prev svg {width: 1.25rem; height: 1.25rem;}
+
+
+/*  */
+
+@media (min-width: 576px) {
+  .box-padding {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .box-padding {
+    padding-left: 6.5rem;
+    padding-right: 6.5rem;
+  }
+}
+@media (min-width: 1440px) {
+  .box-padding {
+    padding-left: 9rem;
+    padding-right: 9rem;
+  }
+}
+@media (min-width: 1920px) {
+  .box-padding {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 1650px;
+  }
+}
+
+</style>  
+
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "S: Video block",
+    "settings": [
+        {
+          "type": "header",
+          "content": "Section Info",
+          "info": "This section will not be shown if image is not added to the Collection in Shopify Admin > Products > Collections."
+		},  
+		{
+            "type": "header",
+            "content": "Collection - Image & Description",
+			"info": "Change this in the settings for each individual collection found in: Shopify Admin > Products > Collections (Recommended size image: 2720 x 1172px with the object center aligned)"
+        }
+    ]
+}
+{% endschema %}

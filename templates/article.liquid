@@ -1,0 +1,22 @@
+{% comment %}
+    The Article template.
+{% endcomment %}
+
+{%- liquid
+    case blog.handle
+        when 'project-gallery'
+            section 'article-project'
+            section 'article-project-gallery'
+            section 'article-project-content'
+            section 'article-project-cta'
+            section 'article-project-related'
+            section 'article-project-form'
+        when 'knowledge-hub'
+        	section 'article-knowledge-hub'           
+        	section 'article-knowledge-hub-related'            
+        else
+            section 'article'
+            section 'article-recommendations'
+            section 'static-announcement'
+    endcase
+-%}

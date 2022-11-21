@@ -1,0 +1,45 @@
+{% comment %}
+    The Alternative Collection template.
+{% endcomment %}
+{% layout none %}
+
+{% liquid 
+    assign debug = true
+    assign json_collection = current_tags[0]
+    assign tag = current_tags[1]
+    assign collection = collections[json_collection]
+%}
+{%- paginate collection.products by 500 -%}
+{% liquid 
+    assign products = null | sort
+    if tag
+        for product in collection.products
+            if product.tags contains tag
+                assign obj_product = product | sort
+                assign products = products | concat: obj_product
+            endif
+        endfor 
+    else
+        assign products = collection.all_products
+    endif 
+    %}
+{%- assign firstProduct = products | first -%}
+{
+    "current_tags": {{ tag | json }},
+    "all_tags": {{ current_tags | json }},
+    "products_count": {{ products.size | json }},
+    "price_from": {{ firstProduct.price_min | json }},
+    "collection": {{ collection | json}}
+    {%- if debug -%}
+    ,"products": [
+        {%- for product in products limit: 1 -%}
+            {
+                "price_min": {{ product.price_min | json }}
+            }
+            {% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+    ]
+    {%- endif -%}
+}
+
+{%- endpaginate -%}

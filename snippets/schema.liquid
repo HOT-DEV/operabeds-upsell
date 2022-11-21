@@ -1,0 +1,46 @@
+{% comment %}
+    The Schema snippet.
+{% endcomment %}
+
+{%- capture markup -%}
+    {%- if type == 'Organisation' -%}
+        {
+            "@context": "http://schema.org",
+            "@type": "Organization"
+        }
+    {%- endif -%}
+
+    {%- if type == 'WebPage' -%}
+        {
+            "@context": "http://schema.org",
+            "@type": "WebPage"
+        }
+    {%- endif -%}
+
+    {%- if type == 'Breadcrumb' -%}
+        {
+            "@context": "http://schema.org",
+            "@type": "Breadcrumb"
+        }
+    {%- endif -%}
+
+    {%- if type == 'Product' -%}
+        {
+            "@context": "http://schema.org",
+            "@type": "Product"
+        }
+    {%- endif -%}
+
+    {%- if type == 'BlogPost' -%}
+        {
+            "@context": "http://schema.org",
+            "@type": "BlogPost"
+        }
+    {%- endif -%}
+{%- endcapture -%}
+
+{%- if markup != blank -%}
+    <script type="application/json+ld">
+        {{ markup }}
+    </script>
+{%- endif -%}

@@ -1,0 +1,21 @@
+{%- if _heading -%}
+    <section class="bg-athens-gray">
+        <div class="container site-padding py-16 py-lg-20 py-xxl-25">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-10 col-xl-8">
+                    <div class="text-center">
+                        <h2 class="u-heading-md text-elephant">
+                            {{- _heading | escape -}}
+                        </h2>
+                        {%- if _intro_text.size > 0 -%}
+                            <p class="m-0 text-14">{{ _intro_text }}</p>
+                        {%- endif -%}
+                        <div class="mt-12 mt-lg-16">
+                            {{- _form_embed_html -}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}

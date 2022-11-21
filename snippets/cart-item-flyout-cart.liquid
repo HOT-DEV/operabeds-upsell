@@ -1,0 +1,50 @@
+{% liquid
+    if _last == true
+        assign border = 'show-border'
+    else
+        assign border = ''
+    endif
+%}
+<div class="t-cart-item {{ border -}}" id="flyout">
+
+    <div class="row d-flex align-items-start justify-content-center no-gutters">
+        <div class="col-3 pr-0 mr-0">
+
+
+            <a href="{{ item.url | within: collections.all }}" class="t-cart-item__image">
+                {%- liquid
+                if item.image
+                    assign prod_img = item.image
+                    echo prod_img | img_url: '256x' | img_tag: item.title
+                elsif item.product.images.size > 1
+                    assign prod_img = item.product.images | first
+                    echo prod_img | img_url: '256x' | img_tag: item.title
+                else
+                    echo item | img_url: '256x' | img_tag: item.title
+                endif
+            -%}
+            </a>
+
+
+        </div>
+        <div class="col-6 pl-4 pr-0">
+            <p class="font-weight-bold text-elephant">
+                <a href="{{ item.url }}" title="{{ item.product.title }}">
+                    {{ item.quantity }} x {{ item.product.title }}
+                </a>
+            </p>
+            {% unless item.variant.title == 'Default Title' %}
+            <p class="text-12">{{ item.variant.title }}</p>
+            {% endunless %}
+            <p class="text-12 mb-0">SKU: {{ item.variant.sku }}</p>
+        </div>
+        <div class="col-3 pr-0 text-right tracking-wide pr-4">
+            <span class="text-tropical font-weight-bold ">{{ item.price | money_without_trailing_zeros }}</span>
+            {% if item.variant.compare_at_price > item.price %}
+            <p class="money font-weight-medium text-14" style="text-decoration:line-through;">
+                {{ item.variant.compare_at_price | money_without_trailing_zeros }}</p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>

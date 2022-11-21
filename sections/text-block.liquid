@@ -1,0 +1,237 @@
+{% comment %}
+    The Text Block section template.
+{% endcomment %}
+
+{%- liquid
+
+    assign padding = section.settings.container_padding
+    assign background = section.settings.container_background
+
+    assign weight = section.settings.text_weight
+    assign size = section.settings.text_size
+    assign spacing = section.settings.text_spacing
+    assign height = section.settings.text_height
+
+    assign uppercase = ""
+    if section.settings.text_uppercase
+        assign uppercase =  "text-uppercase"
+    endif
+-%}
+
+{%- if section.settings.title != blank -%}
+    <section class="{{ background }} text-blue-diane" data-section-type="text-block" data-section-id="{{ section.id }}">
+        <div class="container site-padding {{ padding }}">
+            <p class="m-0 text-center {{ weight }} {{ size }} {{ spacing }} {{ height }} {{ uppercase }}">
+                {{- section.settings.title | escape | newline_to_br -}}
+            </p>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Text Block",
+    "settings": [
+        {
+            "type": "textarea",
+            "id": "title",
+            "label": "Text"
+        },
+        {
+            "type": "header",
+            "content": "Text Configuration"
+        },
+        {
+            "type": "select",
+            "id": "text_size",
+            "label": "Text Size",
+            "options": [
+                {
+                    "value": "text-12",
+                    "label": "Extra Small"
+                },
+                {
+                    "value": "text-14",
+                    "label": "Small"
+                },
+                {
+                    "value": "text-16",
+                    "label": "Normal"
+                },
+                {
+                    "value": "text-18",
+                    "label": "Large"
+                },
+                {
+                    "value": "text-20",
+                    "label": "Extra Large"
+                }
+            ],
+            "default": "text-16"
+        },
+        {
+            "type": "select",
+            "id": "text_weight",
+            "label": "Text Weight",
+            "options": [
+                {
+                    "value": "font-weight-light",
+                    "label": "Light"
+                },
+                {
+                    "value": "font-weight-normal",
+                    "label": "Normal"
+                },
+                {
+                    "value": "font-weight-medium",
+                    "label": "Medium"
+                },
+                {
+                    "value": "font-weight-bold",
+                    "label": "Bold"
+                },
+                {
+                    "value": "font-weight-extrabold",
+                    "label": "Extra Bold"
+                }
+            ],
+            "default": "font-weight-normal"
+        },
+        {
+            "type": "select",
+            "id": "text_spacing",
+            "label": "Letter Spacing",
+            "options": [
+                {
+                    "value": "tracking-tightest",
+                    "label": "Tightest"
+                },
+                {
+                    "value": "tracking-tighter",
+                    "label": "Tighter"
+                },
+                {
+                    "value": "tracking-tight",
+                    "label": "Tight"
+                },
+                {
+                    "value": "tracking-normal",
+                    "label": "Normal"
+                },
+                {
+                    "value": "tracking-wide",
+                    "label": "Wide"
+                },
+                {
+                    "value": "tracking-wider",
+                    "label": "Wider"
+                },
+                {
+                    "value": "tracking-widest",
+                    "label": "Widest"
+                }
+            ],
+            "default": "tracking-normal"
+        },
+        {
+            "type": "select",
+            "id": "text_height",
+            "label": "Line Height",
+            "options": [
+                {
+                    "value": "leading-none",
+                    "label": "None"
+                },
+                {
+                    "value": "leading-tight",
+                    "label": "Tight"
+                },
+                {
+                    "value": "leading-normal",
+                    "label": "Normal"
+                },
+                {
+                    "value": "leading-relaxed",
+                    "label": "Relaxed"
+                },
+                {
+                    "value": "leading-loose",
+                    "label": "Loose"
+                }
+            ],
+            "default": "leading-normal"
+        },
+        {
+            "type": "checkbox",
+            "id": "text_uppercase",
+            "label": "Uppercase",
+            "default": false
+        },
+        {
+            "type": "header",
+            "content": "Container Configuration"
+        },
+        {
+            "type": "select",
+            "id": "container_padding",
+            "label": "Padding",
+            "options": [
+                {
+                    "value": "py-2",
+                    "label": "Tightest"
+                },
+                {
+                    "value": "py-3",
+                    "label": "Tighter"
+                },
+                {
+                    "value": "py-4",
+                    "label": "Tight"
+                },
+                {
+                    "value": "py-5",
+                    "label": "Normal"
+                },
+                {
+                    "value": "py-6",
+                    "label": "Wide"
+                },
+                {
+                    "value": "py-7",
+                    "label": "Wider"
+                },
+                {
+                    "value": "py-8",
+                    "label": "Widest"
+                }
+            ],
+            "default": "py-3"
+        },
+        {
+            "type": "select",
+            "id": "container_background",
+            "label": "Background",
+            "options": [
+                {
+                    "value": "bg-white",
+                    "label": "White"
+                },
+                {
+                    "value": "bg-athens-gray",
+                    "label": "Gray"
+                }
+            ],
+            "default": "bg-athens-gray"
+        }
+    ],
+    "blocks": [],
+    "presets": [
+        {
+            "name": "Text Block",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": []
+        }
+    ]
+}
+{% endschema %}

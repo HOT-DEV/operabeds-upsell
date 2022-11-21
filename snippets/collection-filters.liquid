@@ -1,0 +1,123 @@
+{% comment %} Iterate over the Collection tags and build the Filter Groups array {% endcomment %}
+{%- liquid 
+    if _filter_categories_array
+        assign filter_categories_array = _filter_categories_array
+    else
+        assign user_specified_collection_filters = collection.metafields.accentuate.collection_filters_allowed
+        if user_specified_collection_filters.size > 0
+            assign allowed_filters = user_specified_collection_filters | downcase
+        else 
+            assign allowed_filters = 'Colour,Height,Width,Range,Style,Person' | downcase
+        endif
+        
+        if collection.all_tags.size > 0
+            for tag in collection.all_tags
+                if tag contains '_'
+                    assign tag_key = tag | split: '_' | first | downcase
+                    
+                    if allowed_filters contains tag_key
+                        assign filter_category = tag  | split: '_' | first
+                        assign filter_categories = filter_categories | append: ',' | append: filter_category
+                    endif
+                endif
+            endfor
+            assign filter_categories_array = filter_categories | remove_first: ',' | split: ',' | uniq
+        endif
+    endif
+-%}
+<div id="filters" class="c-filters__overlay__groups">
+    {%- for filter_category in filter_categories_array -%}
+        <div class="c-filters__group" data-filters-group>
+            <button class="c-filters__group__toggle mr-n3" id="filters-group-toggle-{{ forloop.index }}" aria-controls="filters-group-dropdown-{{ forloop.index }}" aria-expanded="false"  data-filters-group-toggle>
+                <span class="c-filters__group__toggle__label">
+                    {{- filter_category | escape -}}
+                </span>
+                {%- liquid 
+                    assign counter = 0
+                    for tag in collection.all_tags
+                        if tag contains '_'
+                            assign tag_key = tag | split: '_' | first | downcase 
+                            assign tag_value = tag | split: '_' | last
+                            assign filter_category_downcase = filter_category | downcase
+
+                            if filter_category_downcase == tag_key and current_tags contains tag
+                                assign counter = counter | plus: 1
+                            endif
+                        endif
+                    endfor 
+                -%}
+                {%- if counter > 0 -%}
+                    <span class="c-filters__group__toggle__count">
+                            {{ counter }}
+                    </span>
+                {%- endif -%}
+            </button>
+            <div class="c-filters__group__dropdown" id="filters-group-dropdown-{{ forloop.index }}" aria-labelledby="filters-group-toggle-{{ forloop.index }}" data-filters-group-dropdown>
+                <ul>
+                    {%- for tag in collection.all_tags -%}
+                        {%- if tag contains '_' -%}
+                            {% comment %}
+                                Fix bug in current_tags - we need to normalize the & to match the encoding on the current_tags
+                                current_tags encoding of & is: \u0026amp;
+                                normal shopify text is: \u0026
+                            {% endcomment %}
+                            {% assign normalized_tag_for_add_or_remove_filter = tag | replace: '&', '&amp;' %}
+                            {%- liquid 
+                                assign selected_tag = false
+                                assign selected_normalised_tag = false
+                                assign anchor = ''
+
+                                assign tag_key = tag | split: '_' | first | downcase 
+                                assign tag_value = tag | split: '_' | last
+                                assign filter_category_downcase = filter_category | downcase 
+                                
+                                if current_tags contains tag
+                                    assign selected_tag = true
+                                elsif current_tags contains normalized_tag_for_add_or_remove_filter
+                                    assign selected_normalised_tag = true
+                                endif
+
+                                if tag_value contains 'GBP'
+                                    assign tag_value = tag_value | replace: 'GBP', '&pound;'
+                                endif
+                            -%}
+                            {%- if filter_category_downcase == tag_key -%}
+                                {%- if selected_tag or selected_normalised_tag -%}
+                                <li class="is-active">
+                                    {%- capture anchor -%}
+                                        {%- liquid 
+                                            if selected_normalised_tag
+                                                assign tag_to_remove = normalized_tag
+                                            elsif selected_tag
+                                                assign tag_to_remove = tag
+                                            endif
+                                            echo tag_value | link_to_remove_tag: tag_to_remove
+                                        -%}
+                                    {%- endcapture -%}
+                                    {%- liquid 
+                                        assign anchor = anchor | replace: '-amp-', '-'
+                                        assign anchor_replacement_str = '<a aria-label="Remove filter $1"' | replace: '$1', tag_value
+                                        assign anchor = anchor | replace: '<a', anchor_replacement_str
+                                    -%}
+                                    {{ anchor }}
+                                </li>
+                                
+                                {%- else -%}
+                                    {% capture anchor %}{{ tag_value | link_to_add_tag: tag }}{% endcapture %}
+                                    {%- liquid 
+                                        assign anchor = anchor | replace: '-amp-', '-'
+                                        assign anchor_replacement_str = '<a aria-label="Filter by $1" ' | replace: '$1', tag_value
+                                        assign anchor = anchor | replace: '<a', anchor_replacement_str | replace: '" title="', '#filters" title="'
+                                    -%}
+                                    <li>
+                                        {{ anchor }}
+                                    </li>
+                                {%- endif -%}
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- endfor -%}
+                </ul>
+            </div>
+        </div>
+    {%- endfor -%}
+</div>

@@ -1,0 +1,241 @@
+{% comment %}
+    Product Tile snippet.
+{% endcomment %}
+{%- liquid
+    if product
+        assign vat_multiplier = settings.taxes_vat_multiplier | divided_by: 100.00 | plus: 1
+        assign product_type_downcase = product.type | downcase
+
+        assign image_xs_default = 'https://via.placeholder.com/576x476'
+        assign image_sm_default = 'https://via.placeholder.com/768x476'
+        assign image_md_default = 'https://via.placeholder.com/1024x476'
+        assign image_lg_default = 'https://via.placeholder.com/1280x580'
+        assign image_xl_default = 'https://via.placeholder.com/1440x680'
+        assign image_xxl_default = 'https://via.placeholder.com/1670x780'
+        assign image_xxxl_default = 'https://via.placeholder.com/1920x780'
+
+        assign image_default = product.images[0]
+        assign image_xs_default = image_default | img_url: 'x476'
+        assign image_sm_default = image_default | img_url: 'x476'
+        assign image_md_default = image_default | img_url: 'x476'
+        assign image_lg_default = image_default | img_url: 'x580'
+        assign image_xl_default = image_default | img_url: 'x680'
+        assign image_xxl_default = image_default | img_url: 'x780'
+        assign image_xxxl_default = image_default | img_url: 'x780'
+
+        if product.images.size > 1
+            assign image_hover = product.images[1]
+            assign image_xs_hover = image_hover | img_url: 'x476'
+            assign image_sm_hover = image_hover | img_url: 'x476'
+            assign image_md_hover = image_hover | img_url: 'x476'
+            assign image_lg_hover = image_hover | img_url: 'x580'
+            assign image_xl_hover = image_hover | img_url: 'x680'
+            assign image_xxl_hover = image_hover | img_url: 'x780'
+            assign image_xxxl_hover = image_hover | img_url: 'x780'
+        endif
+
+        assign product_collection = product.metafields.product_item.category | trim | default: 'Requires product metafield category'
+        assign price_saving = product.compare_at_price | minus: product.price
+        if price_saving > 0
+            assign hasSaving = true
+        else
+            assign hasSaving = false
+        endif
+    endif
+
+    for tag in product.tags
+        assign tag_downcase = tag | downcase
+        assign tag_key = tag | split: '_' | first | downcase
+        assign tag_value = tag | split: '_' | last
+        if tag_key == 'badge'
+            assign tag_ribbon_value = tag_value
+        elsif tag_key == 'ribbon'
+            assign tag_ribbon_category = tag_value
+        endif
+    endfor
+
+    if _tag_ribbon_value
+        assign tag_ribbon_value = _tag_ribbon_value
+    endif
+
+    comment
+    BOLD - custom code
+    endcomment
+    assign trade_customer_tag = settings.trade_customer_tag_bold_app
+    if customer and customer.tags contains trade_customer_tag
+        assign bold_trade_customer_logged_in = true
+    endif
+
+-%}
+{% for tag in product.tags %}
+
+	{% if tag contains 'Delivery_' %}
+		{% assign deliveryMessage = true %}
+		{% assign timeDelivery = tag | split: '_' | last %}
+	{% endif %}
+
+	{% if tag contains 'Delivery & Setup' %}
+		{% assign deliverySetupMessage = true %}
+		{% assign timeDeliverySetup = tag | split: '_' | last %}
+	{% endif %}
+	
+{% endfor %}
+{%- if product != blank -%}
+    {%- if bold_trade_customer_logged_in -%}
+        <script type="application/json" class="bold-product-json">{{ product | json }}</script>
+    {%- endif -%}
+    <div class="c-product-item{% if class %} {{ class }}{% endif %}" data-product-item>
+        <div class="c-product-item__media position-relative">
+            <picture class="c-product-item__media__picture default js-lazy" data-iesrc="{{ image_xxxl_default | url }}" data-alt="{{ image.alt | default: product.title | escape }}">
+                <source srcset="{{ image_xs_default | url }}" media="(max-width: 575px)">
+                <source srcset="{{ image_sm_default | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                <source srcset="{{ image_md_default | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                <source srcset="{{ image_lg_default | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                <source srcset="{{ image_xl_default | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                <source srcset="{{ image_xxl_default | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                <source srcset="{{ image_xxxl_default | url }}" media="(min-width: 1670px)">
+                {% comment %} <img alt="" /> {% endcomment %}
+            </picture>
+            {% if product.images.size > 1 %}
+                <picture class="c-product-item__media__picture hover js-lazy" data-iesrc="{{ image_xxxl_hover | url }}" data-alt="{{ image.alt | default: product.title | escape }}">
+                    <source srcset="{{ image_xs_hover | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ image_sm_hover | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                    <source srcset="{{ image_md_hover | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                    <source srcset="{{ image_lg_hover | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                    <source srcset="{{ image_xl_hover | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                    <source srcset="{{ image_xxl_hover | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                    <source srcset="{{ image_xxxl_hover | url }}" media="(min-width: 1670px)">
+                    {% comment %} <img alt="" /> {% endcomment %}
+                </picture>
+            {%- endif -%}
+            
+            <div class="custom-fabric-swatch">
+                {% for product_option in product.options_with_values %}
+                    {% if product_option.name contains 'Fabric' or product_option.name contains 'Material' or product_option.name contains 'Wood' %}
+                        {% for value in product_option.values limit: 3 %}
+                            {% if value contains 'Linen' or value contains 'Zinc' or value contains 'Anthracite' or value contains 'Sisal' or value contains 'Lichtgrau' or value contains 'Meteor' or value contains 'Beech' or value contains 'Oak' or value contains 'Walnut' or value contains 'Ivory' or value contains 'Stone' or value contains 'Petrol' or value contains 'Wine' %}
+                                {% unless product.handle == 'signature-profiling-bed-upholstered' or product.handle == 'classic-low-upholstered-profiling-bed' or product.handle == 'classic-upholstered-profiling-bed' or product.title contains 'SafeSide' %}
+                                    {% if value contains 'Linen' %}    
+                                    <img data-src="{{- 'swatch-linen-fabric.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Linen' | escape -}}">
+                                    {% endif %}
+                                    {% if value contains 'Zinc' %}    
+                                    <img data-src="{{- 'swatch-zinc-fabric.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Zinc' | escape -}}">
+                                    {% endif %}
+                                    {% if value contains 'Anthracite' %}    
+                                    <img data-src="{{- 'swatch-anthracite-fabric.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Anthracite' | escape -}}">
+                                    {% endif %}                                
+                                {% endunless %}
+                                    {% if value contains 'Sisal' %}    
+                                    <img data-src="{{- 'swatch-sisal-leather.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Sisal' | escape -}}">
+                                    {% endif %}
+                                    {% if value contains 'Lichtgrau' %}    
+                                    <img data-src="{{- 'swatch-lichtgrau-leather.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Lichtgrau' | escape -}}">
+                                    {% endif %}                                
+                                    {% if value contains 'Meteor' %}    
+                                    <img data-src="{{- 'swatch-meteor-leather.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Meteor' | escape -}}">
+                                    {% endif %}
+                                    {% if value contains 'Beech' %}    
+                                    <img data-src="{{- 'swatch-beech.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Beech' | escape -}}">
+                                    {% endif %}   
+                                    {% if value contains 'Oak' %}    
+                                    <img data-src="{{- 'swatch-oak.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Oak' | escape -}}">
+                                    {% endif %} 
+                                    {% if value contains 'Walnut' %}    
+                                    <img data-src="{{- 'swatch-walnut.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Walnut' | escape -}}">
+                                    {% endif %}                                                                                            
+                                    {% if value contains 'Ivory' %}    
+                                    <img data-src="{{- 'swatch-ivory.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Ivory' | escape -}}">
+                                    {% endif %}                                                                                            
+                                    {% if value contains 'Stone' %}    
+                                    <img data-src="{{- 'swatch-stone.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Stone' | escape -}}">
+                                    {% endif %}                                                                                            
+                                    {% if value contains 'Petrol' %}    
+                                    <img data-src="{{- 'swatch-petrol.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Petrol' | escape -}}">
+                                    {% endif %}                                                                                            
+                                    {% if value contains 'Wine' %}    
+                                    <img data-src="{{- 'swatch-wine.png' | file_img_url -}}" class="js-lazy" alt="{{- 'Wine' | escape -}}">
+                                    {% endif %}                                                                                            
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if product_option.name contains 'Material' or product_option.name contains 'Fabric' and forloop.length >= 4 %}
+                            <div class="more-swatches">{{ '&#43;' }}</div>
+                        {% elsif product_option.name contains 'Material' and product_option.name contains 'Fabric' or product_option.name contains 'Wood' and forloop.length >= 4 %}
+                            <div class="more-swatches">{{ '&#43;' }}</div>
+                        {% endif %}
+
+                    {% endif %}                      
+                {% endfor %}   
+            </div>
+
+            {%- comment -%}add sales badge -ja{%- endcomment -%}
+            {% if product.compare_at_price > product.price_min %}
+                <div class="collection-sales-badge">Sale</div>
+            {% endif %}            
+
+        </div>
+        <div class="c-product-item__content mb-0">
+            <div class="c-product-item__content__title">
+                <h3 class="mb-0 text-20 font-weight-semibold leading-tight">
+                    <a href="{{ product.url | within: collection }}" class="stretched-link" aria-label="{{ product.title | escape }}" title="{{ product.title | escape }}">
+                        {{- product.title | escape -}}
+                        </a>
+
+                </h3>
+            </div>
+            <div class="c-product-item__content__list">
+                {%- if product.metafields.global.excerpt != blank -%}
+                    {{- product.metafields.global.excerpt | safe | replace: '<ul>', '<ul role="list">' | replace: '<li>', '<li role="listitem">' -}}
+                {%- else -%}
+                    {%- assign description_parts = product.description | split: '</p>' -%}
+                    {%- if description_parts.size > 0 -%}
+                        <p>{{ description_parts | first | strip_html | strip | truncatewords: 20, '...' | escape }}</p>
+                    {%- endif -%}
+                {%- endif -%}
+            </div>      
+        </div>
+        <div class="product-price-wrapper pt-0" id="col-custom" style="margin-top: auto!important;">
+
+            <div class="c-product-item__content__price w-100">
+                {%- if bold_trade_customer_logged_in -%}
+                    <p class="mb-2" data-finance-container data-product-price="{{ product.price_min }}">
+                        <span class="money" data-product-id="{{ product.id }}" class="d-inline-block mr-1 text-24 leading-none font-weight-bold">
+                            {{- product.price_min | money_without_trailing_zeros -}}
+                        </span>
+                        <span class="text-12 font-weight-semibold">
+                            Trade Price
+                        </span>
+                    </p>
+                {%- else -%}    
+                           
+                    {% if product.compare_at_price > product.price_min %}
+                          <span class="text-12 font-weight-semibold" style="text-decoration: line-through; color: #969696;">{{- product.compare_at_price | money_without_trailing_zeros -}}</span>
+                      {% endif %}
+            
+                    <div class="d-flex justify-content-between mb-2 mt-1 position-relative">
+                      {% if product.compare_at_price > product.price_min %}
+                        <span class="money d-inline-block mr-1 text-28 leading-none font-weight-semibold" data-product-id="{{ product.id }}">
+                            <span style="color:#751212">{{- product.price_min | money_without_trailing_zeros -}}</span>                            
+                            <span class="text-12 font-weight-normal">With VAT Relief</span>                        
+                        </span>                      
+                      {% else %}
+                      
+                          <span class="money d-inline-block mr-1 text-28 leading-none font-weight-semibold" data-product-id="{{ product.id }}">
+                            {{- product.price_min | money_without_trailing_zeros }}
+                            <span class="text-12 font-weight-normal">With VAT Relief </span>                            
+                        </span>
+                        {%- endif -%}
+                        
+                        <span class="text-12 text-right font-weight-semibold position-absolute" style="right: 0; bottom: 0;">
+                            {{ product.price_min | times: vat_multiplier | money_without_trailing_zeros }} inc. VAT
+                        </span>
+                    </div>    
+                {%- endif -%}
+            </div>
+            <div class="c-product-item__view-product bg-white w-100 text-center text-16 font-weight-semibold">
+            {{ 'View Product' }}
+            </div>
+            
+        </div>
+    </div>
+{%- endif -%}

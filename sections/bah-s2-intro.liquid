@@ -1,0 +1,28 @@
+{% comment %}
+    The text-intro section.
+	4PE - 1/12/2021
+{% endcomment %}
+
+<section class="py-7 py-md-14" data-section-id="{{ section.id }}">
+    <div class="container py-12 text-center">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-lg-8 px-8 px-sm-16 px-lg-0">
+                <p class="text-20 text-lg-24 font-weight-medium m-0">{{ section.settings.strapline }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "S2 - Intro text",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "strapline",
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "label": "Add your intro text here"
+    }    
+  ]
+}
+{% endschema %}

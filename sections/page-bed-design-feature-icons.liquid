@@ -1,0 +1,48 @@
+{% comment %}
+    The Bespoke Design - Feature Icons section template.
+{% endcomment %}
+{%- if section.blocks.size > 0 -%}
+    <div class="container site-padding mt-16 mt-md-22">
+        <div class="row justify-content-md-center">
+            <div class="col-md-10">
+                <hr class="light mt-12 mt-md-20 mb-12 mb-md-10"/>
+                <ul class="c-icon-list d-flex flex-column flex-sm-row flex-wrap flex-md-nowrap align-items-center justify-content-sm-between">
+                    {%- for block in section.blocks -%}
+                        <li>
+                            <img data-src="{{ block.settings.image | img_url: '30x' }}" class="js-lazy" alt="{{ block.settings.title }}"/>
+                            <span class="text-16 text-blue-diane">{{ block.settings.title }}</span>
+                        </li>
+                    {%- endfor -%}
+                </ul>
+                <hr class="light mt-12 mt-md-10"/>
+            </div>
+        </div>
+    </div>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Feature Icons",
+    "settings": [
+    ],
+    "blocks": [
+    {
+        "type": "feature",
+        "name": "Feature Point",
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Text",
+                "default": "Feature"
+            },
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image"
+            }
+        ]
+    }
+]
+}
+{% endschema %}

@@ -1,0 +1,265 @@
+{% comment %}
+    The Product Tabs section template.
+	Backup 23.1.22 by 4PE
+{% endcomment %}
+{%- liquid
+    assign product_tabs_names = product.metafields.accentuate.product_tab_name
+    assign product_tabs_content = product.metafields.accentuate.product_tab_content
+
+    assign product_faqs_questions = product.metafields.accentuate.product_tab_faqs_question
+    assign product_faqs_answers = product.metafields.accentuate.product_tab_faqs_answer
+
+    assign product_download_titles = product.metafields.accentuate.product_download_title
+    assign product_download_urls = product.metafields.accentuate.product_download_pdf_link
+    assign product_download_images = product.metafields.accentuate.product_download_image
+
+    comment
+    Add Reviews Tab
+    endcomment
+    assign reviews_heading = section.settings.reviews_heading
+
+    comment
+    Add FAQs Tab
+    endcomment
+    if product_faqs_questions.size > 0
+        assign faq_heading = section.settings.faq_heading
+        assign faq_heading_obj = faq_heading | uniq
+        assign product_tabs_names = product_tabs_names | concat: faq_heading_obj
+    endif
+
+    comment
+    Add Downloads Tab
+    endcomment
+    if product_download_titles.size > 0
+        assign downloads_heading = section.settings.downloads_heading
+        assign downloads_heading_obj = downloads_heading | uniq
+        assign product_tabs_names = product_tabs_names | concat: downloads_heading_obj
+    endif
+
+    assign product_tabs_size = product_tabs_names.size
+
+    assign product_skus = product.variants | map: 'sku' | join: ','
+    assign product_metafield_skus = product.metafields.trustpilot.skus | remove: '' | append: ',' | replace: ',,', ','
+    assign product_all_skus = product_skus | append: ',' | append: product_metafield_skus | replace: ',,', ',' | remove: ''
+-%}
+
+{%- capture truspilot_logo -%}
+<svg class="trustpilot-star-icon" aria-hidden="true" role="presentation">
+    <use xlink:href="#sprite-trustpilot-star"></use>
+</svg>
+Reviews
+{%- endcapture -%}
+
+{%- if product_tabs_size > 0 -%}
+    {%- if product_faqs_questions.size > 0 -%}
+        {%- capture el_faqs_content -%}
+            <div class="c-accordion mt-12 mt-lg-14" data-accordion data-accordion-multiple="true">
+                {%- for question in product_faqs_questions -%}
+                    <button class="c-accordion__toggle" id="faqs-accordion-toggle-{{ forloop.index }}" type="button" aria-controls="faqs-accordion-content-{{ forloop.index }}" aria-expanded="false" data-accordion-toggle>
+                        <span class="c-accordion__toggle__text">
+                            {{- product_faqs_questions[forloop.index0] | escape -}}
+                        </span>
+                        <svg class="c-accordion__toggle__plus" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-caret-down"></use>
+                        </svg>
+                        <svg class="c-accordion__toggle__minus" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-caret-right"></use>
+                        </svg>
+                    </button>
+                    <div class="c-accordion__content" id="faqs-accordion-content-{{ forloop.index }}" hidden>
+                        <div class="text-14 text-abbey c-rte">
+                            {{- product_faqs_answers[forloop.index0] | safe -}}
+                        </div>
+                    </div>
+                {%- endfor -%}
+            </div>
+        {%- endcapture -%}
+    {%- endif -%}
+
+    {%- capture el_reviews_content -%}
+        <!-- TrustBox widget - Product Reviews SEO -->
+        <div class="trustpilot-widget" data-locale="en-GB" data-template-id="5717796816f630043868e2e8" data-businessunit-id="6015ba1d33fc5e0001b26c2b" data-style-height="800px" data-style-width="100%" data-theme="light" data-sku="{{ product_all_skus }}" data-name="{{ product.title }}" data-review-languages="en" data-no-reviews="hide">
+            <a href="https://uk.trustpilot.com/review/operabeds.com" target="_blank" rel="noopener">Trustpilot</a>
+        </div>
+        <!-- End TrustBox widget -->
+    {%- endcapture -%}
+
+    {%- if product_download_titles.size > 0 -%}
+        {%- capture el_download_content -%}
+            {%- for download in product_download_titles -%}
+                <a href="{{- product_download_urls[forloop.index0] -}}" class="c-download-card" aria-label="Download {{- product_download_titles[forloop.index0] -}}">
+                    {{- product_download_titles[forloop.index0] -}}
+                    <div class="image">
+                        <img src="{{- product_download_images[forloop.index0] | file_url -}}" loading="lazy" alt="{{- product_download_titles[forloop.index0] -}}"/>
+                    </div>
+                    <svg aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-arrow-down"></use>
+                    </svg>
+                </a>
+            {%- endfor -%}
+        {%- endcapture -%}
+    {%- endif -%}
+
+
+
+
+    <section class="" data-section-type="product-tabs" data-section-id="{{ section.id }}">
+        <div class="container site-padding py-16 py-lg-20 py-xxl-22">
+            <div class="row justify-content-center mb-10 mb-lg-12">
+                <div class="col-12 col-md-10 col-lg-9 col-xl-8 col-xxl-7 col-xxxl-6 text-center text-abbey">
+                    <h2 class="mb-0 u-heading-md text-elephant">
+                        <span class="d-lg-block">
+                            {{- section.settings.title | escape -}}
+                        </span>
+                        <span class="d-lg-block">
+                            {{- product.title | escape -}}
+                        </span>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10 col-xl-9 col-xxl-8">
+                    {% comment %} Accordion {% endcomment %}
+                    <div class="c-accordion d-lg-none" data-accordion data-accordion-multiple="false">
+                        {%- for tab_name in product_tabs_names -%}
+                            {%- liquid
+                                assign is_reviews_tab = false
+                                assign is_faqs_tab = false
+                                assign is_downloads_tab = false
+
+                                if tab_name == reviews_heading
+                                    assign is_reviews_tab = true
+                                elsif tab_name == faq_heading
+                                    assign is_faqs_tab = true
+                                elsif tab_name == downloads_heading
+                                    assign is_downloads_tab = true
+                                endif
+                            -%}
+                            <button data-tab-name="{{ tab_name | handleize }}" class="c-accordion__toggle" id="product-accordion-toggle-{{ forloop.index }}" type="button" aria-controls="product-accordion-content-{{ forloop.index }}" aria-expanded="false" data-accordion-toggle >
+                                <span class="c-accordion__toggle__text c-accordion__toggle__text--alt">
+                                    {{ tab_name | replace: reviews_heading, truspilot_logo }}
+                                </span>
+                                <svg class="c-accordion__toggle__plus" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-down"></use>
+                                </svg>
+                                <svg class="c-accordion__toggle__minus" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-right"></use>
+                                </svg>
+                            </button>
+                            <div data-tab-content-name="{{ tab_name | handleize }}" class="c-accordion__content" id="product-accordion-content-{{ forloop.index }}" hidden data-accordion-content>
+                                {%- if is_faqs_tab -%}
+                                    {{ el_faqs_content | replace: 'faqs-accordion', 'faqs-accordion-mobile' }}
+                                {%- elsif is_reviews_tab -%}
+                                    {{ el_reviews_content }}
+                                {%- elsif is_downloads_tab -%}
+                                    {{ el_download_content }}
+                                {%- else -%}
+                                    {%- render 'product-tab-content'
+                                        product_tab_content: product_tabs_content[forloop.index0]
+                                    -%}
+                                {%- endif -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+
+                    {% comment %} Tabs {% endcomment %}
+                    <div class="c-tabs d-none d-lg-block" data-tabs>
+                        <ul class="c-tabs__tablist c-tabs__tablist--fluid mb-16 mb-lg-18" role="tablist">
+                            {%- for tab_name in product_tabs_names -%}
+                                {%- liquid
+                                    assign is_reviews_tab = false
+                                    assign is_faqs_tab = false
+                                    assign is_downloads_tab = false
+
+                                    if tab_name == reviews_heading
+                                        assign is_reviews_tab = true
+                                    elsif tab_name == faq_heading
+                                        assign is_faqs_tab = true
+                                    elsif tab_name == downloads_heading
+                                        assign is_downloads_tab = true
+                                    endif
+                                -%}
+                                <li data-tab-name="{{ tab_name | handleize }}" role="none" {% if is_reviews_tab %}hidden{% endif %}>
+                                    <button class="c-tabs__pill" id="product-tab-{{ forloop.index }}" {% if forloop.first %}aria-selected="true"{% endif %} aria-controls="product-tabpanel-{{ forloop.index }}" type="button" role="tab" data-tabs-btn>
+                                        {%- if is_reviews_tab -%}
+                                            {{ truspilot_logo }}
+                                        {%- else -%}
+                                            {{ tab_name }}
+                                        {%- endif -%}
+                                    </button>
+                                </li>
+                            {%- endfor -%}
+                        </ul>
+                        {%- for tab_name in product_tabs_names -%}
+                            {%- liquid
+                                assign is_reviews_tab = false
+                                assign is_faqs_tab = false
+                                assign is_downloads_tab = false
+
+                                if tab_name == reviews_heading
+                                    assign is_reviews_tab = true
+                                elsif tab_name == faq_heading
+                                    assign is_faqs_tab = true
+                                elsif tab_name == downloads_heading
+                                    assign is_downloads_tab = true
+                                endif
+                            -%}
+                            <div data-tab-content-name="{{ tab_name | handleize }}" class="c-tabs__tabpanel" id="product-tabpanel-{{ forloop.index }}" aria-labelledby="product-tab-{{ forloop.index }}" tabindex="{{ forloop.index0 }}" role="tabpanel" data-tabs-panel {% unless forloop.first %}hidden{% endunless %}>
+                                {%- if is_faqs_tab -%}
+                                    {{ el_faqs_content | replace: 'faqs-accordion', 'faqs-accordion-desktop' }}
+                                {%- elsif is_reviews_tab -%}
+                                    {{ el_reviews_content  }}
+                                {%- elsif is_downloads_tab -%}
+                                    {{ el_download_content }}
+                                {%- else -%}
+                                    {%- render 'product-tab-content'
+                                        product_tab_content: product_tabs_content[forloop.index0]
+                                    -%}
+                                {%- endif -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Tabs",
+    "settings": [
+        {
+            "type":"header",
+            "content": "Content Addition Note",
+            "info": "Product specific data can be added through App 'Accentuate'."
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Product tab heading",
+            "default": "Specifications & Details for the"
+        },
+        {
+            "type": "text",
+            "id": "faq_heading",
+            "label": "FAQ tab heading",
+            "default": "Q&A"
+        },
+        {
+            "type": "text",
+            "id": "reviews_heading",
+            "label": "Reviews tab heading",
+            "default": "Reviews"
+        },
+        {
+            "type": "text",
+            "id": "downloads_heading",
+            "label": "Downloads tab heading",
+            "default": "Downloads"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

@@ -1,0 +1,50 @@
+{%- liquid
+    assign image = _image
+    assign image_alt = _image.alt | default: _heading
+    if _text_panel_position == 'right'
+        assign image_position = 'order-lg-first'
+        assign text_position = 'order-lg-last'
+    else
+        assign image_position = 'order-lg-last'
+        assign text_position = 'order-lg-first'
+    endif
+
+    assign img_xs = image | img_url: '376x263', crop: 'center'
+    assign img_sm = image | img_url: '480x336', crop: 'center'
+    assign img_md = image | img_url: '608x426', crop: 'center'
+    assign img_lg = image | img_url: '464x325', crop: 'center'
+    assign img_xl = image | img_url: '524x367', crop: 'center'
+    assign img_xxl = image | img_url: '379x265', crop: 'center'
+    assign img_xxxl = image | img_url: '459x321', crop: 'center'
+-%}
+<div class="container site-padding">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xxl-10 col-xxxl-8">
+            <div class="row no-gutters align-items-lg-center mt-16">
+                <div class="col-12 col-lg-6 mb-8 mb-lg-0 px-lg-16">
+                    <h2 class="mb-8 text-26 text-lg-36 font-weight-normal leading-tight text-elephant">{{ _heading }}</h2>
+                    <div class="mb-n4 text-14 text-abbey">
+                        {{ _text }}
+                    </div>
+                    {%- if _cta_url -%}
+                        <a href="{{ _cta_url | url }}" class="c-btn-outline c-btn-outline--dark mt-8 mt-lg-20">
+                            {{ _cta_text }}
+                        </a>
+                    {%- endif -%}
+                </div>
+                <div class="col-12 col-lg-6 {{ image_position }}">
+                    <picture class="picture-cover js-lazy" data-iesrc="{{- image | img_url: '575x' -}}" data-alt="{{ image_alt }}">
+                        <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+                        <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                        <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                        <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                        <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                        <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                        <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+                        {% comment %} <img alt="" /> {% endcomment %}
+                    </picture>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

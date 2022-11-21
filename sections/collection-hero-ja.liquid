@@ -1,0 +1,128 @@
+{% comment %}
+    New collection hero template aligned with Matt design May/June 2022
+{% endcomment %}
+
+{%- liquid
+    assign background_image = collection.image
+    assign col_video_id = collection.metafields.my_fields.youtube_video_id
+    
+-%}
+{%- liquid
+
+    assign seo_override = blank
+
+    if seo_override.h1 != blank
+    assign collection_h1 = seo_override.h1
+elsif current_tags.size == 1
+    assign first_tag_value = current_tags[0] | split: '_' | last
+    assign collection_h1 = first_tag_value
+elsif current_tags.size > 1
+    assign first_tag_value = current_tags[0] | split: '_' | last
+    assign second_tag_value = current_tags[1] | split: '_' | last
+    assign collection_h1 = first_tag_value | append: ' ' | append: second_tag_value
+else
+    assign collection_h1 = collection.title
+endif
+
+if seo_override.content != blank
+    assign collection_content = seo_override.content
+else
+    assign collection_content = collection.description
+endif
+
+
+    assign image = background_image
+    assign image_alt = image.alt | default: heading
+    assign image_xs = image | img_url: 'x300'
+    assign image_sm = image | img_url: 'x300'
+    assign image_md = image | img_url: 'x300'
+    assign image_lg = image | img_url: '960x482'
+    assign image_xl = image | img_url: '1080x586'
+    assign image_xxl = image | img_url: '995x586'
+    assign image_xxxl = image | img_url: '1195x586'
+    assign image_hd = image | img_url: '1360x586'
+-%}
+{%- if image != blank -%}
+<section class="c-hero-ja mb-0 mb-xl-8" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row align-items-center p-0 m-0">
+            <div class="col-12 col-xl-6 text-center text-xl-left p-0 my-8 my-xl-0">
+                <div class="c-hero-ja__text pr-xl-12 pr-xxl-28">
+                    <h2 class="text-36 text-md-46 text-hd-60 font-weight-medium leading-tight tracking-wide text-elephant mb-8 p-0">
+                        {{ collection_h1 | escape }}
+                  	</h2>              
+
+                      <span class="d-none d-xl-block">
+                        {{ collection_content }}
+                      </span>
+                      
+                      <span class="d-xl-none">
+                      {% if collection_content.size > 125 %}
+                          
+                      <div id="col-description-short">
+                          {{ collection_content | truncate: 75, ''}}<span id="dots"></span>
+                        </div>
+                        <div id="col-description-full">
+                            {{ collection_content }}
+                        </div>                    
+                        
+                        <div class="mt-4">
+                            <button onclick="readMore()" id="readBtn" class="font-weight-medium" style="text-decoration: underline; text-underline-offset:2px; background-color: transparent; border: none; padding: 0;">Read More...</button>
+                        </div>	
+                        {% else %}
+                            
+                        {{ collection_content | safe }}
+                        
+                        {% endif %}
+                    </span>
+
+                </div>
+            </div>
+            <div class="c-hero-ja__image col-12 d-none d-xl-block col-xl-6 p-0 position-relative">
+                <picture class="s-product-video__picture js-lazy" data-iesrc="{{ image_xxxl | url }}"
+                    style="max-height: 300px;" data-alt="{{ image_alt | escape }}">
+                    <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ image_sm | url }}" media="(max-width: 767px)">
+                    <source srcset="{{ image_md | url }}" media="(max-width: 1023px)">
+                    <source srcset="{{ image_lg | url }}" media="(max-width: 1279px)">
+                    <source srcset="{{ image_xl | url }}" media="(max-width: 1439px)">
+                    <source srcset="{{ image_xxl | url }}" media="(max-width: 1669px)">
+                    <source srcset="{{ image_xxxl | url }}" media="(max-width: 1919px)">
+                    <source srcset="{{ image_hd | url }}" media="(min-width: 1920px)">
+                    {% comment %} <img alt="" /> {% endcomment %}
+                </picture>
+
+                {% if col_video_id != blank %}
+                <div class="s-product-video__overlay" style="opacity: 0.15"></div>
+                <div class="s-product-video__content position-absolute" id="col-video">
+                    <a class="play-yt-btn" href="https://youtu.be/{{ col_video_id }}" data-lity>
+                        {%- render 'icon-play-youtube'-%}
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+{%- endif -%}
+
+{{ 'col-read-more.js' | asset_url | script_tag }}
+
+{% schema %}
+  {
+    "name": "Collection - Hero",
+    "settings": [
+        {
+          "type": "header",
+          "content": "Section Info",
+          "info": "This section will not be shown if image is not added to the Collection in Shopify Admin > Products > Collections."
+		},  
+		{
+            "type": "header",
+            "content": "Collection - Image & Description",
+			"info": "Change this in the settings for each individual collection found in: Shopify Admin > Products > Collections (Recommended size image: 2720 x 1172px with the object center aligned)"
+        }
+    ]
+}
+{% endschema %}

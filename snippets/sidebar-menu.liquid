@@ -1,0 +1,50 @@
+{% comment %}
+    Sidebar Menu snippet.
+{% endcomment %}
+
+<aside class="c-sidebar-menu" data-sidebar-menu>
+    <nav role="navigation">
+        <ul role="menu">
+            {%- if settings.sidebar_url_01 != blank and settings.sidebar_title_01 != blank and settings.sidebar_icon_01 != blank -%}
+                <li class="c-sidebar-menu__item" id="sidebar-item-1" aria-label="Toggle {{- settings.sidebar_title_01 -}}" aria-controls="sidebar-text-1" role="presentation">
+                    <div class="c-sidebar-menu__item__icon" role="button" data-sidebar-item>
+                        <svg class="icon">
+                            <use xlink:href="#sprite-{{- settings.sidebar_icon_01 -}}"></use>
+                        </svg>
+                    </div>
+                    <a href="{{- settings.sidebar_url_01 -}}" class="text-center" id="sidebar-text-1" role="menuitem">
+                        {{- settings.sidebar_title_01 -}}
+                    </a>
+                </li>
+            {%- endif -%}
+            {%- if settings.sidebar_url_02 != blank and settings.sidebar_title_02 != blank and settings.sidebar_icon_02 != blank -%}
+                <li class="c-sidebar-menu__item" id="sidebar-item-2" aria-label="Toggle {{- settings.sidebar_title_02 -}}" aria-controls="sidebar-text-2" role="presentation">
+                    <div class="c-sidebar-menu__item__icon" role="button" data-sidebar-item>
+                        <svg class="icon">
+                            <use xlink:href="#sprite-{{- settings.sidebar_icon_02 -}}"></use>
+                        </svg>
+                    </div>
+                    <a href="{{- settings.sidebar_url_02 -}}" class="text-center" id="sidebar-text-2" role="menuitem">
+                        {{- settings.sidebar_title_02  -}}
+                    </a>
+                </li>
+            {%- endif -%}
+            {%- if settings.sidebar_url_03 != blank and settings.sidebar_title_03 != blank and settings.sidebar_icon_03 != blank -%}
+                <li class="c-sidebar-menu__item" id="sidebar-item-3" aria-label="Toggle {{- settings.sidebar_title_03 -}}" aria-controls="sidebar-text-3" role="presentation">
+                    <div class="c-sidebar-menu__item__icon" role="button" data-sidebar-item>
+                        <svg class="icon">
+                            <use xlink:href="#sprite-{{- settings.sidebar_icon_03 -}}"></use>
+                        </svg>
+                    </div>
+                    <a href="{{- settings.sidebar_url_03 -}}" class="text-center" id="sidebar-text-3" role="menuitem">
+                        {{- settings.sidebar_title_03 -}}
+                    </a>
+                </li>
+            {%- endif -%}
+        </ul>
+    </nav>
+</aside>
+
+{% render 'book-a-call-popup' %}
+{% render 'request-brochure-popup' %}
+{% render 'view-retailers-popup' %}

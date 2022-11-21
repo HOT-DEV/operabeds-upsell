@@ -1,0 +1,301 @@
+{% comment %}
+The Search template.
+{% endcomment %}
+
+{%- if search.types.size == 1 and search.types.first == 'article' -%}
+{{- 'knowledge-hub-blog.css' | asset_url | stylesheet_tag -}}
+
+{% comment %}
+===========================================
+SECTION - Hero content
+===========================================  
+TO-DO
+* Done 
+===========================================
+{% endcomment %}    
+
+{%- capture element_header -%}
+<picture class="c-page-header__bg js-lazy" id="kh-search">
+</picture>
+<div class="c-page-header__content h-100">
+  <div class="container site-padding h-100">
+    <div class="row h-100 align-items-center justify-content-center">
+      <div class="col-12 text-center text-white">
+        <p class="mb-5 text-14 font-weight-bold leading-tight tracking-widest text-uppercase text-center">Resources</p>
+        <h1 class="mb-10 mb-md-6 text-46 font-weight-medium text-white text-center" id="page-title">Knowledge Hub</h1>                     
+        <div class="">
+          <form action="{{ shop.url }}/search" method="get" accept-charset="utf-8" role="search" class="kh-search-container">
+            <div class="c-search-form__fields">
+              <input type="hidden" name="type" value="article" />              
+              <input type="search" id="search-bar" name="q" placeholder="What are you looking for?"/>
+              <button class="c-search-form__submit" aria-label="{{ 'Submit' | escape }}">
+                <svg focusable="false" aria-hidden="true" role="presentation" id="kh-page">
+                  <use xlink:href="#sprite-search"></use>
+                </svg>
+              </button>                                  
+            </div>
+          </form>                   
+        </div> 
+        {%- if search.performed -%}
+        <div class="row justify-content-center mt-6">
+          <div class="col-12 mb-4 mb-md-0">
+            <p class="mb-0" id="search-description">
+              {% if search.results_count == 0 %}
+              Your search for "{{ search.terms }}" did not yield any results.
+              {%- else -%}
+              Your search for "{{ search.terms }}" returned {{ search.results_count }} results.
+              {%- endif -%}
+            </p>
+          </div>
+        </div>
+        {%- endif -%}           
+      </div>
+    </div>
+  </div>
+</div>
+<div class="c-page-header__overlay" aria-hidden="true" role="presentation" id="kh-page"></div>
+{%- endcapture -%}      
+
+<header class="c-page-header position-relative" id="kh-search">
+  {{ element_header }}
+
+  {% comment %}
+  ===========================================
+  SECTION - Search Categories
+  ===========================================  
+  TO-DO
+  * done
+  ===========================================
+  {% endcomment %}       
+
+  <!-- Desktop -->  
+  <div class="container site-padding bg-transparent d-none d-xl-block position-absolute mb-n13" id="sc-desktop">
+    <div class="row justify-content-center align-items-center text-left no-gutters">
+      {% if shop.metafields.globals.featured_card_1_link != blank %}      
+      <a href="/blogs/{{ shop.metafields.globals.featured_card_1_link }}" class="category-card d-inline-flex align-items-center text-white bg-elephant p-6 mr-6">          
+        <div class="cc-icon mr-4 align-self-center">
+          <svg focusable="false" aria-hidden="true" role="presentation">
+            {% if shop.metafields.globals.featured_card_1_icon != blank %}                  
+            <use xlink:href="#sprite-{{ shop.metafields.globals.featured_card_1_icon | replace: " ", "-" }}"></use>
+            {% else %}      
+            <use xlink:href="#sprite-resources-question-circle"></use>  
+            {% endif %}            
+          </svg>
+        </div>
+        <div class="cc-title text-17 text-xxl-17 font-weight-medium">
+          {{ shop.metafields.globals.featured_card_1_title }}          
+        </div>
+      </a>  
+      {% endif %} 
+      {% if shop.metafields.globals.featured_card_2_link != blank %}      
+      <a href="/blogs/{{ shop.metafields.globals.featured_card_2_link }}" class="category-card d-inline-flex align-items-center text-white bg-elephant p-6 mr-6">          
+        <div class="cc-icon mr-4 align-self-center">
+          <svg focusable="false" aria-hidden="true" role="presentation">
+            {% if shop.metafields.globals.featured_card_2_icon != blank %}                  
+            <use xlink:href="#sprite-{{ shop.metafields.globals.featured_card_2_icon | replace: " ", "-" }}"></use>
+            {% else %}      
+            <use xlink:href="#sprite-resources-question-circle"></use>  
+            {% endif %}            
+          </svg>
+        </div>
+        <div class="cc-title text-17 text-xxl-17 font-weight-medium">
+          {{ shop.metafields.globals.featured_card_2_title }}
+        </div>
+      </a>  
+      {% endif %} 
+      {% if shop.metafields.globals.featured_card_3_link != blank %}            
+      <a href="/blogs/{{ shop.metafields.globals.featured_card_3_link }}" class="category-card d-inline-flex align-items-center text-white bg-elephant p-6 mr-6">          
+        <div class="cc-icon mr-4 align-self-center">
+          <svg focusable="false" aria-hidden="true" role="presentation">
+            {% if shop.metafields.globals.featured_card_3_icon != blank %}                  
+            <use xlink:href="#sprite-{{ shop.metafields.globals.featured_card_3_icon | replace: " ", "-" }}"></use>
+            {% else %}      
+            <use xlink:href="#sprite-resources-question-circle"></use>  
+            {% endif %}            
+          </svg>
+        </div>
+        <div class="cc-title text-17 text-xxl-17 font-weight-medium">
+          {{ shop.metafields.globals.featured_card_3_title }}
+        </div>
+      </a>   
+      {% endif %} 
+      {% if shop.metafields.globals.featured_card_4_link != blank %}            
+      <a href="/blogs/{{ shop.metafields.globals.featured_card_4_link }}" class="category-card d-inline-flex align-items-center text-white bg-elephant p-6 mr-6">          
+        <div class="cc-icon mr-4 align-self-center">
+          <svg focusable="false" aria-hidden="true" role="presentation">
+            {% if shop.metafields.globals.featured_card_4_icon != blank %}                  
+            <use xlink:href="#sprite-{{ shop.metafields.globals.featured_card_4_icon | replace: " ", "-" }}"></use>
+            {% else %}      
+            <use xlink:href="#sprite-resources-question-circle"></use>  
+            {% endif %}            
+          </svg>
+        </div>
+        <div class="cc-title text-17 text-xxl-17 font-weight-medium">
+          {{ shop.metafields.globals.featured_card_4_title }}
+        </div>
+      </a> 
+      {% endif %}
+    </div>
+  </div> 
+  <!-- Mobile -->
+  {% if shop.metafields.globals.featured_card_1_link != blank %}          
+  <div class="container site-padding d-flex d-xl-none justify-content-center bg-transparent position-absolute mb-n13" id="sc-mobile">
+    <div class="row w-100">
+      <select class="c-tabs__selector c-select mb-6 bg-elephant" id="sc-mobile" onchange="javascript:window.location.href=this.value;">
+        <option value="#">
+          - Popular Articles -
+        </option>        
+        <option value="/blogs/{{ shop.metafields.globals.featured_card_1_link }}">
+          {{ shop.metafields.globals.featured_card_1_title }}
+        </option>
+        {% if shop.metafields.globals.featured_card_2_link != blank %}                
+        <option value="/blogs/{{ shop.metafields.globals.featured_card_2_link }}">
+          {{ shop.metafields.globals.featured_card_2_title }}
+        </option>
+        {% endif %}        
+        {% if shop.metafields.globals.featured_card_3_link != blank %}                
+        <option value="/blogs/{{ shop.metafields.globals.featured_card_3_link }}">
+          {{ shop.metafields.globals.featured_card_3_title }}
+        </option>
+        {% endif %}        
+        {% if shop.metafields.globals.featured_card_4_link != blank %}                
+        <option value="/blogs/{{ shop.metafields.globals.featured_card_4_link }}">
+          {{ shop.metafields.globals.featured_card_4_title }}
+        </option> 
+        {% endif %}        
+      </select>
+    </div>
+  </div>
+  {% endif %}  
+</header>
+
+<div class="bg-porcelain2 pb-10 pt-18 pb-md-24">
+  <div class="container site-padding">              
+    <div class="row justify-content-between align-items-center mb-8">
+      <div class="col-6 text-left pr-0">
+        <h2 class="text-capitalize font-weight-medium text-26 text-md-36">
+          {% if search.results_count == 0 %}    
+          Search
+          {% else %}
+          Search Results
+          {% endif %}
+        </h2>
+      </div>
+      <div class="col-6 text-right">
+        <a href="{{ shop.url }}/blogs/knowledge-hub" class="kh-blog-all">Back to Knowledge Hub</a>
+      </div>                
+    </div>
+    
+    {%- paginate search.results by 19 -%}
+    <div class="row justify-content-center">
+      <div class="col-12">
+        {%- if search.performed -%}
+        {% if search.results_count > 0 %}
+        <div class="row">
+          {%- for article in search.results -%}
+            <div class="col-12 col-md-6 col-xl-4 mb-6">
+              {%- include 'article-card', article: article -%}
+          </div>
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+        {%- include 'pagination' -%}
+        {%- endif -%}
+        {%- endif -%}
+        {%- else -%}
+        <p>No search performed.</p>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- endpaginate -%}    
+
+  </div>
+</div> 
+
+{%- section 'blog-knowledge-hub-cta' -%}
+
+{%- else -%}
+
+
+<section class="t-page" aria-labelledby="search-title"{%- if search.performed -%} aria-describedby="search-description"{%- endif -%}>
+  <header class="mb-8 mt-10 mt-md-14">
+    <div class="container site-padding">
+      <div class="row justify-content-center">
+        <div class="col-12 mb-4 mb-md-0">
+          <h1 class="mb-0" id="search-title">
+            {%- unless search.performed -%}
+            Search
+            {%- else -%}
+            Search Results
+            {%- endunless -%}
+          </h1>
+        </div>
+      </div>
+
+      {%- if search.performed -%}
+      <div class="row justify-content-center">
+        <div class="col-12 mb-4 mb-md-0">
+          <p class="mb-0" id="search-description">
+            {% if search.results_count == 0 %}
+            Your search for "{{ search.terms }}" did not yield any results.
+            {%- else -%}
+            Your search for "{{ search.terms }}" returned {{ search.results_count }} results.
+            {%- endif -%}
+          </p>
+        </div>
+      </div>
+      {%- endif -%}
+    </div>
+  </header>
+
+  <div class="container site-padding">
+    <div class="row">
+      <div class="col-md-8 col-xl-6">
+        <form action="/search" method="get" class="input-group t-search__form" role="search">
+          <label class="text-14 text-uppercase tracking-widest text-elephant" for="search">Search</label>
+          <input id="search" type="search" name="q" value="{{ search.terms }}" class="c-form-input" placeholder="Search our store" aria-label="Search our store" />
+          <input type="hidden" name="type" value="product,page,article" />
+          <button type="submit" class="btn icon-fallback-text">
+            <svg class="icon" aria-hidden="true" role="presentation">
+              <use xlink:href="#sprite-search"></use>
+            </svg>
+            <span class="sr-only">{{ 'template.header.search' | t | escape }}</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {%- paginate search.results by 24 -%}
+    <div class="row justify-content-center">
+      <div class="col-12">
+        {%- if search.performed -%}
+        {% if search.results_count > 0 %}
+        <div class="row my-16">
+          {%- for search_item in search.results -%}
+          <div class="col-6 col-lg-4 mb-8">
+            {% if search_item.object_type == 'product' %}
+            {%- include 'product-item', product: search_item, _tag_ribbon_value: 'Product' -%}
+            {% elsif search_item.object_type == 'articles' -%}
+            {%- include 'article-item', article: search_item -%}
+            {%- elsif search_item.object_type == 'collection' -%}
+            {%- include 'collection-item', collection: search_item -%}
+            {%- elsif search_item.object_type == 'page' -%}
+            {%- include 'page-item', page: search_item -%}
+            {%- endif -%}
+          </div>
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+        {%- include 'pagination' -%}
+        {%- endif -%}
+        {%- endif -%}
+        {%- else -%}
+        <p>No search performed.</p>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{%- endif -%}

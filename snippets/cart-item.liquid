@@ -1,0 +1,92 @@
+{% liquid
+    if _last == true
+        assign border = 'show-border'
+    else
+        assign border = ''
+    endif
+%}
+<div class="t-cart-item {{ border -}}">
+    <div class="row flex-md-nowrap align-items-stretch">
+        <div class="col-12 col-md-8 col-lg-8 order-1">
+            <div class="t-cart-item__details">
+                <a href="{{ item.url | within: collections.all }}" class="t-cart-item__image">
+                    {%- liquid
+                        if item.image
+                            assign prod_img = item.image
+                            echo prod_img | img_url: '256x' | img_tag: item.title
+                        elsif item.product.images.size > 1
+                            assign prod_img = item.product.images | first
+                            echo prod_img | img_url: '256x' | img_tag: item.title
+                        else
+                            echo item | img_url: '256x' | img_tag: item.title
+                        endif
+                    -%}
+                </a>
+                <a href="{{ item.url }}" title="{{ item.product.title }}"
+                    class="t-cart-item__title text-16 text-md-18 text-blue-diane mb-2">
+                    {{- item.product.title -}}
+                </a>
+                <p class="t-cart-item__sku text-14 text-uppercase text-abbey mb-0">{{ item.sku }}</p>
+                {%- if item.product.handle != 'gift-card' -%}
+                {%- unless item.variant.title contains 'Default' -%}
+                <p class="t-cart-item__variant mt-3 mt-md-2 mb-0 text-14 text-blue-diane">
+                    {{ item.variant.title }}
+                </p>
+                {%- endunless -%}
+                {%- endif -%}
+            </div>
+        </div>
+
+        <div
+            class="col-12 col-md-4 flex-grow-1 d-flex order-2 text-md-center align-items-xl-center justify-content-xl-center mt-4 mt-md-0">
+
+            <div class="row flex-wrap text-left text-md-right">
+                <div class="col-12">
+                    <p class="t-cart-item__price mb-0 text-20">
+                        <span class="money font-weight-semibold"
+                            data-line-index="{{ _index0 }}">{{ item.price | money }}</span>
+                        {% if item.variant.compare_at_price > item.price %}
+                        <span class="money font-weight-medium"
+                            style="font-size:14px; text-decoration:line-through;">{{ item.variant.compare_at_price | money_without_trailing_zeros }}</span>
+                        {% endif %}
+                    </p>
+                    <p class="t-cart-item__price mb-0 text-14 font-weight-semibold"> with VAT Relief</p>
+
+                </div>
+                <div class="col-12 mt-0">
+                    <span class="money text-14 font-weight-medium" data-product-id="{{ product.id }}"
+                        data-product-price-inc-vat>
+                        {{- item.price | times: 1.2 | money -}}
+                    </span>
+                    <span class="text-14 font-weight-medium">{{- ' inc. VAT' | escape -}}</span>
+                </div>
+                <div class="col-12 mt-4">
+                    <div class="t-cart-item__qty" data-product-qty>
+                        <button type="button" data-product-qty-minus>
+                            <span class="sr-only">{{ 'Minus' }}</span>
+                            <svg aria-hidden="true">
+                                <use xlink:href="#sprite-minus"></use>
+                            </svg>
+                        </button>
+                        <input type="number" id="updates_{{ item.key }}" name="updates[]"
+                            class="text-20 font-weight-semibold" value="{{ item.quantity }}" min="0" step="1" max="100"
+                            onchange="this.form.submit();" required data-product-qty-input>
+                        <button type="button" data-product-qty-plus>
+                            <span class="sr-only">{{ 'Plus' }}</span>
+                            <svg aria-hidden="true">
+                                <use xlink:href="#sprite-plus"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 text-14 font-weight-semibold mt-4">
+                    <a href="/cart/change?line={{ _index }}&amp;quantity=0" class="remove-item" type=""
+                        aria-label="Remove product">
+                        {{ 'Remove item' }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

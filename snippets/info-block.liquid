@@ -1,0 +1,21 @@
+{% comment %}
+    Info Block snippet.
+{% endcomment %}
+
+<div class="c-info-block{% if class %} {{ class }}{% endif %}">
+    {%- if icon != blank -%}
+        <svg class="c-info-block__icon mb-8" aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-{{ icon | handleize }}"></use>
+        </svg>
+    {%- endif -%}
+    {%- if heading != blank -%}
+        <h3 class="mb-4 text-26 font-weight-medium leading-tight">
+            {{- heading | escape -}}
+        </h3>
+    {%- endif -%}
+    {%- if content != blank -%}
+        <div class="mb-n4">
+            {{- content | safe -}}
+        </div>
+    {%- endif -%}
+</div>

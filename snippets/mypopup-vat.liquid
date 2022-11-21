@@ -1,0 +1,27 @@
+<form data-vat-relief-form novalidate>
+    <div class="c-form-field mb-8">
+        <label>{{- 'template.vat_relief.fields.name_label' | t -}}</label>
+        <input name="name" class="c-form-input" type="text" placeholder="{{- 'template.vat_relief.fields.name_placeholder' | t -}}" data-vat-relief-input autocomplete="off" title="{{ 'template.vat_relief.fields.name_input_title' | t }}" />
+        <div class="c-form-error mt-2" aria-live="assertive" role="alert" data-vat-relief-error hidden></div>
+    </div>
+    <div class="c-form-field mb-6">
+        <label>{{ 'template.vat_relief.fields.condition_label' | t }}</label>
+        <input name="condition" class="c-form-input" type="text" placeholder="{{- 'template.vat_relief.fields.condition_placeholder' | t -}}" data-vat-relief-input autocomplete="off" title="{{ 'template.vat_relief.fields.condition_input_title' | t }}" />
+        <div class="c-form-error mt-2" aria-live="assertive" role="alert" data-vat-relief-error hidden></div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="c-btn" aria-label="{{- 'template.vat_relief.button_text' | t -}}" data-vat-relief-submit-btn>
+            {{- 'template.vat_relief.button_text' | t -}}
+        </button>
+    </div>
+
+    <p data-vat-relief-applied hidden class="t-cart-accordion__content__applied">
+        <svg class="t-cart-accordion__content__applied__icon" aria-hidden="true">
+            <use xlink:href="#sprite-check"></use>
+        </svg>
+        {{ 'template.vat_relief.applied_message' | t }}
+        <button type="button" class="c-btn" aria-label="{{- 'template.vat_relief.remove_button_text' | t -}}" data-vat-relief-remove-btn>
+            {{- 'template.vat_relief.remove_button_text' | t -}}
+        </button>
+    </p>
+</form>

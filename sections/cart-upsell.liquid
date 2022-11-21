@@ -1,0 +1,234 @@
+{% comment %}
+    The Featured Products section template.
+{% endcomment %}
+{%- for item in cart.items -%}
+{%- if item.product.type == 'Care Bed' or item.product.type == 'Adjustable Bed' or item.product.type == 'Rotating Chair Bed' -%}
+<section class="s-featured-products py-8 py-lg-10" data-section-type="featured-products" data-section-id="{{ section.id }}" id="cart-upsell">
+    <div class="container site-padding" >
+        <div class="row align-items-md-center py-8 py-lg-10 m-0" style="border-top: 1px solid rgba(37,61,82,.15);">
+            <div class="col-12 col-md-auto pl-0">
+                <h2 class="m-0 u-heading-md text-center text-30 text-lg-left text-elephant">
+                    {{- section.settings.title | escape -}}
+                </h2>
+            </div>
+            <div class="d-none col-md-auto ml-md-auto d-md-flex flex-md-row flex-md-nowrap align-items-md-center pr-0">
+                    <div class="d-none d-md-flex flex-md-row flex-md-nowrap align-items-md-center ml-8">
+                        <button class="s-featured-products__btn swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-prev>
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-left"></use>
+                            </svg>
+                        </button>
+                        <button class="s-featured-products__btn swiper-button-next ml-2" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-next>
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-right"></use>
+                            </svg>
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="s-featured-products__slider">
+        <div class="container site-padding">
+            <div class="swiper-container pr-4 pr-sm-0" data-featured-products-slider>
+                <div class="swiper-wrapper">
+                   
+                    {%- if item.product.type == 'Care Bed' -%}
+                    {%- for product in section.settings.collection_profiling.products limit: section.settings.product_limit -%}
+                    <div class="swiper-slide position-relative" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                        <!-- <div class="upsell-title" style="background-color: #0A2438;">For Profiling Beds</div> -->
+
+                        {%-
+                            render 'cart-upsell-item',
+                            class: 'w-100 h-100',
+                            product: product
+                        -%}
+                    </div>
+                    {%- endfor -%}
+                    {%- endif -%}
+
+                    {%- if item.product.type == 'Adjustable Bed' -%}
+                    {%- for product in section.settings.collection_adjustable.products limit: section.settings.product_limit -%}
+                        <div class="swiper-slide position-relative" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                            <!-- <div class="upsell-title" style="background-color: #96917D;">For Adjustable Beds</div> -->
+
+                            {%-
+                                render 'cart-upsell-item',
+                                class: 'w-100 h-100',
+                                product: product
+                            -%}
+                        </div>
+                    {%- endfor -%}
+                    {%- endif -%}
+
+                    {%- if item.product.type == 'Rotating Chair Bed' -%}
+                    {%- for product in section.settings.collection_rotating.products limit: section.settings.product_limit -%}
+                        <div class="swiper-slide position-relative" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                            <!-- <div class="upsell-title" style="background-color:#253D52;">For Rotating Chair Beds</div> -->
+                            {%-
+                                render 'cart-upsell-item',
+                                class: 'w-100 h-100',
+                                product: product
+                            -%}
+                        </div>
+                    {%- endfor -%} 
+                    {%- endif -%}
+                  </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row flex-nowrap align-items-center mt-8 d-md-none">
+                <div class="col-auto">
+                    <button class="s-featured-products__prev swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}" data-featured-products-slider-prev>
+                        <svg aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-chevron-left"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="col" style="visibility:hidden;">
+                    <div class="s-featured-products__pagination swiper-pagination" data-featured-products-slider-pagination></div>
+                </div>
+                <div class="col-auto">
+                    <button class="s-featured-products__next swiper-button-next" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-next>
+                        <svg aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-chevron-right"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+
+{%- endif -%}
+{% endfor %}
+
+{%- comment -%}
+<section class="s-featured-products py-8 py-lg-10" data-section-type="featured-products" data-section-id="{{ section.id }}" id="cart-upsell">
+    <div class="container site-padding" >
+        <div class="row align-items-md-center py-8 py-lg-10 m-0" style="border-top: 1px solid rgba(37,61,82,.15);">
+            <div class="col-12 col-md-auto pl-0">
+                <h2 class="m-0 u-heading-md text-center text-30 text-lg-left text-elephant">
+                    {{- section.settings.title | escape -}}
+                </h2>
+            </div>
+            <div class="d-none col-md-auto ml-md-auto d-md-flex flex-md-row flex-md-nowrap align-items-md-center pr-0">
+                    <div class="d-none d-md-flex flex-md-row flex-md-nowrap align-items-md-center ml-8">
+                        <button class="s-featured-products__btn swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-prev>
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-left"></use>
+                            </svg>
+                        </button>
+                        <button class="s-featured-products__btn swiper-button-next ml-2" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-next>
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-right"></use>
+                            </svg>
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="s-featured-products__slider">
+        <div class="container site-padding">
+            <div class="swiper-container pr-4 pr-sm-0" data-featured-products-slider>
+                <div class="swiper-wrapper">
+                    {%- for product in section.settings.collection.products limit: section.settings.product_limit -%}
+                    <div class="swiper-slide position-relative" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                        <!-- <div class="upsell-title" style="background-color: #0A2438;">For Profiling Beds</div> -->
+
+                        {%-
+                            render 'cart-upsell-item',
+                            class: 'w-100 h-100',
+                            product: product
+                        -%}
+                    </div>
+                    {%- endfor -%}
+                  </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row flex-nowrap align-items-center mt-8 d-md-none">
+                <div class="col-auto">
+                    <button class="s-featured-products__prev swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}" data-featured-products-slider-prev>
+                        <svg aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-chevron-left"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="col" style="visibility:hidden;">
+                    <div class="s-featured-products__pagination swiper-pagination" data-featured-products-slider-pagination></div>
+                </div>
+                <div class="col-auto">
+                    <button class="s-featured-products__next swiper-button-next" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-next>
+                        <svg aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-chevron-right"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</section>
+{%- endcomment -%}
+
+
+<style>
+.s-featured-products#cart-upsell {background-color: #F4F4F4!important;}
+</style>
+
+{% schema %}
+{
+    "name": "Cart - Upsell Collections",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Popular Products"
+        },
+        {
+            "type": "collection",
+            "id": "collection",
+            "label": "Selected collection - Mixed basket",
+            "info": "If basket contains a mix of beds from different categories"
+        },
+        {
+            "type": "collection",
+            "id": "collection_adjustable",
+            "label": "Selected collection - Adjustable basket",
+            "info": "If basket only contains beds from adjustable bed category"
+        },  
+        {
+            "type": "collection",
+            "id": "collection_profiling",
+            "label": "Selected collection - Profiling basket",
+            "info": "If basket only contains beds from profiling bed category"
+        },   
+        {
+            "type": "collection",
+            "id": "collection_rotating",
+            "label": "Selected collection - Rotating basket",
+            "info": "If basket only contains beds from rotating bed category"
+        },                        
+        {
+            "type": "header",
+            "content": "Section Settings"
+        },
+        {
+            "type": "range",
+            "id": "product_limit",
+            "min": 4,
+            "max": 12,
+            "step": 1,
+            "label": "Product limit",
+            "default": 4
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

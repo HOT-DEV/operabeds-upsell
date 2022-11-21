@@ -1,0 +1,198 @@
+{% comment %}
+    The Static Delivery Info with Map section template.
+{% endcomment %}
+
+<section class="s-delivery-info bg-athens-gray2 text-elephant" data-section-type="static-delivery-info-with-map" data-section-id="{{ section.id }}">
+    <div class="container site-padding py-16 py-lg-20 py-xxl-25">
+        <div class="row justify-content-center mb-16">
+            <div class="col-12 col-md-10 col-lg-9 col-xl-8 col-xxl-7 col-xxxl-6 text-center text-abbey">
+                <h2 class="u-heading-md text-elephant">
+                    {{- section.settings.heading | escape -}}
+                </h2>
+                <p class="mb-4 text-14">
+                    {{- section.settings.paragraph_1 | escape -}}
+                </p>
+                <p class="mb-4 mb-lg-0 text-14 font-weight-bold">
+                    {{- section.settings.paragraph_2 | escape -}}
+                </p>
+                <p class="mb-0 text-14 font-weight-bold">
+                    {{- section.settings.paragraph_3 | escape -}}
+                </p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-hd-10">
+                <div class="row justify-content-lg-center">
+                    <div class="col-12 col-lg-5 mb-16 mb-md-22 mb-xl-0 order-xl-last">
+                        {%- liquid
+                            assign image = 'delivery-map.png'
+                            assign image_alt = section.settings.image.alt | default: 'Delivery Map'
+                            assign image_xs = image | asset_img_url: '376x'
+                            assign image_sm = image | asset_img_url: '444x'
+                            assign image_md = image | asset_img_url: '444x'
+                            assign image_lg = image | asset_img_url: '700x'
+                        -%}
+                        <picture class="s-delivery-info__map js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+                            <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                            <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                            <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                            <source srcset="{{ image_lg | url }}" media="(min-width: 1024px)">
+                            {% comment %} <img alt="" /> {% endcomment %}
+                        </picture>
+                    </div>
+                    <div class="col-12 col-xl-7 order-xl-first">
+                        <div class="row mb-n12">
+                            {%- for block in section.blocks -%}
+                                {%- liquid
+                                    if forloop.last == false
+                                        assign css_class = 'mb-16'
+                                    endif
+                                    assign content = '<p>' | append: block.settings.paragraph | append: '</p>'
+                                -%}
+                                <div class="col-12 col-md-6 col-xl-12">
+                                    {%-
+                                        render 'delivery-point',
+                                        class: css_class,
+                                        icon: block.settings.icon,
+                                        heading: block.settings.title,
+                                        strapline: block.settings.sub_heading,
+                                        content: content,
+                                    -%}
+                                </div>
+                            {%- endfor -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Delivery Information",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Panel Top"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+        },
+        {
+            "type": "textarea",
+            "id": "paragraph_1",
+            "label": "Paragraph 1"
+        },
+        {
+            "type": "textarea",
+            "id": "paragraph_2",
+            "label": "Paragraph 2"
+        },
+        {
+            "type": "textarea",
+            "id": "paragraph_3",
+            "label": "Paragraph 3"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "delivery_point",
+            "name": "Delivery Point",
+            "limit": 3,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "sub_heading",
+                    "label": "Strapline"
+                },
+                {
+                    "type": "text",
+                    "id": "paragraph",
+                    "label": "Paragraph"
+                },
+                {
+                    "type": "select",
+                    "id": "icon",
+                    "options": [
+                    { "value": "advice", "label": "Advice"},
+                    { "value": "arrow-down", "label": "Arrow Down"},
+                    { "value": "arrow-left", "label": "Arrow Left"},
+                    { "value": "arrow-right", "label": "Arrow Right"},
+                    { "value": "arrow-up", "label": "Arrow Up"},
+                    { "value": "bars", "label": "Bars"},
+                    { "value": "bed", "label": "Bed"},
+                    { "value": "bespoke-service", "label": "Bespoke Service"},
+                    { "value": "brochure2", "label": "Brochure2"},
+                    { "value": "brush-square", "label": "Brush Square"},
+                    { "value": "caret-down", "label": "Caret Down"},
+                    { "value": "caret-left", "label": "Caret Left"},
+                    { "value": "caret-right", "label": "Caret Right"},
+                    { "value": "caret-up", "label": "Caret Up"},
+                    { "value": "check-circle", "label": "Check Circle"},
+                    { "value": "check", "label": "Check"},
+                    { "value": "chevron-down", "label": "Chevron Down"},
+                    { "value": "chevron-left", "label": "Chevron Left"},
+                    { "value": "chevron-right", "label": "Chevron Right"},
+                    { "value": "chevron-up", "label": "Chevron Up"},
+                    { "value": "circulation", "label": "Circulation"},
+                    { "value": "close", "label": "Close"},
+                    { "value": "comfort", "label": "Comfort"},
+                    { "value": "customisable", "label": "Customisable"},
+                    { "value": "delivery-lg", "label": "Delivery Lg"},
+                    { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                    { "value": "delivery-time", "label": "Delivery Time"},
+                    { "value": "delivery", "label": "Delivery"},
+                    { "value": "delivery2", "label": "Delivery2"},
+                    { "value": "discover", "label": "Discover"},
+                    { "value": "documents", "label": "Documents"},
+                    { "value": "documents2", "label": "Documents2"},
+                    { "value": "double-quote", "label": "Double Quote"},
+                    { "value": "facebook-f", "label": "Facebook F"},
+                    { "value": "finance", "label": "Finance"},
+                    { "value": "finance2", "label": "Finance2"},
+                    { "value": "headboards", "label": "Headboards"},
+                    { "value": "headset", "label": "Headset"},
+                    { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                    { "value": "heart-outline", "label": "Heart Outline"},
+                    { "value": "light-bulb", "label": "Light Bulb"},
+                    { "value": "linkedin-in", "label": "Linkedin In"},
+                    { "value": "maintenance", "label": "Maintenance"},
+                    { "value": "minus", "label": "Minus"},
+                    { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                    { "value": "parts", "label": "Parts"},
+                    { "value": "play-circle", "label": "Play Circle"},
+                    { "value": "plus", "label": "Plus"},
+                    { "value": "posture", "label": "Posture"},
+                    { "value": "recycle-lg", "label": "Recycle Lg"},
+                    { "value": "sales", "label": "Sales"},
+                    { "value": "search", "label": "Search"},
+                    { "value": "secure-checkout", "label": "Secure Checkout"},
+                    { "value": "shopping-bag", "label": "Shopping Bag"},
+                    { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                    { "value": "star-fill", "label": "Star Fill"},
+                    { "value": "star-outline", "label": "Star Outline"},
+                    { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                    { "value": "twitter", "label": "Twitter"},
+                    { "value": "uk-map", "label": "Uk Map"},
+                    { "value": "union-jack", "label": "Union Jack"},
+                    { "value": "user-check", "label": "User Check"},
+                    { "value": "user", "label": "User"},
+                    { "value": "warranty", "label": "Warranty"},
+                    { "value": "widths", "label": "Widths"},
+                    { "value": "wireless", "label": "Wireless"}
+                    ],
+                    "label": "Icon"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

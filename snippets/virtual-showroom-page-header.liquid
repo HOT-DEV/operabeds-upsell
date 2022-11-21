@@ -1,0 +1,199 @@
+{%- comment -%}
+    Usage
+    {%- render 'virtual-showroom-page-header',
+        img_mobile:         '...',
+        img_tablet:         '...',
+        img_desktop:        '...',
+        heading:            '...',
+        strapline:          section.settings.page_strapline,
+        page_content:       section.settings.page_content,
+        _image_store:       'file_img_url',
+        _add_header_element: false
+    -%}
+{%- endcomment -%}
+
+{%- liquid
+    assign debug = false
+    assign image_store = _image_store
+
+    if image_desktop.size > 0
+        assign image_desktop = image_desktop
+        assign image_store = 'img_url'
+    elsif page.metafields.global.page_hero.size > 0
+        assign image_desktop = page.metafields.global.page_hero | strip
+        assign image_store = 'file_img_url'
+    elsif shop.metafields.global.page_hero.size > 0
+        assign image_desktop = shop.metafields.global.page_hero | strip
+        assign image_store = 'file_img_url'
+    endif
+
+    if image_desktop.alt
+        assign image_alt = image_desktop.alt
+    elsif page.metafields.global.page_hero_alt.size > 0
+        assign image_alt = page.metafields.global.page_hero_alt
+    elsif shop.metafields.global.page_hero.size > 0
+        assign image_alt = shop.metafields.global.page_hero_alt | default: heading
+    endif
+
+
+
+    assign img_xs = 'https://via.placeholder.com/576x476'
+    assign img_sm = 'https://via.placeholder.com/768x476'
+    assign img_md = 'https://via.placeholder.com/1024x476'
+    assign img_lg = 'https://via.placeholder.com/1280x540'
+    assign img_xl = 'https://via.placeholder.com/1440x600'
+    assign img_xxl = 'https://via.placeholder.com/1670x600'
+    assign img_xxxl = 'https://via.placeholder.com/1920x600'
+
+    if image_store == null or image_store == blank
+        assign image_store = 'img_url'
+    endif
+    if _add_header_element == null
+        assign show_header = true
+    else
+        assign show_header = _add_header_element
+    endif
+
+    assign image_alt = image_alt
+    if image_store contains 'file_img_url'
+        if image_mobile != null
+            assign img_xs = image_mobile | file_img_url: 'x550'
+            assign img_sm = image_mobile | file_img_url: '800x'
+        elsif image_desktop != null
+            assign img_xs = image_desktop | file_img_url: 'x550'
+            assign img_sm = image_desktop | file_img_url: '800x'
+        endif
+
+        if image_tablet != null
+            assign img_md = image_tablet | file_img_url: '1100x'
+        elsif image_desktop != null
+            assign img_md = image_desktop | file_img_url: '1100x'
+        endif
+
+        if image_desktop != null
+            assign img_lg = image_desktop | file_img_url: '1300x'
+            assign img_xl = image_desktop | file_img_url: '1440x'
+            assign img_xxl = image_desktop | file_img_url: '1800x'
+            assign img_xxxl = image_desktop | file_img_url: '2048x'
+        endif
+    elsif image_store contains 'img_url'
+        if image_mobile != null
+            assign img_xs = image_mobile | img_url: 'x550'
+            assign img_sm = image_mobile | img_url: '800x'
+        elsif image_desktop != null
+            assign img_xs = image_desktop | img_url: 'x550'
+            assign img_sm = image_desktop | img_url: '800x'
+        endif
+
+        if image_tablet != null
+            assign img_md = image_tablet | img_url: '1100x'
+        elsif image_desktop != null
+            assign img_md = image_desktop | img_url: '1100x'
+        endif
+
+        if image_desktop != null
+            assign img_lg = image_desktop | img_url: '1300x'
+            assign img_xl = image_desktop | img_url: '1500x'
+            assign img_xxl = image_desktop | img_url: '1800x'
+            assign img_xxxl = image_desktop | img_url: '2048x'
+        endif
+    else
+        if image_mobile != null
+            assign img_xs = image_mobile | file_url
+            assign img_sm = image_mobile | file_url
+        elsif image_desktop != null
+            assign img_xs = image_desktop | file_url
+            assign img_sm = image_desktop | file_url
+        endif
+
+        if image_tablet != null
+            assign img_md = image_tablet | file_url
+        elsif image_desktop != null
+            assign img_md = image_desktop | file_url
+        endif
+
+        if image_desktop != null
+            assign img_lg = image_desktop | file_url
+            assign img_xl = image_desktop | file_url
+            assign img_xxl = image_desktop | file_url
+            assign img_xxxl = image_desktop | file_url
+        endif
+    endif
+-%}
+{%- if debug -%}
+<pre style="background: black;color:white;border:solid 2px red;z-index: 100;position:absolute;">
+    image_mobile: '{{ image_mobile }}'
+    image_tablet: '{{ image_tablet }}'
+    image_desktop: '{{ image_desktop }}'
+    img_xs: {{ img_xs }}
+    img_sm: {{ img_sm }}
+    img_md: {{ img_md }}
+    img_lg: {{ img_lg }}
+    img_xl: {{ img_xl }}
+    img_xxl: {{ img_xxl }}
+    img_xxxl: {{ img_xxxl }}
+    _add_header_element: {{ _add_header_element }}
+    image_store: {{ image_store }}
+</pre>
+{%- endif -%}
+{%- capture element_header -%}
+    <picture class="c-page-header__bg js-lazy" data-iesrc="{{ img_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+        <source srcset="{{ img_xs }}" media="(max-width: 575px)">
+        <source srcset="{{ img_sm }}" media="(min-width: 576px) and (max-width: 767px)">
+        <source srcset="{{ img_md }}" media="(min-width: 768px) and (max-width: 1023px)">
+        <source srcset="{{ img_lg }}" media="(min-width: 1024px) and (max-width: 1279px)">
+        <source srcset="{{ img_xl }}" media="(min-width: 1280px) and (max-width: 1439px)">
+        <source srcset="{{ img_xxl }}" media="(min-width: 1440px) and (max-width: 1669px)">
+        <source srcset="{{ img_xxxl }}" media="(min-width: 1670px)">
+        {% comment %} <img alt="" /> {% endcomment %}
+    </picture>
+
+<div class="c-page-header__content h-100">
+    <div class="container site-padding h-100">
+        <div class="row h-100 align-items-center justify-content-center">
+            <div class="col-12 col-md-8 col-xxl-6 text-center text-white">
+                {%- if strapline != blank -%}
+                <p class="mb-5 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                    {{- strapline | newline_to_br -}}
+                </p>
+                {%- endif -%}
+                <p class="mb-4 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                    {{- section.settings.hero_subheading -}}</p>
+                <h1 class="m-0 text-36 text-lg-46 font-weight-medium leading-tight" id="page-title">
+                    {{- heading | default: page.title | escape -}} </h1>
+                <p class="text-normal text-18 mt-4">{{- section.settings.hero_description -}}</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="c-page-header__overlay" aria-hidden="true" role="presentation"></div>
+
+{% comment %} hero feature blocks component {% endcomment %}
+<div class="container site-padding position-absolute d-none d-lg-block mb-lg-n30" id="vs-box">
+    <div class="vs-container row justify-content-between text-center py-12 no-gutters">
+        <div class="col-4" id="ind-box">
+        {%- render 'virtual-icon-headset' -%}
+            <p class="m-0 text-16 font-weight-medium text-uppercase tracking-widest px-6 px-lg-12 px-xxl-24">{{- section.settings.box_1 -}}</p>
+        </div>
+        <div class="col-4" id="ind-box">
+        {%- render 'virtual-icon-bed' -%}
+            <p class="m-0 text-16 font-weight-medium text-uppercase tracking-widest px-6 px-lg-12 px-xxl-24">{{- section.settings.box_2 -}}</p>
+        </div>
+        <div class="col-4">
+		{%- render 'virtual-icon-b-meeting' -%}          
+            <p class="m-0 text-16 font-weight-medium text-uppercase tracking-widest px-6 px-lg-12 px-xxl-24">{{- section.settings.box_3 -}}</p>
+        </div>
+    </div>
+</div>
+
+{%- endcapture -%}
+
+{%- if show_header -%}
+    <header class="c-page-header position-relative">
+        {{ element_header }}       
+    </header>
+{%- else -%}
+    {{ element_header }}
+{%- endif -%}

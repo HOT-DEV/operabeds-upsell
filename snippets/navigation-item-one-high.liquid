@@ -1,0 +1,21 @@
+{%- comment -%}
+Usage:
+{%- render              'navigation-one-high'
+    _index:             1,
+    _link:              '#full-tile'
+    _title:             'Panel 1',
+    _image_src:         'https://dummyimage.com/600x400/000/fff'
+-%}
+{%- endcomment -%}
+{%- liquid
+    assign column_index = 'column-' | append: _index
+-%}
+<div class="block full-tile {{ column_index }}">
+    <img data-src="{{ _image | img_url: '600x400' }}" class="js-lazy" alt="{{ _title }}"/>
+    <a href="{{ _link }}" class="stretched-link">
+        {{ _title }}
+        <svg focusable="false" aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-caret-right"></use>
+        </svg>
+    </a>
+</div>

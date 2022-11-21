@@ -1,0 +1,84 @@
+{% comment %}
+    The Search template.
+{% endcomment %}
+
+<section class="t-page" aria-labelledby="search-title"{%- if search.performed -%} aria-describedby="search-description"{%- endif -%}>
+    <header class="mb-8 mt-10 mt-md-14">
+        <div class="container site-padding">
+            <div class="row justify-content-center">
+                <div class="col-12 mb-4 mb-md-0">
+                    <h1 class="mb-0" id="search-title">
+                        {%- unless search.performed -%}
+                            Search
+                        {%- else -%}
+                            Search Results
+                        {%- endunless -%}
+                    </h1>
+                </div>
+            </div>
+
+            {%- if search.performed -%}
+                <div class="row justify-content-center">
+                    <div class="col-12 mb-4 mb-md-0">
+                        <p class="mb-0" id="search-description">
+                            {% if search.results_count == 0 %}
+                                Your search for "{{ search.terms }}" did not yield any results.
+                            {%- else -%}
+                                Your search for "{{ search.terms }}" returned {{ search.results_count }} results.
+                            {%- endif -%}
+                        </p>
+                    </div>
+                </div>
+            {%- endif -%}
+        </div>
+    </header>
+
+    <div class="container site-padding">
+        <div class="row">
+            <div class="col-md-8 col-xl-6">
+                <form action="/search" method="get" class="input-group t-search__form" role="search">
+                    <label class="text-14 text-uppercase tracking-widest text-elephant" for="search">Search</label>
+                    <input id="search" type="search" name="q" value="{{ search.terms }}" class="c-form-input" placeholder="Search our store" aria-label="Search our store" />
+                    <input type="hidden" name="type" value="product,page" />
+                    <button type="submit" class="btn icon-fallback-text">
+                        <svg class="icon" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-search"></use>
+                        </svg>
+                        <span class="sr-only">{{ 'template.header.search' | t | escape }}</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        {%- paginate search.results by 24 -%}
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    {%- if search.performed -%}
+                        {% if search.results_count > 0 %}
+                            <div class="row my-16">
+                                {%- for search_item in search.results -%}
+                                    <div class="col-6 col-lg-4 mb-8">
+                                        {% if search_item.object_type == 'product' %}
+                                            {%- include 'product-item', product: search_item, _tag_ribbon_value: 'Product' -%}
+                                        {% elsif search_item.object_type == 'articles' -%}
+                                            {%- include 'article-item', article: search_item -%}
+                                        {%- elsif search_item.object_type == 'collection' -%}
+                                            {%- include 'collection-item', collection: search_item -%}
+                                        {%- elsif search_item.object_type == 'page' -%}
+                                            {%- include 'page-item', page: search_item -%}
+                                        {%- endif -%}
+                                    </div>
+                                {%- endfor -%}
+                            </div>
+                            {%- if paginate.pages > 1 -%}
+                                {%- include 'pagination' -%}
+                            {%- endif -%}
+                        {%- endif -%}
+                    {%- else -%}
+                        <p>No search performed.</p>
+                    {%- endif -%}
+                </div>
+            </div>
+        {%- endpaginate -%}
+    </div>
+</section>

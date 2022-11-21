@@ -1,0 +1,54 @@
+{% comment %}
+    The Collection Upsells section template.
+{% endcomment %}
+{%- liquid
+    assign heading = collection.metafields.accentuate.collection_heading | default: section.settings.title
+    assign accentuate_panels = collection.metafields.accentuate.product_heading
+-%}
+
+{%- if accentuate_panels -%}
+    <section class="bg-athens-gray2 text-elephant" data-section-type="collection-upsells" data-section-id="{{ section.id }}">
+        <div class="container site-padding py-16 py-lg-20">
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-10">
+                    <h2 class="mb-12 mb-lg-18 text-26 text-lg-36 font-weight-medium leading-tight text-elephant text-center">
+                        {{- heading | escape -}}
+                    </h2>
+                    <div class="row mx-xxl-n6 mx-xxxl-n10 mb-n19 mb-lg-0">
+                        {%- for product_upsell in accentuate_panels -%}
+                            <div class="col-12 col-lg-4 mb-19 mb-lg-0 px-xxl-6 px-xxxl-10">
+                                {%-
+                                    render 'product-upsell',
+                                    _buttonTag:      collection.metafields.accentuate.product_button[forloop.index0],
+                                    _heading:        collection.metafields.accentuate.product_heading[forloop.index0],
+                                    _image:          collection.metafields.accentuate.product_image[forloop.index0],
+                                    _introText:      collection.metafields.accentuate.product_intro_text[forloop.index0],
+                                    _bulletPoints:   collection.metafields.accentuate.product_bullet_points[forloop.index0],
+                                -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Upsells",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Fallback Title",
+            "default": "Choose your style"
+        },
+        {
+            "type":"header",
+            "content": "Content can be added through the 'App Accentuate'",
+            "info": "You can add upsell products through the app"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

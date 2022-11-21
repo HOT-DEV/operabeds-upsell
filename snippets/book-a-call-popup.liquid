@@ -1,0 +1,76 @@
+<div id="consultation-call" class="overlay">
+    <div class="popup-call p-0">
+        <a class="close" href="#/">&times;</a>
+
+        <div class="d-block d-lg-flex flex-lg-row justify-content-center">
+            <div class="d-none d-lg-block cta-call-image col-lg-4 px-0 text-center">
+            </div>
+
+            <div class="col-lg-8 px-4 px-lg-16 py-6 py-lg-12 text-center text-lg-left">
+                <h3 class="d-none d-lg-block text-lg-30 font-weight-medium mb-6">{{- settings.popup_call_title -}}</h3>
+                <h3 class="d-lg-none text-18 text-lg-30 font-weight-medium mb-2">{{ 'Book a Call' }}</h3>                
+<!--               <span class="d-none d-lg-block text-16">{{ 'Calls can be scheduled for any time from 7am to 4pm on Monday to Friday.' }} <span style="font-weight:bold;">{{ 'You can also call us and speak to an adviser straightaway on' }} <a href="tel:03332228584"><span class="rTapNumber413992">{{ '0333 222 8584' }}</span></a>.</span></span> -->
+              <span class="d-none d-lg-block text-16">{{ 'Calls can be scheduled for any time from 7am to 4pm on Monday to Friday.' }} <span class="font-weight-bold">You can also call us and speak to an adviser straightaway on 0333 222 85 84.</span></span>              
+                <div class="c-page-form pt-6 pt-lg-6">
+                    {%- form 'contact', class: 'c-form c-form-alt', id: 'consultation-call-form', aria-label: 'Consultation Call form' -%}
+                    <input type="hidden" name="contact[form]" value="Consultation Call form (popup)">
+                    {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+                    <div class="d-lg-flex flex-lg-row justify-content-lg-between">
+                        <div class="c-form-field mb-6" id="split">
+                            <label for="date">Date</label>
+                            <input type="date" class="c-form-input" id="date" name="contact[date]" required />
+                        </div>
+                        <div class="c-form-field mb-6" id="split">
+                            <label for="time">Time</label>
+                            <input type="time" class="c-form-input" id="time" name="contact[time]" min="07:00"
+                                max="16:00" required />
+                        </div>
+                    </div>
+                    <div class="d-lg-flex flex-lg-row justify-content-lg-between">
+                        <div class="c-form-field mb-6" id="split">
+                            <label class="white-bg" for="name">Your Full Name</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'name' %} c-input--error{% endif %}"
+                                id="name" name="contact[name]" placeholder="Enter your full name" type="text"
+                                {%- if form.name -%} value="{{ form.name }}" {%- endif -%} required />
+                        </div>
+                        <div class="c-form-field mb-6" id="split">
+                            <label for="phone">Your Phone Number</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'phone' %} c-input--error{% endif %}"
+                                id="phone" name="contact[phone]" placeholder="Enter your phone number" type="number"
+                                {%- if form.phone -%} value="{{ form.phone }}" {%- endif -%} required />
+                        </div>
+                    </div>
+                    <div class="c-form-field textarea mb-6 mt-10 mt-sm-0 text-left">
+                        <label for="Message">What would you like to discuss?</label>
+                        <textarea
+                            class="c-form-input mt-4 mt-sm-0 {% if show_errors == true and form.errors contains 'message' %} c-input--error{% endif %}"
+                            id="message" name="contact[message]" placeholder="Enter your message" required>
+                            {%- if form.body -%}
+                                {{- form.body -}}
+                            {%- endif -%}
+                        </textarea>
+                    </div>
+                    <input type="hidden" class="c-form-input" name="contact[email]"
+                        value="placeholder-email@operabeds.com">
+                    <div class="d-flex justify-content-sm-end">
+                        <button type="submit" class="c-form-contact-submit c-add-to-cart-btn">
+                            <span
+                                class="text-16 text-uppercase tracking-wider text-bold">{{- settings.popup_call_ctalabel -}}</span>
+                        </button>
+                    </div>
+                      {%- if form.posted_successfully? -%}
+                      <div class="bg-mossgreen">
+                          <p class="c-alert c-alert--success text-tropical text-center text-16 mt-4 p-2" role="alert"> Thank you! Your request
+                              has been received and we will contact you soon.
+                          </p>
+                      </div>
+                      {%- endif -%}					                  
+                    {%- endform -%}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

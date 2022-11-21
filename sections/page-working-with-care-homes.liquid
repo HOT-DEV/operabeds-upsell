@@ -1,0 +1,560 @@
+{% comment %}
+    Page template:      Working with care homes
+    Design template:    Contract Page
+{% endcomment %}
+{%- liquid
+    assign jump_to_links = section.blocks | map: 'settings' | map: 'title'
+-%}
+{%-
+    render 'page-header',
+    image_mobile:           null,
+    image_tablet:           null,
+    image_desktop:          section.settings.hero_image,
+    image_alt:              image_alt,
+    heading:                page.title,
+    strapline:              section.settings.page_strapline,
+    page_content:           section.settings.page_content,
+    _add_header_element:    null,
+    _image_store:           null,
+-%}
+
+<div class="container site-padding my-16 my-lg-20">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-xxl-8 text-center text-lg-left">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-5 mb-8 mb-lg-0">
+                    <h2 class="m-0 text-30 text-lg-36 text-xl-46 font-weight-medium leading-none text-elephant">
+                        {{- section.settings.intro_heading | escape -}}
+                    </h2>
+                </div>
+                <div class="col-12 col-lg-5 c-rte">
+                    {{ section.settings.intro_text }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="t-why-opera__tabs mt-10 mt-md-18" data-tabs>
+        <nav class="c-tabs">
+            <ul class="c-tabs__tablist" role="tablist">
+                {%- for jump_to_link in jump_to_links -%}
+                    <li role="none">
+                        <a href="#{{ jump_to_link | handleize }}" class="c-tabs__box">
+                            {{ jump_to_link }}
+                        </a>
+                    </li>
+                {%- endfor -%}
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+{%- if section.blocks.size > 0 -%}
+    {%- for block in section.blocks -%}
+        {%- if block.type == 'project-gallery' -%}
+            {%- liquid
+                assign selected_blog = blogs[block.settings.blog]
+                assign blog_large_cards = selected_blog.articles
+                assign truncate_words_limit = block.settings.truncate_words_limit
+            -%}
+            <div class="container site-padding my-16 my-lg-20">
+                <div class="row mx-n2 mb-n4">
+                    {%- for article in blog_large_cards limit: block.settings.blog_limit -%}
+                        {%- liquid
+                            assign image = article.image
+                            assign image_alt = article.image.alt | default: article.title
+                            assign img_xs = image | img_url: '800x600'
+                            assign img_sm = image | img_url: '800x600'
+                            assign img_md = image | img_url: '800x600'
+                            assign img_lg = image | img_url: '800x600'
+                            assign img_xl = image | img_url: '800x600'
+                            assign img_xxl = image | img_url: '800x600'
+                            assign img_xxxl = image | img_url: '800x600'
+
+                            assign article_description = article.excerpt | strip_html | default: article.content | strip_html | truncatewords: truncate_words_limit
+                        -%}
+                        <div class="col-12 col-md-6 mb-4 px-2">
+                            <div class="c-project-card">
+                                <picture class="c-project-card__picture js-lazy" data-iesrc="{{ img_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+                                    <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+                                    <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                    <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                    <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                                    <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                                    <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                                    <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+                                    {% comment %} <img alt="" /> {% endcomment %}
+                                </picture>
+                                <div class="c-project-card__content text-white">
+                                    <p class="mb-5 text-14 leading-tight font-weight-bold tracking-widest text-uppercase">
+                                        {{ selected_blog.title }}
+                                    </p>
+                                    <h2 class="m-0 text-24 text-md-36 leading-tight font-weight-normal">
+                                        {{ article.title }}
+                                    </h2>
+                                    <p class="mt-5 mb-0 d-none d-lg-block">
+                                        {{ article_description  }}
+                                    </p>
+                                    <a class="mt-10 mt-lg-12 c-text-btn text-14 font-weight-bold leading-tight tracking-widest text-uppercase" href="{{ article.url }}">
+                                        View Project
+                                        <svg class="c-btn-icon--caret" aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-caret-right"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+                <div class="mt-10 mt-lg-12 text-center">
+                    <a class="c-btn c-btn--blue" href="{{ block.settings.cta_url }}">
+                        <svg class="c-btn-icon--plus" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-plus"></use>
+                        </svg>
+                        {{ block.settings.cta_text }}
+                    </a>
+                </div>
+            </div>
+        {%- elsif block.type == "form" -%}
+            {%- render 'page-form-full-width'
+                _heading:           block.settings.heading,
+                _intro_text:        block.settings.intro_text,
+                _form_embed_html:   block.settings.form_embed_html,
+            -%}
+        {%- elsif block.type == "bullet-panel-with-image" -%}
+            {%- render 'page-bullet-panel-with-image'
+                    _heading:           block.settings.heading,
+                    _image:             block.settings.image,
+                    _bullet_list:       block.settings.bullet_list,
+                    _bullet_list_label: block.settings.bullet_list_label,
+                -%}
+        {%- elsif block.type == "image" -%}
+            {%- render 'page-image'
+                _image:             block.settings.image,
+                _image_alt:         block.settings.image_alt,
+            -%}
+        {%- elsif block.type == 'full-image-text-tab' -%}
+            {%- liquid
+                assign image = block.settings.image
+                assign image_alt = image.alt | default: block.settings.heading
+                if block.settings.text_panel_position == 'right'
+                    assign position = 'justify-content-md-end'
+                else
+                    assign position = ''
+                endif
+            -%}
+            <div class="c-image-and-text mt-24">
+                <picture class="c-image-and-text__bg js-lazy" data-iesrc="{{- image_url -}}" data-alt="{{ image_alt }}">
+                    <source srcset="{{ image | img_url: '600x' }}" media="(max-width: 575px)">
+                    <source srcset="{{ image | img_url: '800x' }}" media="(min-width: 576px) and (max-width: 767px)">
+                    <source srcset="{{ image | img_url: '1100x' }}" media="(min-width: 768px) and (max-width: 1023px)">
+                    <source srcset="{{ image | img_url: '1300x' }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                    <source srcset="{{ image | img_url: '1500x' }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                    <source srcset="{{ image | img_url: '1800x' }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                    <source srcset="{{ image | img_url: '2048x' }}" media="(min-width: 1670px)">
+                </picture>
+
+                <div class="container site-padding">
+                    <div class="row {{ position }}">
+                        <div class="col-lg-6">
+                            <div class="c-image-and-text__content">
+                                <h2 class="text-14 font-weight-normal font-weight-md-bold text-uppercase tracking-widest text-elephant mb-6 mb-md-8">
+                                    {{ block.settings.heading }}
+                                </h2>
+                                <h3 class="text-24 text-md-36 text-elephant font-weight-normal mb-9 mb-md-7">{{ block.settings.subheading }}</h3>
+                                {{ block.settings.text }}
+                                {%- if block.settings.cta_url -%}
+                                    <a href="{{ block.settings.cta_url }}" class="c-btn-outline c-btn-outline--blue c-btn--lg mt-9 mt-md-14">{{ block.settings.cta_text }}</a>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {%- elsif block.type == 'image-and-text' -%}
+            <div data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }} id="{{ block.settings.title | handleize }}" {% if forloop.last %}class="mb-24"{% endif %}>
+                {%- render 'page-image-and-text-tab'
+                        _image: block.settings.image
+                        _heading: block.settings.heading,
+                        _text_panel_position: block.settings.text_panel_position,
+                        _text: block.settings.text,
+                        _cta_url: block.settings.cta_url
+                        _cta_text: block.settings.cta_text,
+                    -%}
+            </div>
+        {%- elsif block.type == 'text' -%}
+            {%- if block.settings.panel_theme_colour == 'grey' -%}
+                <div class="bg-athens-gray text-blue-diane mt-18">
+                    <div class="container site-padding py-8">
+                        <p class="m-0 text-center font-weight-bold text-16 tracking-widest leading-relaxed text-uppercase">
+                            {{- block.settings.heading | escape -}}
+                        </p>
+                    </div>
+                </div>
+            {%- else -%}
+                <div class="container site-padding pt-lg-16">
+                    <p class="m-0 text-center font-weight-bold text-16 tracking-widest leading-relaxed text-uppercase text-blue-diane">
+                        {{- block.settings.heading | escape -}}
+                    </p>
+                </div>
+            {%- endif -%}
+        {%- elsif block.type == 'bg-image-with-text' -%}
+            {%- render 'page-text-banner-image', _settings: block.settings -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Working with Care Homes",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image",
+            "info": "This is overriden by the metafield (old website)"
+        },
+        {
+            "type": "textarea",
+            "id": "page_strapline",
+            "label": "Header Strapline (add line break for design)",
+            "default": "Page\r\nstrapline"
+        },
+        {
+            "type": "textarea",
+            "id": "page_content",
+            "label": "Header content"
+        },
+        {
+            "type": "header",
+            "content": "Text Panel"
+        },
+        {
+            "type": "text",
+            "id": "intro_heading",
+            "label": "Heading",
+            "default": "Working with Care Homes"
+        },
+        {
+            "type": "richtext",
+            "id": "intro_text",
+            "label": "Text (RHS)",
+            "default": "<p>We partner with care organisations and services that are committed to providing outstanding care. Care homes choose Opera® for our design-led, clinically proven beds and mattresses that facilitate excellent care and resident wellbeing.<\/p>"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "project-gallery",
+            "name": "Project Gallery (blog)",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name",
+                    "info": "Required"
+                },
+                {
+                    "type": "blog",
+                    "id": "blog",
+                    "label": "Blog Picker"
+                },
+                {
+                    "type": "header",
+                    "content": "Section Settings"
+                },
+                {
+                    "type": "range",
+                    "id": "truncate_words_limit",
+                    "min": 10,
+                    "max": 60,
+                    "step": 1,
+                    "label": "Article words limit (desktop)",
+                    "default": 24
+                },
+                {
+                    "type": "range",
+                    "id": "blog_limit",
+                    "min": 4,
+                    "max": 12,
+                    "step": 1,
+                    "label": "Blog limit",
+                    "default": 4
+                },
+                {
+                    "type": "header",
+                    "content": "Call To Action"
+                },
+                {
+                    "type": "text",
+                    "id": "cta_text",
+                    "label": "Text",
+                    "default": "View more projects"
+                },
+                {
+                    "type": "url",
+                    "id": "cta_url",
+                    "label": "Url"
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "name": "Image Full Width",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name",
+                    "info": "Required"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image Picker"
+                },
+                {
+                    "type": "text",
+                    "id": "image_alt",
+                    "label": "Accessibility: Image Alternate Text"
+                }
+            ]
+        },
+        {
+            "type": "form",
+            "name": "Form Full Width",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name",
+                    "info": "Required"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading",
+                    "default": "Book your appointment"
+                },
+                {
+                    "type": "text",
+                    "id": "intro_text",
+                    "label": "Text",
+                    "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                },
+                {
+                    "type": "html",
+                    "id": "form_embed_html",
+                    "label": "Form embed html"
+                }
+            ]
+        },
+        {
+            "type": "bullet-panel-with-image",
+            "name": "Bullet Panel With Image",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name",
+                    "info": "Required"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading",
+                    "default": "Your heading"
+                },
+                {
+                    "type": "textarea",
+                    "id": "bullet_list",
+                    "label": "Bullet Points (each line return is a new bullet)"
+                },
+                {
+                    "type": "header",
+                    "content": "Accessibility"
+                },
+                {
+                    "type": "text",
+                    "id": "accessibility_bullet_list_label",
+                    "label": "Bullet List Label",
+                    "default": "Features"
+                }
+            ]
+        },
+        {
+            "type": "image-and-text",
+            "name": "Image & Text Panel",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name",
+                    "info": "Required"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image Picker"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                },
+                {
+                    "type": "header",
+                    "content": "Call To Action"
+                },
+                {
+                    "type": "text",
+                    "id": "cta_text",
+                    "label": "Text",
+                    "default": "Learn more"
+                },
+                {
+                    "type": "url",
+                    "id": "cta_url",
+                    "label": "Url"
+                },
+                {
+                    "type": "header",
+                    "content": "Text Panel Positioning"
+                },
+                {
+                    "type": "select",
+                    "id": "text_panel_position",
+                    "label": "Text Panel Position (Left/Right)",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                    ],
+                    "default": "left",
+                    "info": "Set the position of the text panel"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "name": "Text Panel",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name",
+                    "info": "Required"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "select",
+                    "id": "panel_theme_colour",
+                    "label": "Panel Background Colour (Grey/White)",
+                    "options": [
+                        {
+                            "value": "grey",
+                            "label": "Grey"
+                        },
+                        {
+                            "value": "white",
+                            "label": "White"
+                        }
+                    ],
+                    "default": "grey",
+                    "info": "Set the background panel colour"
+                }
+            ]
+        },
+        {
+            "type": "full-image-text-tab",
+            "name": "Full Image Text Tab",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name",
+                    "info": "Required"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image Picker"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "subheading",
+                    "label": "Sub Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                },
+                {
+                    "type": "header",
+                    "content": "Call To Action"
+                },
+                {
+                    "type": "text",
+                    "id": "cta_text",
+                    "label": "Text",
+                    "default": "Learn more"
+                },
+                {
+                    "type": "url",
+                    "id": "cta_url",
+                    "label": "Url"
+                },
+                {
+                    "type": "header",
+                    "content": "Text Panel Positioning"
+                },
+                {
+                    "type": "select",
+                    "id": "text_panel_position",
+                    "label": "Text Panel Position (Left/Right)",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                    ],
+                    "default": "left",
+                    "info": "Set the position of the text panel"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

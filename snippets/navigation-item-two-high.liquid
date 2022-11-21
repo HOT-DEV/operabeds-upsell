@@ -1,0 +1,33 @@
+{%- comment -%}
+Usage:
+    {%- render 'navigation-two-high'
+        _index:             2,
+        _tile_1_link:       '#half-tile',
+        _tile_1_title:      'Panel 3',
+        _tile_1_image_src:  'https://dummyimage.com/600x400/000/fff'
+        _tile_2_link:       '#half-tile',
+        _tile_2_title:      'Panel 3',
+        _tile_2_image_src:  'https://dummyimage.com/600x400/000/fff'
+    -%}
+{%- endcomment -%}
+{%- liquid
+    assign column_index = 'column-' | append: _index
+-%}
+<div class="block half-tile {{ column_index }}">
+    <img data-src="{{ _tile_1_image | img_url: '600x400' }}" class="js-lazy" alt="{{ _tile_1_title }}"/>
+    <a href="{{ _tile_1_link }}" class="stretched-link">
+        {{ _tile_1_title }}
+        <svg focusable="false" aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-caret-right"></use>
+        </svg>
+    </a>
+</div>
+<div class="block half-tile {{ column_index }}">
+    <img data-src="{{ _tile_2_image | img_url: '600x400' }}" class="js-lazy" alt="{{ _tile_2_title }}"/>
+    <a href="{{ _tile_2_link }}" class="stretched-link">
+        {{ _tile_2_title }}
+        <svg focusable="false" aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-caret-right"></use>
+        </svg>
+    </a>
+</div>

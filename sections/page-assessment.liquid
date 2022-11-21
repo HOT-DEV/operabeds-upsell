@@ -1,0 +1,110 @@
+{% comment %}
+    The online needs assessments section template.
+{% endcomment %}
+<section aria-labelledby="page-title">
+    {%- 
+        render 'page-header',
+        image_mobile:           null,
+        image_tablet:           null,
+        image_desktop:          section.settings.hero_image,
+        image_alt:              null,
+        heading:                page.title,
+        strapline:              null,
+        page_content:           null,
+        _add_header_element:    null,
+        _image_store:           null,
+    -%}
+
+    <div class="container site-padding my-12 mt-lg-14 mb-lg-24">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                {%- if page.content != blank -%}
+                    <div class="c-rte mb-12 mb-lg-14">
+                        {{- page.content -}}
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="mt-3">
+                <div class="row">
+                    {%- if section.blocks.size > 0 -%}
+                        {%- for block in section.blocks -%}
+                            <div class="c-assessment col-12 col-md-6">
+                                <picture class="c-picture c-picture--contain js-lazy" data-iesrc="{{ block.settings.image | img_url: '1200x' }}" data-alt="{{ block.settings.image.alt | default: block.settings.title }}">
+                                    <source media="(min-width:800px)" srcset="{{ block.settings.image | img_url: '600x' }}" />
+                                    <source media="(max-width:799px)" srcset="{{ block.settings.image | img_url: '400x' }}" />
+                                </picture>
+                                <noscript>
+                                    <picture class="c-picture c-picture--cover">
+                                        <img srcset="{{ block.settings.image | file_img_url: '1200x' }} 2x {{ block.settings.image | img_url: '800x' }} 1x" src="{{ block.settings.image| img_url: '800x' }}" alt="{{ block.settings.image.alt | default: block.settings.title }}"/>
+                                    </picture>
+                                </noscript>
+                                {{ block.settings.text }}
+                                {%- if block.settings.typeform_url -%}
+                                    <a class="typeform-share button c-btn c-btn--navy" href="{{ block.settings.typeform_url }}" data-mode="popup" target="_blank">{{ block.settings.title }} &gt;&gt;</a>
+                                    <script> (function() { var qs,js,q,s,d=document, gi=d.getElementById, ce=d.createElement, gt=d.getElementsByTagName, id="typef_orm_share", b="https://embed.typeform.com/"; if(!gi.call(d,id)){ js=ce.call(d,"script"); js.id=id; js.src=b+"embed.js"; q=gt.call(d,"script")[0]; q.parentNode.insertBefore(js,q) } })() </script>
+                                {%- endif -%}
+                            </div>
+                        {%- endfor -%}
+                    {%- endif -%}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center mt-5">
+                    {{ section.settings.text_cta | replace: '<p>', '<p class="c-heading-md">' }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Online Needs Assessment",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image"
+        },
+        {
+            "type": "text",
+            "id": "text_cta",
+            "label": "CTA text"
+        }
+    ],
+    "blocks": [
+    {
+        "type": "Block",
+        "name": "Block",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image"
+            },
+            {
+                "type": "url",
+                "id": "typeform_url",
+                "label": "Html button (Typeform)"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Heading"
+            },
+            {
+                "type": "text",
+                "id": "text",
+                "label": "Text"
+            }
+        ]
+    }
+]
+}
+{% endschema %}

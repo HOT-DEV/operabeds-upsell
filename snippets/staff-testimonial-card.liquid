@@ -1,0 +1,31 @@
+{%- liquid
+    assign review_heading = _heading
+    assign review_title = _title
+    assign review_content = _content
+    assign review_author = _author
+    assign review_job_title = _job_title
+-%}
+{%- if review_title.size > 0 -%}
+    <div class="swiper-slide" class="{{ block.shopify_attributes }} id="{{ block.id | handleize }}">
+        <div class="c-testimonial-card w-100 h-100 p-0 text-center text-lg-left">
+            <svg class="c-testimonial-card__icon mb-6 mb-lg-8 ml-lg-0" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-double-quote"></use>
+            </svg>
+            <div class="mb-6 mb-lg-12 m-0 text-14 leading-tight font-weight-medium tracking-widest text-uppercase">
+                {{- review_heading | escape -}}
+            </div>
+            <h3 class="text-24 font-weight-medium leading-tight mb-6 mb-lg-4">
+                {{- review_title | escape -}}
+            </h3>
+            <div class="mb-12 text-abbey mb-lg-8">
+                {{- review_content | escape | prepend: '<p>' | append: '</p>' -}}
+            </div>
+            <p class="mt-auto mb-0 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                {{ review_author | escape }}
+            </p>
+            <p class="mt-2 mb-0 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                {{ review_job_title | escape }}
+            </p>
+        </div>
+    </div>
+{%- endif -%}

@@ -1,0 +1,131 @@
+{%- liquid
+    assign feature_points = section.blocks | where: 'type', 'feature_point'
+-%}
+<section class="s-quick-enquiry" data-section-type="quick-enquiry" data-section-id="{{ section.id }}">
+
+    <div class="container site-padding my-12 mt-lg-24">
+        <div class="row justify-content-center">
+            <div class="c-rte col-lg-4 text-center text-lg-left">
+                {%- if section.settings.enquiry_heading -%}
+                <h2 class="text-26 text-md-36 font-weight-semibold">
+                    {{- section.settings.enquiry_heading | escape -}}
+                </h2>
+                {%- endif -%}
+                {%- if section.settings.enquiry_description -%}
+                <div class="mb-10">
+                    {{- section.settings.enquiry_description | safe -}}
+                </div>
+                {%- endif -%}
+                {%- if feature_points -%}
+                <div class="mb-10">
+                    <ul class="c-check-list d-flex flex-column align-items-center align-items-lg-start"
+                        aria-label="{{ section.settings.accessibility_features_label | escape }}">
+                        {%- for feature_point in feature_points -%}
+                        {%- if feature_point.settings.title.size > 0 -%}
+                        <li class="mb-5" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}"
+                            {{ block.shopify_attributes }}>
+                            <svg aria-hidden="true" role="presentation" style="color: #00b67A;">
+                                <use xlink:href="#sprite-check"></use>
+                            </svg>
+                            <span>
+                                {{- feature_point.settings.title | escape -}}
+                            </span>
+                        </li>
+                        {%- endif -%}
+                        {%- endfor -%}
+                    </ul>
+                </div>
+                {%- endif -%}
+            </div>
+
+            <div class="col-lg-6 col-xl-5">
+                <div class="c-page-form pt-lg-6">
+                    {%- form 'contact', class: 'c-form c-form-alt', id: 'quick-enquiry-form', aria-label: 'Quick Enquiry form' -%}
+                    <input type="hidden" name="contact[form]" value="Quick Enquiry Form">
+                    {% comment %} {%- if form.posted_successfully? and form.id == 'quick-enquiry-form' -%}
+                    <p class="c-alert c-alert--success text-tropical" role="alert">Your message was sent successfully.
+                    </p>
+                    {%- endif -%} {% endcomment %}
+                    {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+                        <div class="c-form-field mb-6 c-form-field--white-bg">
+                            <label class="white-bg" for="name">Name</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'name' %} c-input--error{% endif %}"
+                                id="name" name="contact[name]" placeholder="Enter your full name" type="text"
+                                {%- if form.name -%} value="{{ form.name }}" {%- endif -%} required />
+                        </div>                   
+                  	<div class="c-form-field mb-6 c-form-field--white-bg">
+                        <label for="email">Email</label>
+                        <input
+                            class="c-form-input {% if show_errors == true and form.errors contains 'email' %} c-input--error{% endif %}"
+                            id="email" name="contact[email]" placeholder="Enter your email address" type="email"
+                            {%- if form.email -%} value="{{ form.email }}" {%- endif -%} required />
+                    </div>
+                    <div class="c-form-field mb-6 c-form-field--white-bg">
+                        <label for="phone">Phone</label>
+                        <input
+                            class="c-form-input {% if show_errors == true and form.errors contains 'phone' %} c-input--error{% endif %}"
+                            id="phone" name="contact[phone]" placeholder="Enter your phone number" type="number"
+                            {%- if form.phone -%} value="{{ form.phone }}" {%- endif -%} required />
+                    </div>
+                    <div class="c-form-field mb-6 c-form-field--white-bg">
+                        <label for="Message">Notes</label>
+                        <textarea
+                            class="c-form-input {% if show_errors == true and form.errors contains 'message' %} c-input--error{% endif %}"
+                            id="message" name="contact[message]" placeholder="How can we help?">
+                                {%- if form.body -%}
+                                    {{- form.body -}}
+                                {%- endif -%}
+                            </textarea>
+                    </div>
+                    <div class="d-flex justify-content-sm-end">
+                        <button type="submit" class="c-form-contact-submit c-btn c-btn--blue">
+                            Send
+                        </button>
+                    </div>
+                    {%- endform -%}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+{% schema %}
+{
+"name": "Quick Enquiry",
+"settings": [
+{
+"type": "text",
+"id": "enquiry_heading",
+"label": "Heading"
+},
+{
+"type": "text",
+"id": "enquiry_description",
+"label": "Description"
+}
+],
+"blocks": [
+{
+"type": "feature_point",
+"name": "Feature Point",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Text"
+}
+]
+}
+],
+"presets": [
+{
+"name": "Quick Enquiry",
+"category": "Homepage",
+"settings": {},
+"blocks": []
+}
+]
+}
+{% endschema %}

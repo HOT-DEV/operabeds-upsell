@@ -1,0 +1,29 @@
+{% comment %} Example Content - This will not be sufficient when it comes to wiring up the Liquid {% endcomment %}
+{%- liquid 
+    if product_tab_content contains '<table'
+        assign content_type = 'table'
+    else 
+        assign content_type = 'richtext' 
+    endif 
+-%}
+{%- if content_type == 'table' -%}
+    <div class="c-expanding-table text-16 mt-n4" data-expanding-table>
+        <div class="c-responsive-table pt-xl-14 pr-xl-14 pl-xl-14 px-xxl-32" id="product-accordion-content-{{ forloop.index }}-table">
+            {{ product_tab_content | replace: '<table ', '<table class="c-table c-table--sm" data-expanding-table-content ' }}
+        </div>
+        <div class="mt-12 pb-lg-14 text-center">
+            <button class="c-btn c-btn--dark" type="button" aria-label="{{ 'Load more details' | escape }}" title="{{ 'Load more details' | escape }}" aria-controls="product-accordion-content-{{ forloop.index }}-table" aria-expanded="false" data-expanding-table-toggle>
+                <svg class="c-btn-icon--plus" aria-hidden="true" role="presentation">
+                    <use xlink:href="#sprite-plus"></use>
+                </svg>
+                <span data-expanding-table-toggle-text data-expanding-table-toggle-text-on="{{ 'Hide more details' | escape }}" data-expanding-table-toggle-text-off="{{ 'Load more details' | escape }}">
+                    {{- 'Load more details' | escape -}}
+                </span>
+            </button>
+        </div>
+    </div>
+{%- else -%}
+    <div class="text-14 text-abbey c-rte">
+        {{ product_tab_content }}
+    </div>
+{%- endif -%}

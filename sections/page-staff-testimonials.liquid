@@ -1,0 +1,153 @@
+{% comment %}
+    The Staff Testiominal template.
+{% endcomment %}
+{%- liquid
+    assign image = section.settings.image
+    assign image_xs = image | img_url: '600x'
+    assign image_sm = image | img_url: '800x'
+    assign image_md = image | img_url: '1100x'
+    assign image_lg = image | img_url: '1300x'
+    assign image_xl = image | img_url: '1500x'
+    assign image_xxl = image | img_url: '1800x'
+    assign image_xxxl = image | img_url: '2048x'
+    assign image_alt = image.alt | default: _title
+-%}
+<section class="s-product-testimonials" data-section-type="product-testimonials" data-section-id="{{ section.id }}">
+    <picture class="s-product-testimonials__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+        <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+        <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+        <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+        <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+        <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+        <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+        <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+        {% comment %} <img alt="" /> {% endcomment %}
+    </picture>
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xxl-10">
+                <div class="row">
+                    <div class="col-12 col-lg-6 mt-n20 my-lg-32">
+                        <div class="p-10 py-lg-16 bg-white text-center text-lg-left">
+                            <div class="s-product-testimonials__slider">
+                                <div class="row no-gutters flex-lg-nowrap align-items-lg-center">
+                                    <div class="d-none d-lg-block col-lg-1">
+                                        <button class="s-product-testimonials__btn swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}">
+                                            <svg aria-hidden="true" role="presentation">
+                                                <use xlink:href="#sprite-chevron-left"></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-lg-10 px-lg-10">
+                                        <div class="swiper-container">
+                                            <div class="swiper-wrapper">
+                                                {%- for block in section.blocks -%}
+                                                        {%- render 'staff-testimonial-card'
+                                                            _author: block.settings.title,
+                                                            _heading: section.settings.team_comments_panel_heading,
+                                                            _title: block.settings.review_title,
+                                                            _content: block.settings.content,
+                                                            _job_title: block.settings.job_title,
+                                                            _block: block
+                                                        -%}
+                                                {%- endfor -%}
+                                            </div>
+                                            <div class="px-8 pt-10 py-md-12 d-lg-none">
+                                                <div class="row flex-nowrap align-items-center justify-content-md-center">
+                                                    <div class="col-auto">
+                                                        <button class="s-product-testimonials__prev swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}">
+                                                            <svg aria-hidden="true" role="presentation">
+                                                                <use xlink:href="#sprite-chevron-left"></use>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col col-md-6 col-lg-3">
+                                                        <div class="s-product-testimonials__pagination swiper-pagination"></div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button class="s-product-testimonials__next swiper-button-next" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}">
+                                                            <svg aria-hidden="true" role="presentation">
+                                                                <use xlink:href="#sprite-chevron-right"></use>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mt-6 mb-0 text-14 font-weight-medium text-abbey">
+                                            {{- section.settings.team_comments_panel_footer | escape -}}
+                                        </p>
+                                    </div>
+                                    <div class="d-none d-lg-block col-lg-1 text-right">
+                                        <button class="s-product-testimonials__btn swiper-button-next" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}">
+                                            <svg aria-hidden="true" role="presentation">
+                                                <use xlink:href="#sprite-chevron-right"></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Staff Testimonials",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Team Comments"
+        },
+        {
+            "type": "text",
+            "id": "team_comments_panel_heading",
+            "label": "Panel Heading",
+            "default": "Team Comments"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Background Image"
+        },
+        {
+            "type": "text",
+            "id": "team_comments_panel_footer",
+            "label": "Panel Footer Text",
+            "default": "Collected by independent consultant in staff interviews"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "team-review",
+            "name": "Team Review",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Author"
+                },
+                {
+                    "type": "text",
+                    "id": "review_title",
+                    "label": "Review Title"
+                },
+                {
+                    "type": "textarea",
+                    "id": "content",
+                    "label": "Review Content"
+                },
+                {
+                    "type": "text",
+                    "id": "job_title",
+                    "label": "Job Title"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

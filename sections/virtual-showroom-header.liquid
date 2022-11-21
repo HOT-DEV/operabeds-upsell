@@ -1,0 +1,69 @@
+{%- 
+    render 'virtual-showroom-page-header',
+    image_mobile:           section.settings.hero_image_mobile,
+    image_tablet:           section.settings.hero_image_tablet,
+    image_desktop:          section.settings.hero_image_desktop,
+    image_alt:              image_alt,
+    heading:                page.title,
+    page_content:           page.content,
+    _add_header_element:    null,
+    _image_store:           null,
+-%}
+
+{% schema %}
+{
+    "name": "VS - Hero details",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "hero_image_desktop",
+            "label": "Hero Image - Desktop",
+            "info": "2048x640 recommended"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image_tablet",
+            "label": "Hero Image - Tablet",
+            "info": "1366x576 recommended"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image_mobile",
+            "label": "Hero Image - Mobile",
+            "info": "768x365 recommended"
+        },
+        {
+            "type": "text",
+            "id": "hero_subheading",
+            "label": "Subheading",
+            "default": "Visit us"
+        },
+        {
+            "type": "textarea",
+            "id": "hero_description",
+            "label": "Description",
+            "default": "Lorem ipsum text"
+        },
+        {
+            "type": "textarea",
+            "id": "box_1",
+            "label": "Box 1 - Description",
+            "default": "1-to-1 expert advice with a dedicated adviser"
+        },
+        {
+            "type": "textarea",
+            "id": "box_2",
+            "label": "Box 2 - Description",
+            "default": "Discover our beds from the comfort of your home"
+        },
+        {
+            "type": "textarea",
+            "id": "box_3",
+            "label": "Box 3 - Description",
+            "default": "Free service with no obligations"
+        }
+
+
+    ]
+}
+{% endschema %}

@@ -1,0 +1,37 @@
+<section class="py-14 py-lg-16" style="background-color: #F2F3F4;">
+<div class="container site-padding">
+  <div class="row justify-content-center">
+  {% if collection.metafields.my_fields.learn_more_title_1 != blank %}
+    <div class="learn-more-block col-12 col-xl-12 mb-14 mb-lg-14">
+      <h2 class="mb-6 text-24 text-hd-32 leading-tight">{{ collection.metafields.my_fields.learn_more_title_1 }}</h2>
+      {{ collection.metafields.my_fields.learn_more_textbox_1 }}
+    </div>
+  {% endif %}
+  {% if collection.metafields.my_fields.learn_more_title_2 != blank %}
+    <div class="learn-more-block col-12 col-xl-12 mb-14 mb-lg-14">
+      <h2 class="mb-6 text-24 text-hd-32 leading-tight">{{ collection.metafields.my_fields.learn_more_title_2 }}</h2>
+      {{ collection.metafields.my_fields.learn_more_textbox_2 }}
+    </div>
+  {% endif %}
+  {% if collection.metafields.my_fields.learn_more_title_3 != blank %}
+    <div class="learn-more-block col-12 col-xl-12 mb-14 mb-lg-14">
+      <h2 class="mb-6 text-24 text-hd-32 leading-tight">{{ collection.metafields.my_fields.learn_more_title_3 }}</h2>
+      {{ collection.metafields.my_fields.learn_more_textbox_3 }}
+    </div>
+  {% endif %}
+</div>
+</div>    
+</section>
+
+{% schema %}
+  {
+    "name": "Collection - Text Blocks",
+    "settings": [
+   {
+     "type": "header",
+     "content": "Instructions to add content",
+    "info": "Shopify Admin > Products > Collections > Pick the collection > Scroll down to metafields in the individual collection"
+   }
+    ]
+  }
+{% endschema %}

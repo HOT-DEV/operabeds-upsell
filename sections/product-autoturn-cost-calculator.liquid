@@ -1,0 +1,58 @@
+<section class="s-cta-with-icon bg-white" data-section-id="{{ section.id }}" style="">
+    <div class="container site-padding pt-16">
+        <div class="row text-center justify-content-center">
+            <div class="col-12 col-xxl-10">
+                <div class="cta-with-icon_content bg-elephant pt-12 pb-16 px-3">
+                <svg class="s-cta_icon" aria-hidden="true" role="presentation">
+                    <use xlink:href="#{{ section.settings.icon }}"></use>
+                </svg>
+                <h3 class="text-20 text-md-26 font-weight-normal leading-tight text-white mt-8 mb-12">
+                    {{ section.settings.title }}
+                </h3>
+                <a data-calculatorid="61f957e55eddd2002ce5b243" href="#/calculator/61f957e55eddd2002ce5b243" class="btn-autoturn text-capitalize">
+                    {{ section.settings.button_label }}
+                </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Autoturn - Cost Calc",
+    "settings": [
+      {
+          "type": "select",
+          "id": "icon",
+          "label": "Which calculator?",
+          "options": [
+          {
+            "value": "calculator-taupe",
+            "label": "Calculator - Taupe"
+          },           
+              {
+                  "value": "calculator-white",
+                  "label": "Calculator - White"
+              },
+            {
+                "value": "calculator-elephant",
+                "label": "Calculator - Elephant"
+            }                          
+          ]
+      },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Welcome to Opera Beds CTA section with icon"
+        },
+        {
+            "type": "text",
+            "id": "button_label",
+            "label": "Button - Label",
+            "info": "This button triggers the calculator popup"
+        }
+    ]
+}
+{% endschema %}

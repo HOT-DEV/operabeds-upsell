@@ -1,0 +1,55 @@
+
+{%- liquid
+    assign feature_list = _bullet_list | newline_to_br | split: '<br />'
+
+    assign image = _image
+    assign image_alt = image.alt | default: _image_alt
+    assign img_xs = image | img_url: '408x248'
+    assign img_sm = image | img_url: '512x248'
+    assign img_md = image | img_url: '608x320'
+    assign img_lg = image | img_url: '480x640'
+    assign img_xl = image | img_url: '700x678'
+    assign img_xxl = image | img_url: '840x678'
+    assign img_xxxl = image | img_url: '956x678'
+-%}
+    <section class="s-featured-content">
+    <div class="container site-padding">
+        <div class="bg-elephant text-white">
+            <div class="row no-gutters align-items-lg-stretch">
+                <div class="col-12 col-lg-6 col-xl-7 order-lg-last">
+                    <picture class="s-featured-content__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ 'Alt text' | escape }}">
+                        <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+                        <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                        <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                        <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                        <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                        <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                        <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+                        {% comment %} <img alt="" /> {% endcomment %}
+                    </picture>
+                </div>
+                <div class="col-12 col-lg-6 col-xl-5 order-lg-first align-self-lg-center">
+                    <div class="s-featured-content__content mx-auto p-4 px-md-8 px-xxxl-0 py-16 py-md-8 py-xxl-20">
+                        <h2 class="mb-12 u-heading-md">
+                            {{- _heading | escape -}}
+                        </h2>
+                        {%- if feature_list.size > 0 -%}
+                            <ul class="c-check-list mb-n8" aria-label="{{ _bullet_list_label | escape }}">
+                                {%- for feature in feature_list -%}
+                                    <li class="mb-8">
+                                        <svg aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-check-circle"></use>
+                                        </svg>
+                                        <span>
+                                            {{- feature | escape -}}
+                                        </span>
+                                    </li>
+                                {%- endfor -%}
+                            </ul>
+                        {%- endif -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

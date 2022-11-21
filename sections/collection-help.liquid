@@ -1,0 +1,115 @@
+{% comment %}
+    The Collection Help section template.
+{% endcomment %}
+{%- liquid
+    assign blocks = section.blocks
+-%}
+{%- if blocks -%}
+    <section class="bg-athens-gray2 text-elephant" data-section-type="collection-help" data-section-id="{{ section.id }}">
+        <div class="container site-padding py-16">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 mb-12 mb-lg-13">
+                    <h2 class="mb-0 text-26 text-md-30 font-weight-medium leading-tight text-elephant text-center">
+                        {{- section.settings.title | escape -}}
+                    </h2>
+                </div>
+                <div class="col-12 col-md-10 col-lg-12 col-xl-10">
+                    <div class="row mb-n12 mb-md-n18 mb-lg-0 mx-n2 mx-xl-n4 mx-xxxl-n8">
+                        {%- for block in blocks -%}
+                            {%- liquid
+                                assign image = block.settings.image
+                                assign image_alt = image.alt | default: block.settings.heading
+                                assign image_xs = image | img_url: '376x158'
+                                assign image_sm = image | img_url: '480x196'
+                                assign image_md = image | img_url: '502x244'
+                                assign image_lg = image | img_url: '310x244'
+                                assign image_xl = image | img_url: '278x244'
+                                assign image_xxl = image | img_url: '310x244'
+                                assign image_xxxl = image | img_url: '411x244'
+                            -%}
+                            <div class="col-12 col-lg-4 mb-12 mb-md-18 mb-lg-0 px-2 px-xl-4 px-xxxl-8">
+                                <div class="c-help-card">
+                                    <div class="c-help-card__media">
+                                        <picture class="c-help-card__media__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+                                            <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                                            <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                            <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                            <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                                            <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                                            <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                                            <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+                                        </picture>
+                                    </div>
+                                    <h3 class="c-help-card__heading mb-6 text-22 text-sm-26 text-md-30 text-lg-26 text-xl-30 font-weight-medium leading-tight">
+                                        {{- block.settings.heading | escape -}}
+                                    </h3>
+                                    <div class="c-help-card__content">
+                                        {{- block.settings.paragraph | replace: '0333 222 8584', '<span class="rTapNumber413992">0333 222 8584</span>' -}}
+                                        <a class="c-help-card__btn mt-md-11" href="{{ block.settings.button_url }}" aria-label="{{ block.settings.button_text | escape }}" title="{{ block.settings.button_text | escape }}">
+                                            {{- block.settings.button_text  | escape -}}
+                                            <svg aria-hidden="true" role="presentation">
+                                                <use xlink:href="#sprite-caret-right"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Help",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Panel"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Other ways we can help you find the perfect bed for you."
+        }
+    ],
+    "blocks": [
+        {
+            "type": "informational_panel",
+            "name": "Informational Panel",
+            "limit": 3,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Text"
+                },
+                {
+                    "type": "richtext",
+                    "id": "paragraph",
+                    "label": "Paragraph"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Text",
+                    "default": "Learn more"
+                },
+                {
+                    "type": "url",
+                    "id": "button_url",
+                    "label": "Link"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

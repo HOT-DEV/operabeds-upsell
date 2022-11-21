@@ -1,0 +1,133 @@
+{% comment %}
+    The Article Recommendations section template.
+{% endcomment %}
+
+{%- if section.settings.enabled -%}
+    {% comment %}
+        This 'articles' array will be populated with article objects until the 'limit' is reached.
+        The empty 'blog' variable will become an object, acheived by parsing the articles url.
+    {% endcomment %}
+    {%- liquid
+        assign articles = '' | split: ''
+        assign limit = section.settings.limit
+        assign blog = blank
+    -%}
+
+    {% comment %}
+        Get the blog that the article belongs to.
+    {% endcomment %}
+    {%- liquid
+        assign url_parts = article.url | remove_first: '/' | split: '/'
+        if url_parts[0] == 'blogs'
+            assign blog_handle = url_parts[1]
+            assign blog = blogs[blog_handle]
+        endif
+    -%}
+
+    {% comment %}
+        Get articles that share a tag.
+    {% endcomment %}
+    {%- liquid
+        if article.tags.size > 0
+            for article_tag in article.tags
+                if articles.size >= limit
+                    break
+                endif
+
+                paginate blog.articles by 100
+                    for blog_article in blog.articles
+                        if articles.size >= limit
+                            break
+                        endif
+
+                        if blog_article.id != article.id and blog_article.tags contains article_tag
+                            assign blog_article_arr = blog_article | sort
+                            assign articles = articles | concat: blog_article_arr | uniq
+                        endif
+                    endfor
+                endpaginate
+            endfor
+        endif
+    -%}
+
+    {% comment %}
+        Get articles from the same blog.
+    {% endcomment %}
+    {%- liquid
+        if articles.size < limit
+            for blog_article in blog.articles
+                if articles.size >= limit
+                    break
+                endif
+
+                if blog_article.id != article.id
+                    assign blog_article_arr = blog_article | sort
+                    assign articles = articles | concat: blog_article_arr | uniq
+                endif
+            endfor
+        endif
+    -%}
+
+    <section data-section-type="article-recommendations" data-section-id="{{ section.id }}">
+        {%- if articles.size > 0 -%}
+            <div class="bg-porcelain2 py-14 pt-md-31 pb-md-26">
+                <div class="container site-padding">
+                    <div class="row mb-14 mb-md-16">
+                        <div class="col-12 d-sm-flex justify-content-sm-between align-items-sm-baseline">
+                            <h3 class="text-30 text-md-36 font-weight-normal text-elephant">{{ section.settings.title | escape }}</h3>
+                            <a href="" class="d-none d-sm-inline-flex c-btn-underline text-elephant" aria-label="{{- 'View All News & Blogs' | escape -}}">{{- 'View All News & Blogs' | escape -}}</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {%- for article in articles limit: 3 -%}
+                            <div class="col-md-4 mb-4" >
+                                {%- render 'article-card',
+                                    article: article,
+                                    class: 'h-100'
+                                -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                    <a href="" class="c-btn--block d-md-none c-btn c-btn--dark mt-8" aria-label="{{- 'View All News & Blogs' | escape -}}">{{- 'View All News & Blogs' | escape -}}</a>
+                </div>
+            </div>
+        {%- endif -%}
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": {
+        "de": "Artikelempfehlungen",
+        "en": "Article Recommendations",
+        "es": "Recomendaciones de Artículos",
+        "fr": "Recommandations de Articles",
+        "it": "Consigli sul Articolo",
+        "ja": "記事の推奨事項",
+        "pt-BR": "Recomendações de artigos"
+    },
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "enabled",
+            "label": "Enable Article Recommendations?",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "title",
+			"label": "Title",
+            "default": "Recommended Articles"
+        },
+        {
+            "type": "range",
+            "id": "limit",
+			"label": "Limit",
+            "min": 4,
+            "max": 40,
+            "step": 1,
+            "default": 12
+        }
+    ]
+}
+{% endschema %}

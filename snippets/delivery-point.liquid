@@ -1,0 +1,33 @@
+{% comment %}
+    Delivery Point snippet.
+{% endcomment %}
+
+    {%- if icon != blank -%}
+        <svg class="c-delivery-point__icon mb-4 d-inline" aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-{{ icon | handleize }}"></use>
+        </svg>
+    {%- endif -%}
+<div class="c-delivery-point{% if class != blank %} {{ class }}{% endif %}">
+    <div class="c-delivery-point__body">
+        {%- if heading != blank -%}
+            <p class="c-delivery-point__heading mb-2 text-26 font-weight-semibold leading-tight">
+                {{- heading | escape -}}
+            </p>
+        {%- endif -%}
+        {%- if strapline != blank -%}
+        {%- assign firstSentence = strapline | split: ' | ' | first -%}
+        {%- assign lastSentence = strapline | split: ' | ' | last -%}
+            <p class="c-delivery-point__strapline mt-4 mb-2 text-14 font-weight-semibold leading-tight tracking-widest text-uppercase">
+                {{- firstSentence | escape -}}
+            </p>   
+            <p class="c-delivery-point__strapline mb-4 text-14 font-weight-semibold leading-tight tracking-widest text-uppercase">
+                {{- lastSentence | escape -}}
+            </p>         
+        {%- endif -%}
+        {%- if content != blank -%}
+            <div class="c-delivery-point__content mb-n4">
+                {{- content | safe -}}
+            </div>
+        {%- endif -%}
+    </div>
+</div>

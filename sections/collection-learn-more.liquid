@@ -1,0 +1,53 @@
+{% comment %}
+    The Collection Learn More section template.
+{% endcomment %}
+{%- liquid
+    assign string_replacement = '{title}'
+    assign section_title = section.settings.title | replace: string_replacement, collection.title
+    assign panel_content = collection.metafields.accentuate.content
+-%}
+{%- if panel_content -%}
+    <section class="s-learn-more my-10 my-lg-24 my-xxl-32" data-section-type="collection-learn-more" data-section-id="{{ section.id }}">
+        <div class="container site-padding">
+            <button class="s-learn-more__toggle" id="learn-more-toggle" aria-controls="learn-more-content" aria-expanded="false">
+                {{ section_title }}
+                <span class="s-learn-more__toggle__state">
+                    <svg class="s-learn-more__toggle__icon s-learn-more__toggle__icon--plus" aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-plus"></use>
+                    </svg>
+                    <svg class="s-learn-more__toggle__icon s-learn-more__toggle__icon--minus" aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-minus"></use>
+                    </svg>
+                </span>
+            </button>
+            <div class="s-learn-more__content" id="learn-more-content" aria-labelledby="learn-more-toggle">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 col-lg-9 col-xl-8">
+                        <div class="row mb-n6 mb-lg-n8">
+                            {{ panel_content }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Learn More",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "info": "You can include {title} which will add the title into the heading",
+            "default": "Learn more about {title}"
+        },
+        {
+            "type":"header",
+            "content": "Content can be added through the 'App Accentuate'"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

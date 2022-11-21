@@ -1,0 +1,65 @@
+{% comment %}
+    The Article Item snippet.
+{% endcomment %}
+
+<article>
+    {%- assign articleDate = article.published_at -%}
+    {%- assign articleDate_seconds = article.published_at | date: '%s' -%}
+    {%- assign secondsPerDay = 86400 -%}
+    {%- assign dateTimeFormat = "%Y-%m-%dT%T%z" -%}
+    {%- assign daysAgo = 'now' | date: '%s' | minus: articleDate_seconds | date: '%s' | divided_by: secondsPerDay -%}
+    {%- assign hoursAgo = 'now' | date: '%s' | minus: articleDate_seconds | date: '%s' | divided_by: 3600 -%}
+
+    <figure class="m-0">
+        <a href="{{ article.url }}" title="{{ article.title | escape }}">
+            {%- if article.image != blank -%}
+                <picture class="js-lazy" data-iesrc="{{ article.image | img_url: '545x545', crop: 'center' }}" data-alt="{{ article.image.alt }}">
+                    <source srcset="{{ article.image | img_url: '600x600', crop: 'center' }}" media="(min-width: 768px)">
+                    <source srcset="{{ article.image | img_url: '300x300', crop: 'center' }}" media="(max-width: 767px)">
+                </picture>
+                <noscript>
+                    <picture class="">
+                        <source srcset="{{ article.image | img_url: '600x600', crop: 'center' }}" media="(min-width: 768px)">
+                        <source srcset="{{ article.image | img_url: '300x300', crop: 'center' }}" media="(max-width: 767px)">
+                        <img src="{{ article.image | img_url: '300x300', crop: 'center' }}" alt="{{ article.image.alt }}" />
+                    </picture>
+                </noscript>
+            {%- else -%}
+                {{- 'image' | placeholder_svg_tag: 'placeholder-svg' -}}
+            {%- endif -%}
+        </a>
+    </figure>
+
+    <h2 class="mb-0">
+        <a href="{{ article.url }}" title="{{ article.title | escape }}">{{ article.title | escape }}</a>
+    </h2>
+
+    <p class="mb-0">
+        Posted 
+        <time datetime="{{ articleDate | date: dateTimeFormat }}">
+            {%- if hoursAgo <= 6 -%}
+                today
+            {%- elsif daysAgo == 0 and hoursAgo < 24 -%}
+                {{- hoursAgo | append: ' hours ago' -}}
+            {%- else -%}
+                {%- if daysAgo == 1 -%}
+                {{- daysAgo | append: ' day ago' -}}
+                {%- else -%}
+                {{- daysAgo | append: ' days ago' -}}
+                {%- endif -%}
+            {%- endif -%}
+        </time>
+        by
+        <span>{{- article.author -}}</span>
+    </p>
+
+    {%- if article.tags != blank -%}
+        <p class="mb-0">
+            {%- for tag in article.tags -%}
+                {{- tag | link_to_tag: tag -}}{% unless forloop.last %}, {% endunless %}
+            {%- endfor -%}
+        </p>
+    {%- endif -%}
+
+    {{- article.excerpt | default: article.content | truncatewords: 10 | strip_html | prepend: '<p class="mb-0">' | append: '</p>' -}}
+</article>

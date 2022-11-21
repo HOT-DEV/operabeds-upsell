@@ -1,0 +1,35 @@
+{% comment %}
+    The Collection Item snippet.
+{% endcomment %}
+
+<div data-type="collection">
+    <figure class="m-0">
+        <a href="{{ collection.url }}" title="{{ collection.title | escape }}">
+            {%- if collection.image != blank -%}
+                <picture class="js-lazy" data-iesrc="{{ collection.image | img_url: '545x545', crop: 'center' }}" data-alt="{{ collection.image.alt }}">
+                    <source srcset="{{ collection.image | img_url: '600x600', crop: 'center' }}" media="(min-width: 768px)">
+                    <source srcset="{{ collection.image | img_url: '300x300', crop: 'center' }}" media="(max-width: 767px)">
+                </picture>
+                <noscript>
+                    <picture class="">
+                        <source srcset="{{ collection.image | img_url: '600x600', crop: 'center' }}" media="(min-width: 768px)">
+                        <source srcset="{{ collection.image | img_url: '300x300', crop: 'center' }}" media="(max-width: 767px)">
+                        <img src="{{ collection.image | img_url: '300x300', crop: 'center' }}" alt="{{ collection.image.alt }}" />
+                    </picture>
+                </noscript>
+            {%- else -%}
+                {{- 'image' | placeholder_svg_tag: 'placeholder-svg' -}}
+            {%- endif -%}
+        </a>
+    </figure>
+
+    <h2 class="mb-0">
+        <a href="{{ collection.url }}" title="{{ collection.title | escape }}">
+            {{ collection.title | escape }}
+        </a>
+    </h2>
+
+    {%- if collection.description != blank -%}
+        <p class="mb-0">{{ collection.description | strip_html }}</p>
+    {%- endif -%}
+</div>

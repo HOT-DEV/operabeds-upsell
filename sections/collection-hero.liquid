@@ -1,0 +1,374 @@
+{% comment %}
+    The Collection Hero section template.
+{% endcomment %}
+{%- liquid
+    assign seo_override = blank
+    assign video_youtube_url = collection.metafields.accentuate.youtube_url
+
+
+    if collection.metafields.filter.seo_overrides
+        if current_tags.size > 0
+            assign current_tag = current_tags | first | downcase | handleize
+            assign seo_override = collection.metafields.filter.seo_overrides | where: 'match_tag', current_tag | first
+        endif
+    endif
+
+    if seo_override.h1 != blank
+        assign collection_h1 = seo_override.h1
+    elsif current_tags.size == 1
+        assign first_tag_value = current_tags[0] | split: '_' | last
+        assign collection_h1 = first_tag_value
+    elsif current_tags.size > 1
+        assign first_tag_value = current_tags[0] | split: '_' | last
+        assign second_tag_value = current_tags[1] | split: '_' | last
+        assign collection_h1 = first_tag_value | append: ' ' | append: second_tag_value
+    else
+        assign collection_h1 = collection.title
+    endif
+
+    if seo_override.content != blank
+        assign collection_content = seo_override.content
+    else
+        assign collection_content = collection.description
+    endif
+
+    assign hide_video = false
+    assign accentuate_file_image = collection.metafields.accentuate.hero_image
+    if seo_override.image != blank
+        assign hide_video = true
+        assign image = seo_override.image
+        assign image_xs = image | file_img_url: '376x214', crop: 'center'
+        assign image_sm = image | file_img_url: '480x272', crop: 'center'
+        assign image_md = image | file_img_url: '608x345', crop: 'center'
+        assign image_lg = image | file_img_url: '464x264', crop: 'center'
+        assign image_xl = image | file_img_url: '536x304', crop: 'center'
+
+        assign alt_image_portrait = image
+        assign alt_image = image
+    elsif accentuate_file_image
+        assign image = accentuate_file_image | default: collection.image
+        assign image_xs = image | file_img_url: '376x214'
+        assign image_sm = image | file_img_url: '480x272'
+        assign image_md = image | file_img_url: '608x345'
+        assign image_lg = image | file_img_url: '464x264'
+        assign image_xl = image | file_img_url: '536x304'
+
+        assign alt_image_portrait = collection.metafields.accentuate.hero_image_portrait | strip
+        assign alt_image = accentuate_file_image | strip
+    elsif collection.image
+        assign image = collection.image
+        assign image_xs = image | img_url: '376x214'
+        assign image_sm = image | img_url: '480x272'
+        assign image_md = image | img_url: '608x345'
+        assign image_lg = image | img_url: '464x264'
+        assign image_xl = image | img_url: '536x304'
+
+        assign alt_image_portrait = collection.metafields.accentuate.hero_image_portrait | strip
+        assign alt_image = accentuate_file_image | strip
+    elsif section.settings.image
+        assign image = section.settings.image
+        assign image_xs = image | img_url: '376x214'
+        assign image_sm = image | img_url: '480x272'
+        assign image_md = image | img_url: '608x345'
+        assign image_lg = image | img_url: '464x264'
+        assign image_xl = image | img_url: '536x304'
+
+        assign alt_image_portrait = collection.metafields.accentuate.hero_image_portrait | strip
+        assign alt_image = accentuate_file_image | strip
+    endif
+
+    assign accentuate_video_wistia_id = collection.metafields.accentuate.hero_video_wistia
+    assign accentuate_trustpoints = collection.metafields.accentuate.hero_icon_text
+
+    assign hero_height_value = collection.metafields.accentuate.hero_height
+
+    case hero_height_value
+        when '250px'
+            assign hero_height = 'is-short'
+        when '500px'
+            assign hero_height = 'is-tall'
+        else
+            assign hero_height = ''
+    endcase
+-%}
+
+{%- capture image_element -%}
+    <picture class="c-video-player__poster js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ collection.title | escape }}">
+        <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+        <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+        <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+        <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+        <source srcset="{{ image_xl | url }}" media="(min-width: 1280px)">
+    </picture>
+{%- endcapture -%}
+
+
+{%- if collection.metafields.accentuate.hero_alternate_view -%}
+
+    <section data-section-type="collection-hero" data-section-id="{{ section.id }}">
+        <div class="s-collection__hero {{ hero_height -}}">
+            <picture class="js-lazy" data-iesrc="{{ alt_image | file_img_url }}" data-alt="{{ collection.title | escape }}">
+                <source srcset="{{ alt_image_portrait | file_img_url: '600x' }}" media="(max-width: 575px)">
+                <source srcset="{{ alt_image_portrait | file_img_url: '800x' }}" media="(min-width: 576px) and (max-width: 767px)">
+                <source srcset="{{ alt_image | file_img_url: '1300x' }}" media="(min-width: 768px) and (max-width: 1279px)">
+                <source srcset="{{ alt_image | file_img_url: '1500x' }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                <source srcset="{{ alt_image | file_img_url: '1800x' }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                <source srcset="{{ alt_image | file_img_url: '2048x' }}" media="(min-width: 1670px)">
+            </picture>
+            <div class="s-collection__hero__heading">
+                <h1 class="text-20 text-lg-30 text-uppercase text-elephant font-weight-normal mb-0">{{- collection_h1 | escape -}}</h1>
+            </div>
+            {%- if accentuate_video_wistia_id.size > 0 -%}
+                <button class="s-collection__hero__button"
+                    aria-label="{{- 'View Video' | escape -}}"
+                    title="{{- 'View Video' | escape -}}"
+                    data-modal-open="{{ collection_h1 | escape }}"
+                    data-modal-title="{{ collection_h1 | escape }}"
+                    data-modal-content-wistia-id="{{ accentuate_video_wistia_id }}"
+                >
+                    <svg class="mr-3" aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-play-circle"></use>
+                    </svg>
+                </button>
+            {%- endif -%}
+
+
+            {% comment %}
+                if metia-field exist . default url if not .
+            {% endcomment %}
+            {%- if video_youtube_url -%}
+                <a class="play-yt-btn"
+                 href="{{ video_youtube_url }}"
+                 data-lity>
+                        <svg class="icon" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-play-circle"></use>
+                        </svg>
+                </a>
+            {%- endif -%} 
+
+
+        </div>
+
+        
+            {% comment %}
+                Collections page hero slider
+            {% endcomment %}
+        {%- if accentuate_trustpoints -%}
+            <div class="container site-padding collections-swiper relative">
+                
+                
+                <div class="s-collection__trustpoints__nav ">
+                    <button aria-label="Previous Slide" class="swiper-button-prev swiper-arrow" data-collection-trustpoints-slider-prev>
+                        <svg role="img">
+                            <use xlink:href="#sprite-chevron-left"></use>
+                        </svg>
+                    </button>
+                    <button aria-label="Next Slide" class="swiper-button-next swiper-arrow" data-collection-trustpoints-slider-next>
+                        <svg role="img">
+                            <use xlink:href="#sprite-chevron-right"></use>
+                        </svg>
+                    </button>
+                </div>
+
+
+                <div class="s-collection__trustpoints swiper-container" data-collection-trustpoints-slider>
+                    <div class="swiper-wrapper">
+                        {%- for block in accentuate_trustpoints -%}
+                            <div class="swiper-slide" data-collection-trustpoints-slide>
+                                <div class="s-collection__trustpoints__slide">
+                                    <svg aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-{{ collection.metafields.accentuate.hero_icon[forloop.index0] }}"></use>
+                                    </svg>
+                                    <h2 class="text-elephant text-16 font-weight-normal text-uppercase tracking-widest mb-6">
+                                        {{- collection.metafields.accentuate.hero_icon_heading[forloop.index0] -}}
+                                    </h2>
+                                    {{- collection.metafields.accentuate.hero_icon_text[forloop.index0] -}}
+                                </div>
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+                
+            </div>
+        {%- endif -%}
+
+
+    </section>
+{%- else -%}
+    <section class="text-center text-lg-left" data-section-type="collection-hero" data-section-id="{{ section.id }}">
+        <div class="container site-padding py-17">
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-10">
+                    <div class="row justify-content-between">
+                        <div class="col-12 col-lg-6 mb-8 mb-md-12 mb-lg-0">
+                            <p class="mb-5 text-14 text-md-14 font-weight-bold text-uppercase leading-tight tracking-widest text-elephant">
+                                {{- section.settings.title | escape -}}
+                            </p>
+                            <h1 class="mb-3 mb-md-8 text-36 text-lg-46 leading-tight font-weight-medium text-elephant">
+                                {{- collection_h1 | escape -}}
+                            </h1>
+                            <div class="mb-8 text-rolling-stone">
+                                {{- collection_content | safe -}}
+                            </div>
+                            <div class="row mx-n2 mx-md-n4 mb-n10 mt-md-12 mt-lg-16 justify-content-md-center justify-content-lg-start">
+                                {%- if accentuate_trustpoints -%}
+                                    {%- for block in accentuate_trustpoints -%}
+                                        <div class="col-12 mb-10 col-md-auto px-2 px-md-4">
+                                            {%-
+                                                render 'trustpoint',
+                                                icon: collection.metafields.accentuate.hero_icon[forloop.index0],
+                                                icon_size: 'sm',
+                                                text: collection.metafields.accentuate.hero_icon_text[forloop.index0],
+                                            -%}
+                                        </div>
+                                    {%- endfor -%}
+                                {%- else -%}
+                                    {%- for block in blocks_trustpoint -%}
+                                        <div class="col-12 mb-10 col-md-auto px-2 px-md-4">
+                                            {%-
+                                                render 'trustpoint',
+                                                icon: block.settings.icon,
+                                                icon_size: 'sm',
+                                                text: block.settings.title
+                                            -%}
+                                        </div>
+                                    {%- endfor -%}
+                                {%- endif -%}
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 col-lg-5">
+                            {%- if accentuate_video_wistia_id and hide_video == false -%}
+                                <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
+                                <div class="wistia_embed wistia_async_{{- accentuate_video_wistia_id -}}" style="width:100%;height:360px;"></div>
+                                <script>
+                                window._wq = window._wq || [];
+                                _wq.push({ id: '{{- accentuate_video_wistia_id -}}', onReady: function(video) {
+                                }});
+                                </script>
+                            {%- else -%}
+                                {{ image_element }}
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Hero",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Opera"
+        },
+        {
+            "type": "header",
+            "content": "Collection Media"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "Make sure the image is 16:9 aspect ratio"
+        },
+        {
+            "type": "html",
+            "id": "video_embed",
+            "label": "Video Embed",
+            "info": "When a video embed is added the video pull out is activated on click"
+        }
+    ],
+    "max_blocks": 3,
+    "blocks": [
+        {
+            "type": "trust_point",
+            "name": "Trustpoint",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Text"
+                },
+                {
+                    "type": "select",
+                    "id": "icon",
+                    "options": [
+                    { "value": "advice", "label": "Advice"},
+                    { "value": "arrow-down", "label": "Arrow Down"},
+                    { "value": "arrow-left", "label": "Arrow Left"},
+                    { "value": "arrow-right", "label": "Arrow Right"},
+                    { "value": "arrow-up", "label": "Arrow Up"},
+                    { "value": "bars", "label": "Bars"},
+                    { "value": "bed", "label": "Bed"},
+                    { "value": "bespoke-service", "label": "Bespoke Service"},
+                    { "value": "brochure2", "label": "Brochure2"},
+                    { "value": "brush-square", "label": "Brush Square"},
+                    { "value": "caret-down", "label": "Caret Down"},
+                    { "value": "caret-left", "label": "Caret Left"},
+                    { "value": "caret-right", "label": "Caret Right"},
+                    { "value": "caret-up", "label": "Caret Up"},
+                    { "value": "check-circle", "label": "Check Circle"},
+                    { "value": "check", "label": "Check"},
+                    { "value": "chevron-down", "label": "Chevron Down"},
+                    { "value": "chevron-left", "label": "Chevron Left"},
+                    { "value": "chevron-right", "label": "Chevron Right"},
+                    { "value": "chevron-up", "label": "Chevron Up"},
+                    { "value": "circulation", "label": "Circulation"},
+                    { "value": "close", "label": "Close"},
+                    { "value": "comfort", "label": "Comfort"},
+                    { "value": "customisable", "label": "Customisable"},
+                    { "value": "delivery-lg", "label": "Delivery Lg"},
+                    { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                    { "value": "delivery-time", "label": "Delivery Time"},
+                    { "value": "delivery", "label": "Delivery"},
+                    { "value": "delivery2", "label": "Delivery2"},
+                    { "value": "discover", "label": "Discover"},
+                    { "value": "documents", "label": "Documents"},
+                    { "value": "documents2", "label": "Documents2"},
+                    { "value": "double-quote", "label": "Double Quote"},
+                    { "value": "facebook-f", "label": "Facebook F"},
+                    { "value": "finance", "label": "Finance"},
+                    { "value": "finance2", "label": "Finance2"},
+                    { "value": "headboards", "label": "Headboards"},
+                    { "value": "headset", "label": "Headset"},
+                    { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                    { "value": "heart-outline", "label": "Heart Outline"},
+                    { "value": "light-bulb", "label": "Light Bulb"},
+                    { "value": "linkedin-in", "label": "Linkedin In"},
+                    { "value": "maintenance", "label": "Maintenance"},
+                    { "value": "minus", "label": "Minus"},
+                    { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                    { "value": "parts", "label": "Parts"},
+                    { "value": "play-circle", "label": "Play Circle"},
+                    { "value": "plus", "label": "Plus"},
+                    { "value": "posture", "label": "Posture"},
+                    { "value": "recycle-lg", "label": "Recycle Lg"},
+                    { "value": "sales", "label": "Sales"},
+                    { "value": "search", "label": "Search"},
+                    { "value": "secure-checkout", "label": "Secure Checkout"},
+                    { "value": "shopping-bag", "label": "Shopping Bag"},
+                    { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                    { "value": "star-fill", "label": "Star Fill"},
+                    { "value": "star-outline", "label": "Star Outline"},
+                    { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                    { "value": "twitter", "label": "Twitter"},
+                    { "value": "uk-map", "label": "Uk Map"},
+                    { "value": "union-jack", "label": "Union Jack"},
+                    { "value": "user-check", "label": "User Check"},
+                    { "value": "user", "label": "User"},
+                    { "value": "warranty", "label": "Warranty"},
+                    { "value": "widths", "label": "Widths"},
+                    { "value": "wireless", "label": "Wireless"}
+                    ],
+                    "label": "Icon"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

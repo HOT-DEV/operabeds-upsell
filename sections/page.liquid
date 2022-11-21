@@ -1,0 +1,78 @@
+{%- comment -%}
+    Page Section for template/page.liquid
+{%- endcomment -%}
+<section aria-labelledby="page-title">
+    {% unless page.metafields.custom.hide_header_and_h1 == true %}          
+    {%- render 'page-header',
+        image_mobile:           section.settings.image_mobile,
+        image_tablet:           section.settings.image_tablet,
+        image_desktop:          section.settings.image_desktop,
+        image_alt:              image_alt,
+        heading:                page.title,
+        strapline:              section.settings.page_strapline,
+        page_content:           null,
+        _add_header_element:    null,
+        _image_store:           null,
+    -%}
+    {% endunless %}
+    <div class="container site-padding my-12 mt-lg-14 mb-lg-24 {% if page.metafields.custom.hide_header_and_h1 == true%}mt-lg-32{% endif %}">
+        <div class="row justify-content-center">
+            {%- if page.content != blank -%}
+                {%- if page.content contains '<table' -%}
+                    <div class="col-12">
+                        <div class="c-rte mb-12 mb-lg-14">
+                            {{- page.content -}}
+                        </div>
+                    </div>
+                {%- else -%}
+                    <div class="col-12 col-lg-10 col-xl-8">
+                        <div class="c-rte mb-12 mb-lg-14">
+                            {{- page.content -}}
+                        </div>
+                    </div>
+                {%- endif -%}
+            {%- endif -%}
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Content",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content",
+            "info": "Fallback content for all template pages"
+        },
+        {
+            "type": "textarea",
+            "id": "heading",
+            "label": "Heading",
+            "info": "The heading can be changed by updating the page title"
+        },
+        {
+            "type": "header",
+            "content": "Image",
+            "info": "Add a background image to the header."
+        },
+        {
+            "type": "image_picker",
+            "id": "image_desktop",
+            "label": "Desktop Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_tablet",
+            "label": "Tablet Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_mobile",
+            "label": "Mobile Image"
+        }
+    ],
+    "blocks": [
+    ]
+}
+{% endschema %}

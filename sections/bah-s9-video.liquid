@@ -1,0 +1,101 @@
+{% comment %}
+    The Video section.
+	4PE - 1/12/2021
+{% endcomment %}
+
+{%- liquid
+    assign background_image = section.settings.image
+-%}
+{%- liquid
+    assign image = background_image
+    assign image_alt = image.alt | default: heading
+    assign image_xs = image | img_url: '376x256'
+    assign image_sm = image | img_url: '480x256'
+    assign image_md = image | img_url: '608x378'
+    assign image_lg = image | img_url: '960x482'
+    assign image_xl = image | img_url: '1080x586'
+    assign image_xxl = image | img_url: '995x586'
+    assign image_xxxl = image | img_url: '1195x586'
+    assign image_hd = image | img_url: '1360x586'
+-%}
+
+<section class="s9-video" data-section-id="{{ section.id }}">
+    <div class="container-fluid my-2">
+        <div class="row justify-content-center">
+            <div class="col-12 p-0 m-0">
+                <div class="s-product-video__inner">
+                    <picture class="s-product-video__picture js-lazy" data-iesrc="{{ image_xxxl | url }}"
+                        data-alt="{{ image_alt | escape }}">
+                        <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                        <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                        <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                        <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                        <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                        <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                        <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px) and (max-width: 1919px)">
+                        <source srcset="{{ image_hd | url }}" media="(min-width: 1920px)">
+                        {% comment %} <img alt="" /> {% endcomment %}
+                    </picture>
+                    <div class="s-product-video__overlay" style="opacity: 0.4"></div>
+                    <div class="s-product-video__content">
+                        <div class="row no-gutters justify-content-center">
+                            <div class="col-12 col-lg-4 text-center text-lg-left">
+                                <svg class="c-testimonial-card__icon mb-6 mb-lg-4 ml-lg-0 text-white" aria-hidden="true"
+                                    role="presentation">
+                                    <use xlink:href="#sprite-double-quote"></use>
+                                </svg>
+                                <p class="text-20 text-md-26 text-lg-32 font-weight-semibold">
+                                    {{ section.settings.title }}
+                                </p>
+                                <p class="d-none d-lg-block text-16 font-weight-normal p-6 p-lg-0">
+                                    {{ section.settings.quote }}
+                                </p>
+                            </div>
+                            <div class="col-12 col-lg-4 text-center align-self-center">
+                                {% if section.settings.video_id != blank %}
+                                <a class="play-yt-btn" href="https://youtu.be/{{ section.settings.video_id }}"
+                                    data-lity>
+                                    {%- render 'icon-play-youtube2'-%}
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+	{
+  "name": "S9 - Video",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Add your cover image here",
+	  "info": "Recommended size: 3840 x 1655px (Tips: have the main-focus point centered in the image for the best responsiveness)"
+    },  
+    {
+      "type": "text",
+      "id": "video_id",
+      "default": "Yi1vk2bXdCk",
+      "label": "Add the video-id to the YouTube video (for example Yi1vk2bXdCk)",
+	  "info": "Play-button will be hidden if no video-id is added above"
+    },  
+	{
+      "type": "text",
+      "id": "title",
+      "default": "Hear what Opera users say",
+      "label": "Add title here"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "label": "Add quote here"
+    }   
+  ]
+}
+{% endschema %}

@@ -1,0 +1,90 @@
+{% comment %}
+    The Logolist section.
+	4PE - 1/12/2021
+{% endcomment %}
+
+<section class="s3-logolist py-4 py-md-6 position-relative" data-section-id="{{ section.id }}">
+    <div class="container">
+        {%- if section.blocks.size > 0 -%}
+        <div class="swiper-logolist s3-logolist">
+            <div class="swiper-wrapper">
+                {%- for block in section.blocks -%}
+                <div class="swiper-slide col-auto" id="logolist">
+                    <img src="{{ block.settings.image | img_url: 'master' }}" />
+                </div>
+                {%- endfor -%}
+            </div>
+            <div class="logolist-nav row w-100 position-absolute justify-content-between">
+                <div class="col-6 text-left m-0">
+                    <button type="button" class="s-testimonials__prev s3-swiper-button-prev">
+                        <svg class="icon">
+                            <use xlink:href="#sprite-chevron-left"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="col-6 text-right m-0">
+                    <button type="button" class="s-testimonials__next s3-swiper-button-next">
+                        <svg class="icon">
+                            <use xlink:href="#sprite-chevron-right"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {%- endif -%}
+    </div>
+</section> 
+
+<script>
+      var swiper = new Swiper(".s3-logolist", {
+        slidesPerView: 2,
+        slidesPerGroup: 2,
+// Responsive breakpoints
+        breakpoints: {
+			// when window width is >= 768px
+            768: {
+            slidesPerView: 4,
+        	slidesPerGroup: 4,              
+            },
+            // when window width is >= 1024px
+            1024: {
+            slidesPerView: 6,
+        	slidesPerGroup: 6,              
+            },            
+            // when window width is >= 1440px
+            1440: {
+            slidesPerView: 8,
+        	slidesPerGroup: 8,              
+            }          
+        },
+        navigation: {
+          nextEl: ".s3-swiper-button-next",
+          prevEl: ".s3-swiper-button-prev",
+        },
+      });
+
+</script>
+
+{% schema %}
+  {
+    "name": "S3 - Logo list",
+    "max_blocks": 16,
+    "settings": [
+
+    ],
+    "blocks": [
+      {
+        "type": "logo_image",
+        "name": "Logo",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "450 x 150px (center aligned .png with transparent background)"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

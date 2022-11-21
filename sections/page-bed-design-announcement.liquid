@@ -1,0 +1,40 @@
+{% comment %}
+    The Bespoke Design - Announcement section template.
+{% endcomment %}
+{%- if section.settings.text.size > 0 -%}
+    <div class="bg-elephant py-16 py-md-10 my-12 my-md-20">
+        <div class="container site-padding text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-6 col-xl-10 col-xxl-12">
+                    <p class="text-white text-26 text-md-30 font-weight-normal mb-0">
+                        {%- render 'presenter-phone-number' 
+                            _phone_number:  settings.company_phone,
+                            _template:      section.settings.text
+                        -%}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Announcement Bar",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content"
+        },
+        {
+            "type": "text",
+            "id": "text",
+            "label": "Message",
+            "default": "Choose from hundreds of options. <strong>Call us on {number}</strong> to create your dream bed.",
+            "info": "{number} will be automatically replace"
+        }
+    ],
+    "blocks": [
+    ]
+}
+{% endschema %}

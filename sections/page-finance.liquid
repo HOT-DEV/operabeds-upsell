@@ -1,0 +1,43 @@
+<section aria-labelledby="page-title">
+    {%- 
+        render 'page-header',
+        image_mobile:           null,
+        image_tablet:           null,
+        image_desktop:          section.settings.hero_image,
+        image_alt:              image_alt,
+        heading:                page.title,
+        strapline:              null,
+        page_content:           null,
+        _add_header_element:    null,
+        _image_store:           null,
+    -%}
+</section>
+
+{%- if page.content != blank -%}
+    <div class="container site-padding my-16 my-lg-20">
+        <div class="row justify-content-center">
+            <div class="c-rte col-12 col-lg-6 text-center">
+                {{- page.content | safe -}}
+            </div>
+        </div>
+    </div>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Page Content",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image"
+        }
+    ],
+    "blocks": [
+    ]
+}
+{% endschema %}

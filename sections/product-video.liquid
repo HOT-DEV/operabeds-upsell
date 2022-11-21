@@ -1,0 +1,111 @@
+{% comment %}
+    The Product Video section template.
+{% endcomment %}
+
+{%- liquid
+    assign heading = product.metafields.accentuate.video_heading
+    assign background_image = product.metafields.accentuate.video_background_image
+    assign badge_text = product.metafields.accentuate.video_badge_text
+    assign video_heading = product.metafields.accentuate.video_heading
+    assign video_subheading = product.metafields.accentuate.video_subheading
+    assign video_wistia_id = product.metafields.accentuate.video_wistia_id
+    assign video_overlay = product.metafields.accentuate.video_overlay | default: 0.3
+-%}
+{%- comment -%}
+    assign image = background_image
+    assign image_alt = image.alt | default: heading
+    assign image_xs = image | img_url: '376x256'
+    assign image_sm = image | img_url: '480x256'
+    assign image_md = image | img_url: '608x378'
+    assign image_lg = image | img_url: '960x482'
+    assign image_xl = image | img_url: '1080x586'
+    assign image_xxl = image | img_url: '995x586'
+    assign image_xxxl = image | img_url: '1195x586'
+    assign image_hd = image | img_url: '1360x586'
+{%- endcomment -%}
+
+{%- liquid
+    assign image = background_image | strip
+    if image
+        assign image_alt = image.alt | default: heading
+        assign image_xs = image | file_img_url: '376x256'
+        assign image_sm = image | file_img_url: '480x256'
+        assign image_md = image | file_img_url: '608x378'
+        assign image_lg = image | file_img_url: '960x482'
+        assign image_xl = image | file_img_url: '1080x586'
+        assign image_xxl = image | file_img_url: '995x586'
+        assign image_xxxl = image | file_img_url: '1195x586'
+        assign image_hd = image | file_img_url: '1360x586'
+    endif
+-%}
+{%- if image != blank -%}
+    <section class="s-product-video" data-section-type="product-video" data-section-id="{{ section.id }}">
+        <div class="container site-padding">
+            <div class="row justify-content-center">
+                <div class="col-12 col-xxl-10">
+                    <div class="s-product-video__inner">
+                        {%- if badge_text != blank -%}
+                            <div class="s-product-video__ribbon c-ribbon">
+                                {{- badge_text | escape -}}
+                            </div>
+                        {%- endif -%}
+                        <picture class="s-product-video__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+                            <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                            <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                            <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                            <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                            <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                            <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                            <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px) and (max-width: 1919px)">
+                            <source srcset="{{ image_hd | url }}" media="(min-width: 1920px)">
+                            {% comment %} <img alt="" /> {% endcomment %}
+                        </picture>
+                        <div class="s-product-video__overlay" style="opacity: {{- video_overlay -}}"></div>
+                        <div class="s-product-video__content">
+                            {%- if video_heading != blank -%}
+                                <p class="mb-4 text-20 text-md-26 text-lg-36 leading-tight font-weight-medium">
+                                    {{ video_heading }}
+                                </p>
+                            {%- endif -%}
+                            {%- if video_subheading != blank -%}
+                                <p class="mb-8 text-16 leading-tight font-weight-normal">
+                                    {{ video_subheading }}
+                                </p>
+                            {%- endif -%}
+                            {%- if video_wistia_id -%}
+                                <a class="c-btn c-btn--play-alt"
+                                        aria-label="{{ 'Watch the video' | escape }}"
+                                        title="{{ 'Watch the video' | escape }}"
+                                        data-modal-open="{{ heading | handleize }}"
+                                        data-modal-title="{{ heading }}"
+                                        {% if video_wistia_id %}
+                                            data-modal-content-wistia-id="{{ video_wistia_id }}"
+                                        {% endif %}
+                                    >
+                                    <svg class="mr-3" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-play-circle"></use>
+                                    </svg>
+                                    <span>
+                                        {{- 'Watch the video' | escape -}}
+                                    </span>
+                                </a>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Video",
+    "settings": [
+        {
+            "type":"header",
+            "content": "Content can be added through the 'App Accentuate'"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

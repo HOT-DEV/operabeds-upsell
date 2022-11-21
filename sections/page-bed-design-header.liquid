@@ -1,0 +1,112 @@
+{% comment %}
+    The Bespoke Design page section template.
+{% endcomment %}
+<section class="t-bespoke-design" aria-labelledby="page-title" data-section-type="bespoke-design" data-section-id="{{ section.id }}">
+    {%-
+        render 'page-header',
+        image_mobile:           null,
+        image_tablet:           null,
+        image_desktop:          section.settings.hero_image,
+        image_alt:              null,
+        heading:                page.title,
+        strapline:              section.settings.page_strapline,
+        page_content:           section.settings.page_content,
+        _add_header_element:    null,
+        _image_store:           null,
+    -%}
+    <div class="container site-padding mt-16 mt-md-22">
+        <div class="row justify-content-md-center">
+            <div class="col-md-4">
+                <h2 class="text-24 text-md-36 text-blue-diane font-weight-normal leading-tight">
+                    {{- section.settings.intro_heading | escape -}}
+                </h2>
+            </div>
+            <div class="col-md-6">
+                <div class="c-rte">{{ section.settings.intro_text }}</div>
+            </div>
+        </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+        <div class="container site-padding mt-16 mt-md-22">
+            <div class="row justify-content-md-center">
+                <div class="col-md-10">
+                    <hr class="light mb-12 mb-md-10"/>
+                    <ul class="c-icon-list d-flex flex-column flex-sm-row flex-wrap flex-md-nowrap align-items-center justify-content-sm-between">
+                        {%- for block in section.blocks -%}
+                            <li>
+                                <img data-src="{{ block.settings.image | img_url: '30x' }}" class="js-lazy" alt="{{ block.settings.title }}"/>
+                                <span class="text-16 text-blue-diane">{{ block.settings.title }}</span>
+                            </li>
+                        {%- endfor -%}
+                    </ul>
+                    <hr class="light mt-12 mt-md-10"/>
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+</section>
+
+{% schema %}
+{
+    "name": "Header",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image",
+            "info": "This is overriden by the metafield (old website)"
+        },
+        {
+            "type": "textarea",
+            "id": "page_strapline",
+            "label": "Header Strapline (add line break for design)",
+            "default": "Page\r\nstrapline"
+        },
+        {
+            "type": "textarea",
+            "id": "page_content",
+            "label": "Header content"
+        },
+        {
+            "type": "header",
+            "content": "Text Panel"
+        },
+        {
+            "type": "text",
+            "id": "intro_heading",
+            "label": "Heading",
+            "default": "Working with Care Homes"
+        },
+        {
+            "type": "richtext",
+            "id": "intro_text",
+            "label": "Text (RHS)",
+            "default": "<p>We partner with care organisations and services that are committed to providing outstanding care. Care homes choose Opera® for our design-led, clinically proven beds and mattresses that facilitate excellent care and resident wellbeing.<\/p>"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "feature",
+            "name": "Feature Point",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Text",
+                    "default": "Feature"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,39 @@
+{% comment %}
+    The Cookies snippet.
+{% endcomment %}
+
+{% liquid
+    if settings.cookie_bar_position contains 'left' or settings.cookie_bar_position contains 'right'
+        assign container_padding = false
+        assign column_size = 'col-12'
+        assign flex = 'flex-column'
+    else
+        assign container_padding = true
+        assign column_size = 'col-md-10 mb-3 mb-md-0'
+        assign flex = 'flex-wrap align-items-md-center justify-content-md-between'
+    endif
+%}
+
+<div class="c-cookie-bar c-cookie-bar--{{ settings.cookie_bar_position }}" data-cookie-bar hidden>
+    <div class="container {% if container_padding -%}container-padding{%- endif -%}">
+        <div class="row {{ flex -}}">
+            <div class="{{- column_size -}}">
+                <p class="mb-0">
+                    {{ 'cookie.cookie_policy_message_html' | t}}
+                </p>
+            </div>
+            <div class="col-md-2 text-left text-lg-right">
+                <button class="c-btn c-btn--light" type="button" aria-label="Accept Cookies" data-cookie-bar-confirm>
+                    {{ 'cookie.accept_text' | t }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <script type="application/json" data-cookie-bar-data>
+        {
+            {%- if settings.cookie_bar_tracking_id != blank -%}
+                "google_analytics_tracking_id": "{{ settings.cookie_bar_tracking_id }}"
+            {%- endif -%}
+        }
+    </script>
+</div>

@@ -1,0 +1,294 @@
+{% comment %}
+    Product Tile snippet for domestic/lifestyle collections with inc. VAT as main price (4PE: P-OB003)
+{% endcomment %}
+{%- liquid
+    if product
+        assign vat_multiplier = settings.taxes_vat_multiplier | divided_by: 100.00 | plus: 1
+        assign product_type_downcase = product.type | downcase
+
+        assign image_xs_default = 'https://via.placeholder.com/576x476'
+        assign image_sm_default = 'https://via.placeholder.com/768x476'
+        assign image_md_default = 'https://via.placeholder.com/1024x476'
+        assign image_lg_default = 'https://via.placeholder.com/1280x580'
+        assign image_xl_default = 'https://via.placeholder.com/1440x680'
+        assign image_xxl_default = 'https://via.placeholder.com/1670x780'
+        assign image_xxxl_default = 'https://via.placeholder.com/1920x780'
+
+        assign image_default = product.images[0]
+        assign image_xs_default = image_default | img_url: 'x476'
+        assign image_sm_default = image_default | img_url: 'x476'
+        assign image_md_default = image_default | img_url: 'x476'
+        assign image_lg_default = image_default | img_url: 'x580'
+        assign image_xl_default = image_default | img_url: 'x680'
+        assign image_xxl_default = image_default | img_url: 'x780'
+        assign image_xxxl_default = image_default | img_url: 'x780'
+
+        if product.images.size > 1
+            assign image_hover = product.images[1]
+            assign image_xs_hover = image_hover | img_url: 'x476'
+            assign image_sm_hover = image_hover | img_url: 'x476'
+            assign image_md_hover = image_hover | img_url: 'x476'
+            assign image_lg_hover = image_hover | img_url: 'x580'
+            assign image_xl_hover = image_hover | img_url: 'x680'
+            assign image_xxl_hover = image_hover | img_url: 'x780'
+            assign image_xxxl_hover = image_hover | img_url: 'x780'
+        endif
+
+        assign product_collection = product.metafields.product_item.category | trim | default: 'Requires product metafield category'
+        assign price_saving = product.compare_at_price | minus: product.price
+        if price_saving > 0
+            assign hasSaving = true
+        else
+            assign hasSaving = false
+        endif
+    endif
+
+    for tag in product.tags
+        assign tag_downcase = tag | downcase
+        assign tag_key = tag | split: '_' | first | downcase
+        assign tag_value = tag | split: '_' | last
+        if tag_key == 'badge'
+            assign tag_ribbon_value = tag_value
+        elsif tag_key == 'ribbon'
+            assign tag_ribbon_category = tag_value
+        endif
+    endfor
+
+    if _tag_ribbon_value
+        assign tag_ribbon_value = _tag_ribbon_value
+    endif
+
+    comment
+    BOLD - custom code
+    endcomment
+    assign trade_customer_tag = settings.trade_customer_tag_bold_app
+    if customer and customer.tags contains trade_customer_tag
+        assign bold_trade_customer_logged_in = true
+    endif
+
+-%}
+{% for tag in product.tags %}
+
+	{% if tag contains 'Delivery_' %}
+		{% assign deliveryMessage = true %}
+		{% assign timeDelivery = tag | split: '_' | last %}
+	{% endif %}
+
+	{% if tag contains 'Delivery & Setup' %}
+		{% assign deliverySetupMessage = true %}
+		{% assign timeDeliverySetup = tag | split: '_' | last %}
+	{% endif %}
+	
+{% endfor %}
+{%- if product != blank -%}
+    {%- if bold_trade_customer_logged_in -%}
+        <script type="application/json" class="bold-product-json">{{ product | json }}</script>
+    {%- endif -%}
+    <div class="c-product-item{% if class %} {{ class }}{% endif %}" data-product-item>
+        <div class="c-product-item__media">
+            <picture class="c-product-item__media__picture default js-lazy" data-iesrc="{{ image_xxxl_default | url }}" data-alt="{{ image.alt | default: product.title | escape }}">
+                <source srcset="{{ image_xs_default | url }}" media="(max-width: 575px)">
+                <source srcset="{{ image_sm_default | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                <source srcset="{{ image_md_default | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                <source srcset="{{ image_lg_default | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                <source srcset="{{ image_xl_default | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                <source srcset="{{ image_xxl_default | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                <source srcset="{{ image_xxxl_default | url }}" media="(min-width: 1670px)">
+                {% comment %} <img alt="" /> {% endcomment %}
+            </picture>
+            {% if product.images.size > 1 %}
+                <picture class="c-product-item__media__picture hover js-lazy" data-iesrc="{{ image_xxxl_hover | url }}" data-alt="{{ image.alt | default: product.title | escape }}">
+                    <source srcset="{{ image_xs_hover | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ image_sm_hover | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                    <source srcset="{{ image_md_hover | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                    <source srcset="{{ image_lg_hover | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                    <source srcset="{{ image_xl_hover | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                    <source srcset="{{ image_xxl_hover | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                    <source srcset="{{ image_xxxl_hover | url }}" media="(min-width: 1670px)">
+                    {% comment %} <img alt="" /> {% endcomment %}
+                </picture>
+            {%- endif -%}
+        </div>
+        <div class="c-product-item__content">
+            <div class="c-product-item__content__title">
+                <h3 class="mb-0 text-18 text-lg-24 font-weight-medium leading-tight">
+                    <a href="{{ product.url | within: collection }}" class="stretched-link" aria-label="{{ product.title | escape }}" title="{{ product.title | escape }}">
+                        {{- product.title | escape -}}
+                    </a>
+                </h3>
+                {%- comment -%}
+                    <div class="row justify-content-between">
+                        <div class="{%- if tag_ribbon_category != blank -%}col-8 {% else %} col-12{%- endif -%}">
+                            <h3 class="mb-0 text-18 text-lg-24 font-weight-semibold leading-tight">
+                                <a href="{{ product.url | within: collection }}" aria-label="{{ product.title | escape }}" title="{{ product.title | escape }}">
+                                    {{- product.title | escape -}}
+                                </a>
+                            </h3>
+                        </div>
+
+                            {%- if tag_ribbon_category != blank -%}
+                            <div class="col-3 text-right">
+                                <span class="text-14 font-weight-normal text-uppercase text-orange-rough tracking-wider">{{ tag_ribbon_category }}</span>
+                            </div>
+                            {%- endif -%}
+
+                    </div>
+                {%- endcomment -%}
+            </div>
+            <div class="c-product-item__content__list">
+                {%- if product.metafields.global.excerpt != blank -%}
+                    {{- product.metafields.global.excerpt | safe | replace: '<ul>', '<ul role="list">' | replace: '<li>', '<li role="listitem">' -}}
+                {%- else -%}
+                    {%- assign description_parts = product.description | split: '</p>' -%}
+                    {%- if description_parts.size > 0 -%}
+                        <p>{{ description_parts | first | strip_html | strip | truncatewords: 20, '...' | escape }}</p>
+                    {%- endif -%}
+                {%- endif -%}
+            </div>
+            {%- if product_type_downcase contains ' bed' -%}
+                {%- liquid
+                    assign show_width = false
+                    assign show_headboard = false
+                    assign show_fabrics = false
+                    assign show_wood = false
+                    for option in product.options
+                        assign option_name_downcase = option | downcase
+                        if option_name_downcase contains 'width'
+                            assign show_width = true
+                        elsif option_name_downcase contains 'board'
+                            assign show_headboard = true
+                        elsif option_name_downcase contains 'fabric' or option_name_downcase contains 'material'
+                            assign show_fabrics = true
+                        elsif option_name_downcase contains 'wood'
+                            assign show_wood = true
+                        endif
+                    endfor
+                -%}
+                {%- if show_width or show_headboard or show_fabrics or show_wood -%}
+                    <div class="c-product-item__content__options">
+                        <ul role="list">
+                            {%- if show_width -%}
+                            <li role="listitem">
+                                <img data-src="{{- 'widths.png' | asset_url -}}" class="js-lazy" alt="{{- 'Widths' | escape -}}">
+                                <span>{{- 'Widths' | escape -}}</span>
+                            </li>
+                            {%- endif -%}
+                            {%- if show_headboard -%}
+                            <li role="listitem">
+                                <img data-src="{{- 'headboards.png' | asset_url -}}" class="js-lazy" alt="{{- 'Headboards' | escape -}}">
+                                <span>{{- 'Headboards' | escape -}}</span>
+                            </li>
+                            {%- endif -%}
+                            {%- if show_fabrics -%}
+                            <li role="listitem">
+                                <img data-src="{{- 'fabrics.png' | asset_url -}}" class="js-lazy" alt="{{- 'Fabrics' | escape -}}">
+                                <span>{{- 'Fabrics' | escape -}}</span>
+                            </li>
+                            {%- endif -%}
+                            {%- if show_wood -%}
+                            <li role="listitem">
+                                <img data-src="{{- 'woods.png' | asset_url -}}" class="js-lazy" alt="{{- 'Woods' | escape -}}">
+                                <span>{{- 'Woods' | escape -}}</span>
+                            </li>
+                            {%- endif -%}
+                        </ul>
+                    </div>
+                {%- endif -%}
+            {%- endif -%}
+
+            <div class="c-product-item__content__price">
+                {%- if bold_trade_customer_logged_in -%}
+                    <p class="mb-2" data-finance-container data-product-price="{{ product.price_min }}">
+                        <span class="money" data-product-id="{{ product.id }}" class="d-inline-block mr-1 text-24 leading-none font-weight-bold">
+                            {{- product.price_min | money_without_trailing_zeros -}}
+                        </span>
+                        <span class="text-14 font-weight-normal">
+                            Trade Price
+                        </span>
+                    </p>
+              
+                {%- else -%}
+              
+                    {% if product.compare_at_price > product.price_min %}
+              			<span style="text-decoration: line-through">{{- 'Was ' -}}{{- product.compare_at_price | times: vat_multiplier | money_without_trailing_zeros -}}</span>
+              		{% endif %}              
+              
+                    <p class="mb-2">
+                       {% if product.compare_at_price > product.price_min %}
+                        <span class="money d-inline-block mr-1 text-18 text-lg-24 leading-none font-weight-semibold" data-product-id="{{ product.id }}" style="color:#751212">
+                            {{ product.price_min | times: vat_multiplier | money_without_trailing_zeros }}
+                        </span>
+                      {% else %}
+                        <span class="money d-inline-block mr-1 text-18 text-lg-24 leading-none font-weight-semibold" data-product-id="{{ product.id }}">
+                            {{ product.price_min | times: vat_multiplier | money_without_trailing_zeros }}
+                        </span>       
+                      {% endif %}
+                        <span class="text-14 font-weight-normal">
+                            inc. VAT
+                          
+                                                  {% if settings.finance_product_item_enabled %}
+                                <span data-finance-container data-product-price="{{ product.price_min | times: vat_multiplier }}">
+                                    | only <span data-finance-monthly></span> per month*
+                                </span>
+                            {% endif %}
+                        </span>
+                    </p>
+              {%unless deliveryMessage or deliverySetupMessage %}
+                    <p class="m-0 text-14 leading-loose font-weight-semibold">
+                      {{- product.price_min | money_without_trailing_zeros -}}<span> With VAT Relief</span>
+              		</p>
+              {%endunless%}
+
+						{% if deliveryMessage or deliverySetupMessage %}
+                              
+								<div class="deliveryMessage">
+                                    <span class="m-0 text-14 leading-loose font-weight-semibold" style="float:left;">
+                        			{{ product.price_min | money_without_trailing_zeros }} With VAT Relief 
+                					</span>
+                                  
+                                  <span class="m-0 text-14 leading-loose" style="float:right; text-align:right; line-height:1.5!important;">
+  
+                                    {% if deliveryMessage == true and deliverySetupMessage == blank %}
+                                    <span style="font-weight: 600;">{{'Delivery: '}}</span><span style="font-weight: 400;">{{ timeDelivery }}</span>
+                                    {% endif %}
+                                      
+                                    {% if deliverySetupMessage == true and deliveryMessage == blank %}
+                                    <span style="font-weight: 600;">{{'Delivery & Setup: '}}</span><span style="font-weight: 400;">{{ timeDeliverySetup }}</span>
+                                    {% endif %}   
+                                      
+                                    {% if deliveryMessage == true and deliverySetupMessage == true %}
+                                    <span style="font-weight: 600;">{{'Deliverys: '}}</span><span style="font-weight: 400;">{{ timeDelivery }}</span><br>                                 
+                                    <span style="font-weight: 600;">{{'Delivery & Setup: '}}</span><span style="font-weight: 400;">{{ timeDeliverySetup }}</span>
+                                    {% endif %}                                       
+                                    
+                                  </span>
+            					</div>
+                              
+                         {% endif %}                             
+                {%- endif -%}
+            </div>
+        </div>
+      
+{% comment %} -- Request to hide "savings" badge --          
+      
+        {%- if hasSaving or tag_ribbon_value -%}
+            <div class="c-product-item__ribbon">
+                {% if hasSaving %}
+                    Save {{ price_saving | money_without_trailing_zeros }}
+                {%- endif %}
+                {%- if hasSaving and tag_ribbon_value -%}|{%- endif -%}
+                {{ tag_ribbon_value }}
+            </div>
+        {%- endif -%}
+      
+{% endcomment %}      
+      
+        {%- comment -%}
+        <button class="c-product-item__wishlist c-icon-btn c-icon-btn--sm" type="button" aria-label="{{ 'Add to Wishlist' | escape }}" title="{{ 'Add to Wishlist' | escape }}">
+            <svg focusable="false" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-heart-outline"></use>
+            </svg>
+        </button>
+        {%- endcomment -%}
+    </div>
+{%- endif -%}

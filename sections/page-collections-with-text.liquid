@@ -1,0 +1,103 @@
+
+<div class="container site-padding my-16 my-lg-20">
+    <div class="row justify-content-center">
+        <div class="c-rte col-12 col-lg-6 mb-8 mb-lg-0">
+            {{ section.settings.intro_text }}
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="c-collection-carousel" data-collection-carousel>
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {%- for block in section.blocks -%}
+                            {%- liquid
+                                assign collection = collections[block.settings.collection]
+                                assign collection_image_xs = 'https://via.placeholder.com/460x260'
+                                assign collection_image_sm = 'https://via.placeholder.com/460x260'
+                                assign collection_image_md = 'https://via.placeholder.com/460x260'
+                                assign collection_image_lg = 'https://via.placeholder.com/460x260'
+                                assign collection_image_xl = 'https://via.placeholder.com/460x260'
+                                assign collection_image_xxl = 'https://via.placeholder.com/460x260'
+                                assign collection_image_xxxl = 'https://via.placeholder.com/460x260'
+
+                                if collection.image != blank
+                                    assign collection_image_xs = collection.image | img_url: '460x260', crop: 'center'
+                                    assign collection_image_sm = collection.image | img_url: '460x260', crop: 'center'
+                                    assign collection_image_md = collection.image | img_url: '460x260', crop: 'center'
+                                    assign collection_image_lg = collection.image | img_url: '460x260', crop: 'center'
+                                    assign collection_image_xl = collection.image | img_url: '460x260', crop: 'center'
+                                    assign collection_image_xxl = collection.image | img_url: '460x260', crop: 'center'
+                                    assign collection_image_xxxl = collection.image | img_url: '460x260', crop: 'center'
+                                endif
+                            -%}
+                            <div class="swiper-slide">
+                                <div class="w-100 h-100 bg-athens-gray border-rounded overflow-hidden text-center">
+                                    <a class="d-flex flex-column" href="{{ collection.url | url }}" aria-label="{{ collection.title | escape }}" title="{{ collection.title | escape }}">
+                                        <picture class="flex-grow-1 c-picture picture-cover js-lazy" data-iesrc="{{ collection_image_xxxl | url }}" data-alt="{{ collection_image.alt | default: collection.title | escape }}">
+                                            <source srcset="{{ collection_image_xs | url }}" media="(max-width: 575px)">
+                                            <source srcset="{{ collection_image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                            <source srcset="{{ collection_image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                            <source srcset="{{ collection_image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                                            <source srcset="{{ collection_image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                                            <source srcset="{{ collection_image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                                            <source srcset="{{ collection_image_xxxl | url }}" media="(min-width: 1670px)">
+                                            {% comment %} <img alt="" /> {% endcomment %}
+                                        </picture>
+                                        <h3 class="flex-none m-0 p-4 text-16 text-lg-14 font-weight-normal leading-tight tracking-widest text-uppercase text-blue-diane">
+                                            {{- block.settings.new_collection_title | default: collection.title | escape -}}
+                                        </h3>
+                                    </a>
+                                </div>
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                    <button class="swiper-button-prev c-collection-carousel__btn c-collection-carousel__btn--prev" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}">
+                        <svg aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-chevron-left"></use>
+                        </svg>
+                    </button>
+                    <button class="swiper-button-next c-collection-carousel__btn c-collection-carousel__btn--next" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}">
+                        <svg aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-chevron-right"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% schema %}
+{
+    "name": "Showroom Content",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Settings"
+        },
+        {
+            "type": "richtext",
+            "id": "intro_text",
+            "label": "Intro Text (LHS)"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "collection",
+            "name": "Collection",
+            "settings": [
+                {
+                    "type": "collection",
+                    "id": "collection",
+                    "label": "Collection Picker"
+                },
+                {
+                    "type": "text",
+                    "id": "new_collection_title",
+                    "label": "Override Collection Title",
+                    "info": "Optional"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}
+            

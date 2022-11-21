@@ -1,0 +1,190 @@
+{% comment %}
+    The Featured Content section template.
+{% endcomment %}
+
+{%- liquid
+    assign image = section.settings.image
+    assign image_xs = image | img_url: '408x680'
+    assign image_sm = image | img_url: '512x680'
+    assign image_md = image | img_url: '608x680'
+    assign image_lg = image | img_url: '400x680'
+    assign image_xl = image | img_url: '540x680'
+    assign image_xxl = image | img_url: '700x680'
+    assign image_xxxl = image | img_url: '956x680'
+
+    assign feature_points = section.blocks | where: 'type', 'feature_point'
+-%}
+<section class="s-featured-content" data-section-type="featured-content" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="bg-elephant text-white">
+            <div class="row no-gutters align-items-lg-stretch">
+                {%- if image -%}
+                <div class="col-12 col-lg-5 col-xl-6 col-xxl-7 order-lg-last">
+                    <picture class="s-featured-content__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image.alt | default: section.settings.title | escape }}">
+                        <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                        <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                        <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                        <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                        <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                        <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                        <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+                        {% comment %} <img alt="" /> {% endcomment %}
+                    </picture>
+                </div>
+                {%- endif -%}
+                <div class="col-12 col-lg-7 col-xl-6 col-xxl-5 order-lg-first align-self-lg-center">
+                    <div class="s-featured-content__content mx-auto p-4 px-md-8 px-xl-4 py-16 py-md-8 py-lg-20 text-center text-lg-left">
+                        {%- if section.settings.title -%}
+                        <h2 class="u-heading-md">
+                            {{- section.settings.title | escape -}}
+                        </h2>
+                        {%- endif -%}
+                        {%- if section.settings.paragraph -%}
+                            <div class="mb-12 mb-md-8">
+                                {{- section.settings.paragraph | safe -}}
+                            </div>
+                        {%- endif -%}
+                        {%- if feature_points -%}
+                            <ul class="c-check-list mb-12 mb-md-4 mb-lg-12" aria-label="{{ section.settings.accessibility_features_label | escape }}">
+                                {%- for feature_point in feature_points -%}
+                                    {%- if feature_point.settings.title.size > 0 -%}
+                                        <li class="mb-5" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                                            <svg aria-hidden="true" role="presentation">
+                                                <use xlink:href="#sprite-check-circle"></use>
+                                            </svg>
+                                            <span>
+                                                {{- feature_point.settings.title | escape -}}
+                                            </span>
+                                        </li>
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            </ul>
+                        {%- endif -%}
+                        <div class="c-btn-group d-sm-inline-flex flex-sm-nowrap">
+                            {%- liquid
+                                assign wistia_id = section.settings.wistia_id
+                            -%}
+                            {%- if wistia_id.size > 0 -%}
+                                <button class="c-btn c-btn--gold c-btn--2 mr-sm-4"
+                                    aria-label="{{ section.settings.video_button_text | escape }}"
+                                    title="{{ section.settings.video_button_text | escape }}"
+                                    data-modal-open="{{ section.settings.title | handleize }}"
+                                    data-modal-title="{{ section.settings.title }}"
+                                    {% if wistia_id %}
+                                        data-modal-content-wistia-id="{{ wistia_id }}"
+                                    {% endif %}
+                                >
+                                    <svg class="mr-3" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-play-circle"></use>
+                                    </svg>
+                                    <span>
+                                        {{- section.settings.video_button_text | escape -}}
+                                    </span>
+                                </button>
+                            {%- endif -%}
+                            {%- if section.settings.learn_more_button_url -%}
+                                <a class="c-btn-outline c-btn--2 mt-4 mt-sm-0" href="{{ section.settings.learn_more_button_url | escape_url }}" aria-label="{{ section.settings.learn_more_button_text | escape }}" title="{{ section.settings.learn_more_button_text | escape }}">
+                                    {{- section.settings.learn_more_button_text | escape -}}
+                                </a>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Featured Content",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Panel"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Heading"
+        },
+        {
+            "type": "richtext",
+            "id": "paragraph",
+            "label": "Paragraph"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "header",
+            "content": "Video"
+        },
+        {
+            "type": "text",
+            "id": "video_button_text",
+            "label": "Button text",
+            "default": "Watch the video"
+        },
+        {
+            "type": "header",
+            "content": "Wistia Video"
+        },
+        {
+            "type": "text",
+            "id": "wistia_id",
+            "label": "Wistia Video Id",
+            "info": "Add the wistia video id e.g. 37xpmkvcxo"
+        },
+        {
+            "type": "header",
+            "content": "Learn more"
+        },
+        {
+            "type": "text",
+            "id": "learn_more_button_text",
+            "label": "Text",
+            "default": "Learn more"
+        },
+        {
+            "type": "url",
+            "id": "learn_more_button_url",
+            "label": "Link"
+        },
+        {
+            "type": "header",
+            "content": "Accessibility"
+        },
+        {
+            "type": "text",
+            "id": "accessibility_features_label",
+            "label": "Features label",
+            "info": "The label to be used for accessibility on the Features list",
+            "default": "Features"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "feature_point",
+            "name": "Feature Point",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Text"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Featured Content",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": []
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,51 @@
+
+{{- 'virtual-showroom.css' | asset_url | stylesheet_tag -}}
+{{- 'bed-selector-tool.css' | asset_url | stylesheet_tag -}}
+
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+{% comment %}
+    @TODO: 
+    Convert snippets/sections 
+    to 1 . 
+    cause its sharing the same layout as /virtual-showroom
+{% endcomment %}
+
+{%- section 'bed-selector-header' -%}
+
+
+{%- section 'virtual-showroom-features-mob' -%}
+
+
+<div class="scroll-to mx-auto flex align-center justify-center">
+    <p>Scroll to Start Assessment</p>
+    <svg focusable="false" aria-hidden="true" role="presentation">
+        <use xlink:href="#sprite-chevron-right"></use>
+    </svg>
+</div>
+
+
+<div class="container site-padding my-12 mt-lg-40 mb-lg-24">
+  <div class="row justify-content-center">
+      {%- if page.content != blank -%}
+          {%- if page.content contains '<table' -%}
+              <div class="col-12">
+                  <div class="c-rte mb-12 mb-lg-14">
+                      {{- page.content -}}
+                  </div>
+              </div>
+          {%- else -%}
+              <div class="col-12 col-lg-10 col-xl-8">
+                  <div class="c-rte mb-12 mb-lg-14">
+                      {{- page.content -}}
+                  </div>
+              </div>
+          {%- endif -%}
+      {%- endif -%}
+  </div>
+</div>
+
+
+{%- render 'cta-customer-support' -%}
+

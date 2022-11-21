@@ -1,0 +1,132 @@
+{% comment %}
+	How It Works section for Virtual Showroom Page by 4PE.
+
+	TO-DO
+	* Add no. 1, 2, 3 to boxes
+	* Add svg to spritesheets/assets for shorter links
+
+{% endcomment %}
+
+<section class="vs-howitworks" data-section-type="cta-blocks" data-section-id="{{ section.id }}">
+    <div class="container site-padding my-12 mt-lg-50 mb-lg-20">
+        <h2 class="text-capitalize text-center font-weight-medium text-36 mb-8">{{ section.settings.title }}</h2>
+        <div class="row justify-content-center justify-content-lg-between text-white text-left no-gutters">
+            <div class="hiw-block mb-6 mb-lg-0 bg-elephant text-left py-8 px-8">
+              <div class="box-no d-flex justify-content-center align-items-center position-lg-absolute ml-lg-8 mt-lg-2 mb-4"><span class="text-24 font-weight-semibold m-0 p-0">1</span></div>              
+                <h3 class="mb-0 ml-lg-16 text-24 font-weight-medium leading-tight text-capitalize">{{ section.settings.b1_row1 }}</h3>
+                <h3 class="mb-4 ml-lg-16 text-24 font-weight-medium leading-tight text-capitalize">{{ section.settings.b1_row2 }}</h3>
+              <p class="font-weight-medium text-16 mb-0">{{ section.settings.b1_description }}</p>
+            </div>
+            <div class="mb-6 mb-lg-0 text-left d-none d-lg-block align-self-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="23" viewBox="0 0 20 23">
+                    <path id="Polygon_21" data-name="Polygon 21" d="M11.5,0,23,20H0Z"
+                        transform="translate(20) rotate(90)" fill="#0a2438" />
+                </svg>
+            </div>
+            <div class="mb-6 mb-lg-0 text-left d-lg-none align-self-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="23" height="20" viewBox="0 0 23 20">
+                    <path id="Polygon_21" data-name="Polygon 21" d="M11.5,0,23,20H0Z" transform="translate(23 20) rotate(-180)"
+                        fill="#0a2438" />
+                </svg>
+            </div>
+            <div class="hiw-block mb-6 mb-lg-0 bg-elephant text-left py-8 px-8">
+              <div class="box-no d-flex justify-content-center align-items-center position-lg-absolute ml-lg-8 mt-lg-2 mb-4"><span class="text-24 font-weight-semibold m-0 p-0">2</span></div>              
+                <h3 class="mb-0 ml-lg-16 text-24 font-weight-medium leading-tight text-capitalize">{{ section.settings.b2_row1 }}</h3>
+                <h3 class="mb-4 ml-lg-16 text-24 font-weight-medium leading-tight text-capitalize">{{ section.settings.b2_row2 }}</h3>
+                <p class="font-weight-medium text-16 mb-0">{{ section.settings.b2_description }}</p>
+            </div>
+            <div class="mb-6 mb-lg-0 text-left d-none d-lg-block align-self-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="23" viewBox="0 0 20 23">
+                    <path id="Polygon_21" data-name="Polygon 21" d="M11.5,0,23,20H0Z" transform="translate(20) rotate(90)"
+                        fill="#0a2438" />
+                </svg>
+            </div>
+            <div class="mb-6 mb-lg-0 text-left d-lg-none align-self-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="23" height="20" viewBox="0 0 23 20">
+                    <path id="Polygon_21" data-name="Polygon 21" d="M11.5,0,23,20H0Z" transform="translate(23 20) rotate(-180)"
+                        fill="#0a2438" />
+                </svg>
+            </div>          
+            <div class="hiw-block mb-4 mb-lg-0 bg-elephant text-left py-8 px-8">
+              <div class="box-no d-flex justify-content-center align-items-center position-lg-absolute ml-lg-8 mt-lg-2 mb-4"><span class="text-24 font-weight-semibold m-0 p-0">3</span></div>              
+                <h3 class="mb-0 ml-lg-16 text-24 font-weight-medium leading-tight text-capitalize">{{ section.settings.b3_row1 }}</h3>
+                <h3 class="mb-4 ml-lg-16 text-24 font-weight-medium leading-tight text-capitalize">{{ section.settings.b3_row2 }}</h3>
+                <p class="font-weight-medium text-16 mb-0">{{ section.settings.b3_description }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+  .box-no {background-color: transparent; color: #fff; width: 3rem; height: 3rem; border: 1px solid #fff; border-radius: 50%; left: 0;}
+  .left-no {background-color: #fff; color: #0A2438; width: 3rem; height: 3rem; border-radius: 50%;}  
+</style>
+
+{% schema %}
+{
+    "name": "VS - How it Works",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "How it works"
+        },
+        {
+            "type": "text",
+            "id": "b1_row1",
+            "label": "Box 1 - Title - Row 1",
+            "default": "Book your"
+        },
+        {
+            "type": "text",
+            "id": "b1_row2",
+            "label": "Box 1 - Title - Row 2",
+            "default": "virtual visit"
+        },
+        {
+            "type": "textarea",
+            "id": "b1_description",
+            "label": "Box 1 - Description",
+            "default": "Use the booking tool below to pick a suitable date and time for your visit. You will be automatically assigned an adviser after booking or there is an option to pre-select your adviser if you have a preference."
+        },
+        {
+            "type": "text",
+            "id": "b2_row1",
+            "label": "Box 2 - Title - Row 1",
+            "default": "Booking"
+        },
+        {
+            "type": "text",
+            "id": "b2_row2",
+            "label": "Box 2 - Title - Row 2",
+            "default": "Scheduled"
+        },
+        {
+            "type": "textarea",
+            "id": "b2_description",
+            "label": "Box 2 - Description",
+            "default": "Once you have booked, you will be emailed with a calendar invite and Zoom video link in preparation for your virtual visit. You will receive a second reminder one hour before your visit."
+        },
+        {
+            "type": "text",
+            "id": "b3_row1",
+            "label": "Box 3 - Title - Row 1",
+            "default": "Virtual Visit, Assessment"
+        },
+        {
+            "type": "text",
+            "id": "b3_row2",
+            "label": "Box 3 - Title - Row 2",
+            "default": "And Advice"
+        },
+        {
+            "type": "textarea",
+            "id": "b3_description",
+            "label": "Box 3 - Description",
+            "default": "At your selected time, one of our advisers will be ready for you on the video link to take you around our showroom, discuss your needs and go through applicable products with you. Enjoy your visit!"
+        }
+
+    ]
+}
+{% endschema %}

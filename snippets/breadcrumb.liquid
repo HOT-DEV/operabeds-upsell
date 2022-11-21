@@ -1,0 +1,137 @@
+{% comment %}
+    Breadcrumb snippet.
+{% endcomment %}
+
+<nav class="c-breadcrumb{% if class %} {{ class }}{% endif %} d-none d-md-block" aria-label="{{ 'breadcrumb.aria_label' | t }}" role="navigation">
+    {%- capture left_separator -%}
+        <span>&lt;</span>
+    {%- endcapture -%}
+    {%- capture mid_separator -%}
+        <span>&vert;</span>
+    {%- endcapture -%}
+    {%- capture right_separator -%}
+        <span>&gt;</span>
+    {%- endcapture -%}
+
+    {% comment %} Back {% endcomment %}
+    {%- if show_back_link -%}
+        <a href="javascript:history.go(-1)" aria-label="{{ 'Back to the previous page' | escape }}" title="{{ 'Back to the previous page' | escape }}">
+            {{- left_separator | safe -}}
+            {{- 'Back' | escape -}}
+        </a>
+        {{- mid_separator | safe -}}
+    {%- endif -%}
+
+    {% comment %} Home {% endcomment %}
+    <a href="{{ routes.root_url }}" aria-label="{{ 'Home' | escape }}" title="{{ 'Home' | escape }}" rel="home">
+        {{- 'Home' | escape -}}
+    </a>
+
+    {% comment %} Breadcrumb links {% endcomment %}
+    {%- if template contains 'page' -%}
+        
+        {% comment %} Page {% endcomment %}
+        {{- right_separator | safe -}}
+        <span aria-current="page">{{ page.title | escape }}</span>
+    
+    {%- elsif template contains 'customer' -%}
+        
+        {% comment %} Customer {% endcomment %}
+        {%- if template != 'customers/account' -%}
+            {{- right_separator | safe -}}
+            <a href="{{ routes.account_url }}" title="{{ 'Account' | escape }}">{{ 'Account' | escape }}</a>
+        {%- endif -%}
+        {%- if template == 'customers/login' -%}
+            {{- right_separator | safe -}}
+            <span aria-current="page">{{ 'Login' | escape }}</span>
+        {%- else -%}
+            {{- right_separator | safe -}}
+            <span aria-current="page">{{ page_title | escape }}</span>
+        {%- endif -%}
+    
+    {%- elsif template contains 'search' -%}
+
+        {% comment %} Search {% endcomment %}
+        {{- right_separator | safe -}}
+        <span aria-current="page">{{ 'Search' | escape }}</span>
+    
+    {%- elsif template contains 'product' -%}
+        
+        {% comment %} Product {% endcomment %}
+        {%- if collection.url -%}
+            {{- right_separator | safe -}}
+            <a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title | escape }}</a>
+        {%- else -%}
+            {{- right_separator | safe -}}
+            <a href="{{ routes.all_products_collection_url }}" title="{{ 'Products' | escape }}">{{ 'Products' | escape }}</a>
+        {%- endif -%}
+
+        {{- right_separator | safe -}}
+        <span aria-current="page">{{ product.title | escape }}</span>
+    
+    {%- elsif template contains 'collection' and collection.handle -%}
+        
+        {% comment %} Collection {% endcomment %}
+        {%- unless current_tags -%}
+            {{- right_separator | safe -}}
+            <span aria-current="page">{{ collection.title | escape }}</span>
+        {%- else -%}
+            {{- right_separator | safe -}}
+            <a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title | escape }}</a>
+            {%- assign tag_url = collection.url -%}
+            {%- for tag in current_tags -%}
+                {%- assign tag_parts = tag | split: '_' -%}
+                {%- assign tag_key = tag_parts | first -%}
+                {%- assign tag_value = tag_parts | last -%}
+                
+                {%- if tag_url == collection.url -%}
+                    {%- assign tag_url = tag_url | append: '/' | append: tag | downcase -%}
+                {%- else -%}
+                    {%- assign tag_url = tag_url | append: '+' | append: tag | downcase -%}
+                {%- endif -%}
+
+                {{- right_separator | safe -}}
+                {%- if tag_parts.size > 1 -%}
+                    {%- unless forloop.last -%}
+                        <a href="{{ tag_url }}" title="{{ tag_key | append: ': ' | append: tag_value | escape }}">{{ tag_key | append: ': ' | append: tag_value | escape }}</a>
+                    {%- else -%}
+                        <span aria-current="page">{{ tag_key | append: ': ' | append: tag_value | escape }}</span>
+                    {%- endunless -%}
+                {%- else -%}
+                    <span aria-current="page">{{ tag | escape }}</span>
+                {%- endif -%}
+            {%- endfor -%}
+        {%- endunless -%}
+
+    {%- elsif template contains 'blog' -%}
+        
+        {% comment %} Blog {% endcomment %}
+        {%- unless current_tags -%}
+            {{- right_separator | safe -}}
+            <span aria-current="page">{{ blog.title | escape }}</span>
+        {%- else -%}
+            {{- right_separator | safe -}}
+            <a href="{{ blog.url }}" title="{{ blog.title | escape }}">{{ blog.title | escape }}</a>
+
+            {%- assign first_tag = current_tags | first -%}
+            {{- right_separator | safe -}}
+            <span aria-current="page">{{ first_tag | escape }}</span>
+        {%- endunless -%}
+
+    {%- elsif template contains 'article' -%}
+
+        {% comment %} Article {% endcomment %}
+        {{- right_separator | safe -}}
+        <a href="{{ blog.url }}" title="{{ blog.title | escape }}">{{ blog.title | escape }}</a>
+
+        {{- right_separator | safe -}}
+        <span aria-current="page">{{ article.title | escape }}</span>
+
+    {%- else -%}
+
+        {% comment %} Other {% endcomment %}
+        {{- right_separator | safe -}}
+        <span aria-current="page">{{ page_title | escape }}</span>
+
+    {%- endif -%}
+</nav>

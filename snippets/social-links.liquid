@@ -1,0 +1,53 @@
+{% comment %}
+    The Social Links snippet.
+{% endcomment %}
+
+{%- if settings.social_facebook_link != blank or settings.social_twitter_link != blank or settings.social_instagram_link != blank -%}
+    <ul class="c-social-links" aria-label="{{ 'Social Links' | escape }}">
+        {%- if settings.social_facebook_link != blank -%}
+            <li>
+                <a href="{{ settings.social_facebook_link | url_escape }}" title="{{ 'Facebook' | escape }}" aria-label="{{ 'Facebook' | escape }}" target="_blank" rel="noopener noreferrer">
+                    <svg focusable="false" aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-facebook-f"></use>
+                    </svg>
+                </a>
+            </li>
+        {%- endif -%}
+        {%- if settings.social_twitter_link != blank -%}
+            <li>
+                <a href="{{ settings.social_twitter_link | url_escape }}" title="{{ 'Twitter' | escape }}" aria-label="{{ 'Twitter' | escape }}" target="_blank" rel="noopener noreferrer">
+                    <svg focusable="false" aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-twitter"></use>
+                    </svg>
+                </a>
+            </li>
+        {%- endif -%}
+        {%- if settings.social_instagram_link != blank -%}
+            <li>
+                <a href="{{ settings.social_instagram_link | url_escape }}" title="{{ 'Instagram' | escape }}" aria-label="{{ 'Instagram' | escape }}" target="_blank" rel="noopener noreferrer">
+                    <svg focusable="false" aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-instagram"></use>
+                    </svg>
+                </a>
+            </li>
+        {%- endif -%}
+        {%- if settings.social_pinterest_link != blank -%}
+            <li>
+                <a href="{{ settings.social_pinterest_link | url_escape }}" title="{{ 'Pinterest' | escape }}" aria-label="{{ 'Pinterest' | escape }}" target="_blank" rel="noopener noreferrer">
+                    <svg focusable="false" aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-pinterest"></use>
+                    </svg>
+                </a>
+            </li>
+        {%- endif -%}
+        {%- if settings.social_linkedin_link != blank -%}
+            <li>
+                <a href="{{ settings.social_linkedin_link | url_escape }}" title="{{ 'Linkedin' | escape }}" aria-label="{{ 'Linkedin' | escape }}" target="_blank" rel="noopener noreferrer">
+                    <svg focusable="false" aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-linkedin-in"></use>
+                    </svg>
+                </a>
+            </li>
+        {%- endif -%}
+    </ul>
+{%- endif -%}

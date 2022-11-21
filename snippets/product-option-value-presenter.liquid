@@ -1,0 +1,27 @@
+{% comment %}
+    Product Option Value Presenter snippet.
+    
+    NOTE: The rules used below should be kept in sync with the rules used in the `optionValuePresenter` function in /src/scripts/helpers.js.
+{% endcomment %}
+
+{%- liquid
+    if value
+        assign result = value | escape
+        
+        assign result = result | replace: '/', ' / '
+        
+        unless result contains "Left"
+            assign result = result | replace: 'ft', '<sup>ft</sup>' | replace: 'cm', '<sup>cm</sup>' 
+        endunless
+
+        assign result = result | replace: ' Fabric', ''
+
+        assign result = result | replace: ' Headboard', ''
+
+        assign result = result | replace: ' Legs', ''
+        
+        assign result = result | replace: '  ', ' '
+
+        echo result
+    endif
+-%}

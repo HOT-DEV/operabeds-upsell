@@ -1,0 +1,82 @@
+{% comment %}
+    Product Tile (Alt) snippet.
+{% endcomment %}
+
+{%- if product != blank -%}
+    {%- liquid
+        assign image = product.featured_image
+        assign image_xs = image | img_url: '576x476'
+        assign image_sm = image | img_url: '768x476'
+        assign image_md = image | img_url: '1024x476'
+        assign image_lg = image | img_url: '1280x580'
+        assign image_xl = image | img_url: '1440x680'
+        assign image_xxl = image | img_url: '1670x780'
+        assign image_xxxl = image | img_url: '1920x780'
+
+        if product.compare_at_price > 0 and product.compare_at_price > product.price
+            assign on_sale = true
+        endif
+    -%}
+    <div class="c-product-item c-product-item--alt{% if class %} {{ class }}{% endif %}" data-product-item>
+        <div class="c-product-item__header">
+            <p class="m-0 text-14 font-weight-bold tracking-widest text-uppercase">
+                {{- 'Adjustable Comfort Bed | Dual' | escape -}}
+            </p>
+        </div>
+        <div class="c-product-item__media">
+            <a href="{{ product.url }}" aria-label="{{ product.title | escape }}" title="{{ product.title | escape }}">
+                <picture class="c-product-item__media__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ 'Alt text' | escape }}">
+                    <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                    <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                    <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                    <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                    <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                    <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+                    {% comment %} <img alt="" /> {% endcomment %}
+                </picture>
+            </a>
+        </div>
+        <div class="c-product-item__content">
+            <h3 class="mb-3 text-16 font-weight-600 leading-tight">
+                <a href="{{ product.url }}" aria-label="{{ product.title | escape }}" title="{{ product.title | escape }}">
+                    {{- product.title | escape -}}
+                </a>
+            </h3>
+
+            {%- if on_sale -%}
+                {% comment %} Price: On Sale {% endcomment %}
+                <p class="mb-2 text-14 leading-tight text-line-through text-rolling-stone">
+                    {{- product.price_min | money -}}
+                </p>
+                <p class="mb-1 text-24 leading-none font-weight-bold text-orange-rough">
+                    {{- product.compare_at_price | money -}}
+                </p>
+            {%- else -%}
+                {% comment %} Price: Standard {% endcomment %}
+
+                <p class="mb-1 text-24 leading-none font-weight-bold">
+                    {{- product.price_min | money -}}
+                </p>
+            {%- endif -%}
+        </div>
+        <div class="c-product-item__footer">
+            <p class="m-0 text-14 font-weight-normal" data-finance-container data-product-price="{{ product.price_min }}">
+                With VAT Relief
+                {% if settings.finance_product_item_enabled %}
+                    | only <span data-finance-monthly></span> per month*
+                {% endif %}
+            </p>
+        </div>
+
+        {% comment %} On Sale {% endcomment %}
+        <div class="c-product-item__ribbon">
+            <svg aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-star-outline"></use>
+            </svg>
+            <span>
+                {{- 'Featured' | escape -}}
+            </span>
+        </div>
+    </div>
+{%- endif -%}

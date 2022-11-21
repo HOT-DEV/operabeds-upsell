@@ -1,0 +1,201 @@
+{% comment %}
+    The Product Cross Sell snippet.
+    Params: product
+{% endcomment %}
+
+
+{% comment %}
+    condition has been changed from multiple to single value
+    previously looped over all conditions, but live data was always single value
+    old code:
+            for condition in rule.conditions
+                if product.type contains condition
+                    assign matched_rule = rule
+                    break
+                endif
+            endfor
+{% endcomment %}
+
+{%- liquid
+    assign debug = false
+    assign product_type_downcase = product.type | downcase
+    assign rules_type = shop.metafields.accentuate.rule_type
+    assign rules_relationship = shop.metafields.accentuate.relationship
+    assign rules_condition = shop.metafields.accentuate.condition
+    assign rules_stage_name = shop.metafields.accentuate.stage_name
+    assign rules_stage_collection = shop.metafields.accentuate.stage_collection_path
+
+    assign matched_rule = false
+
+    for type in rules_type
+        if matched_rule
+            break
+        endif
+
+        assign relationship = rules_relationship[forloop.index0]
+        assign condition = rules_condition[forloop.index0]
+        assign stage_names = rules_stage_name[forloop.index0] | split: ','
+        assign stage_collections = rules_stage_collection[forloop.index0] | split: ','
+
+        if type == 'product_type' and relationship == 'contains'
+            if product.type contains condition
+                assign matched_rule = true
+                break
+            endif
+        elsif type == 'product_type' and relationship == 'equals'
+            if product.type == condition
+                assign matched_rule = true
+                break
+            endif
+        elsif type == 'product_tag'
+            if product.tags contains condition
+                assign matched_rule = true
+                break
+            endif
+        endif
+    endfor
+%}
+
+{% comment %}
+    BOLD - custom code
+{% endcomment %}
+{%- liquid
+    assign trade_customer_tag = settings.trade_customer_tag_bold_app
+    if customer and customer.tags contains trade_customer_tag
+        assign bold_trade_customer_logged_in = true
+    endif
+-%}
+
+{% if debug -%}
+<pre style="background-color: black; border: solid 2px red; color: white; padding: 10px;">
+all rules
+rules_type: {{ rules_type | json}}
+rules_stage_name: {{ rules_stage_name | json }}
+rules_stage_collection: {{ rules_stage_collection | json }}
+
+matched_rule: {{ matched_rule }}
+stage_collections: {{ stage_collections | json }}
+stage_names: {{ stage_names | json }}
+</pre>
+{%- endif -%}
+
+{%- if matched_rule or product.type == 'Adjustable Bed' -%}
+    <div class="c-cross-sell" data-product-cross-sell>
+        <button class="c-cross-sell__close" type="button" data-product-cross-sell-close-btn>
+            <svg class="mr-sm-2" aria-hidden="true">
+                <use xlink:href="#sprite-close"></use>
+            </svg>
+            <span class="d-none d-sm-inline-flex text-uppercase text-14 tracking-hd-widest">{{ 'products.cross_sell.close_btn_text' | t }}</span>
+        </button>
+        <div class="c-cross-sell__window" data-product-cross-sell-window>
+            <div class="c-cross-sell__alert" aria-live="polite" data-product-cross-sell-alert role="alert" hidden>
+                <svg class="c-cross-sell__alert__icon" aria-hidden="true">
+                    <use xlink:href="#sprite-check-circle"></use>
+                </svg>
+                <div class="c-cross-sell__alert__text">
+                    <!-- <span data-product-cross-sell-alert-product></span>  -->
+                    <span data-product-cross-sell-alert-message></span>
+                </div>
+            </div>
+            <div class="c-cross-sell__header px-4 px-md-16 mt-2 mt-md-2 mb-2 mb-md-2">
+                <h5 class="text-18 text-lg-32 text-blue-diane font-weight-normal mb-0">{{- 'products.cross_sell.heading' | t -}}</h5>
+                <button type="button" data-product-cross-sell-skip-btn>
+                    {{ 'products.cross_sell.skip' | t }}
+                    <svg class="ml-2" aria-hidden="true">
+                        <use xlink:href="#sprite-caret-right"></use>
+                    </svg>
+                </button>
+            </div>
+            <nav class="c-cross-sell__nav mb-2 mb-md-2 px-4 px-md-16 my-2 my-md-2">
+                <ul role="menu">
+                    {%- for stage in stage_names -%}
+                        {%- if stage -%}
+                            <li>
+                                <button class="c-cross-sell__nav__btn c-cross-sell__nav__btn--mattresses" id="cross-sell-nav-btn-{{- forloop.index -}}" aria-controls="cross-sell-scene-{{- forloop.index -}}" aria-expanded="false" type="button" data-product-cross-sell-nav-btn="{{- stage | strip -}}">
+                                    <span class="c-cross-sell__nav__btn__number text-14 text-sm-18 font-weight-normal mr-md-4">{{- forloop.index -}}</span>
+                                    <span class="c-cross-sell__nav__btn__label d-none d-md-inline-flex text-24 font-weight-normal">{{- stage | strip -}}</span>
+                                </button>
+                            </li>
+                        {%- endif -%}
+                    {%- endfor -%}
+                </ul>
+            </nav>
+            <div class="c-cross-sell__main mb-4 mb-md-12" aria-live="polite" role="region">
+                {%- for stage in stage_names -%}
+                    {%- if stage -%}
+                        {%- paginate collections.all.products by 500 -%}
+                            <div class="c-cross-sell__scene" id="cross-sell-scene-{{- forloop.index -}}" aria-labelledby="cross-sell-nav-btn-{{- forloop.index -}}" data-product-cross-sell-scene="{{- stage | strip -}}">
+                                {%- liquid
+                                    assign collection_name = stage_collections[forloop.index0] | strip
+                                    assign collection_products = collections[collection_name].products
+                                -%}
+                                {%- if collection_products.size > 0 -%}
+                                    <div class="c-cross-sell__scene__slider-wrapper">
+                                        <div class="c-cross-sell__scene__slider__btns d-none d-md-flex mb-md-8">
+                                            <button type="button" class="c-cross-sell__scene__slider__btn swiper-button-prev" data-product-cross-sell-scene-slider-prev>
+                                                <svg class="icon">
+                                                    <use xlink:href="#sprite-chevron-left"></use>
+                                                </svg>
+                                            </button>
+                                            <button type="button" class="c-cross-sell__scene__slider__btn swiper-button-next" data-product-cross-sell-scene-slider-next>
+                                                <svg class="icon">
+                                                    <use xlink:href="#sprite-chevron-right"></use>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="c-cross-sell__scene__slider swiper-container" data-product-cross-sell-scene-slider>
+                                            <div class="c-cross-sell__scene__slides swiper-wrapper">
+                                                {%- for cross_sell_product in collection_products -%}
+                                                    <div class="c-cross-sell__scene__slide swiper-slide">
+                                                        {%-
+                                                            render: 'product-cross-sell-card',
+                                                                product: cross_sell_product,
+                                                                parent_product: product,
+                                                                truncate_description_chars: 0,
+                                                                show_select_btn: true,
+                                                                bold_trade_customer_logged_in: bold_trade_customer_logged_in
+                                                        -%}
+                                                    </div>
+                                                {%- endfor -%}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                {%- else -%}
+                                    <div class="px-4 px-md-16">
+                                        <p class="mb-0">{{- 'products.cross_sell.no_results' | t -}}</p>
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        {%- endpaginate -%}
+                    {%- endif -%}
+                {%- endfor -%}
+            </div>
+            <div class="c-cross-sell__footer px-4 px-md-16 pb-4 pb-md-16">
+                <div class="row">
+                    <div class="col-md-6 mb-6 mb-md-0">
+                        <div class="c-cross-sell__footer__total-price">
+                            <p class="text-16 text-md-36 font-weight-bold text-blue-diane mb-1">{{ 'products.cross_sell.order_total' | t }} <span class="price text-24 text-md-36" data-product-cross-sell-total>{{- product.price_min -}}</span></p>
+                            {%- if settings.finance_product_item_enabled -%}
+                                <p class="mb-0" data-product-item-price="{{- product.price_min -}}"><small class="text-14">With VAT Relief only <span data-product-monthly></span> per month*</small></p>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-between justify-content-md-end align-items-center">
+                        <div class="c-cross-sell__footer__actions">
+                            <button class="c-cross-sell__actions__btn c-cross-sell__actions__btn prev mr-4" type="button" data-product-cross-sell-prev-btn>
+                                {{- 'products.cross_sell.prev_btn_text' | t -}}
+                            </button>
+                            <button class="c-cross-sell__actions__btn c-cross-sell__actions__btn next c-btn2" type="button" data-product-cross-sell-next-btn>
+                                <span>{{- 'products.cross_sell.next_btn_text' | t -}}</span>
+                                <svg class="ml-2" aria-hidden="true">
+                                    <use xlink:href="#sprite-caret-right"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endif -%}

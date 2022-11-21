@@ -1,0 +1,128 @@
+{% comment %}
+    The Featured Collections section template.
+{% endcomment %}
+
+<section class="s-featured-collections my-12" data-section-type="featured-collections" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row justify-content-center mb-8">
+            <div class="col-12 col-md-8 text-center">
+                {%- if section.settings.title != blank -%}
+                    <h2 class="u-heading-md text-elephant">
+                        {{- section.settings.title | escape -}}
+                    </h2>
+                {%- endif -%}
+                {%- if section.settings.description != blank -%}
+                    <div class="mb-n4 text-16 text-lg-14 text-abbey">
+                        {{- section.settings.description | safe -}}
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+        {%- if section.blocks.size > 0 -%}
+            <div class="row">
+                {%- for block in section.blocks -%}
+                    {%- assign featured_collection = collections[block.settings.collection] -%}
+                    <div class="col-12 col-sm-6" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                        {%- if featured_collection != blank -%}
+                            {%- liquid
+                                assign collection_title = block.settings.title | default: featured_collection.title
+                                assign collection_description = block.settings.description | default: featured_collection.description
+                                assign collection_image = block.settings.image | default: featured_collection.image
+                                assign sub_heading = block.settings.sub_heading
+                            -%}
+                            {% comment %} Separate liquid code block is required for the render (apparently)... {% endcomment %}
+                            {%-
+                                render 'collection-card',
+                                collection: featured_collection,
+                                sub_heading: sub_heading
+                                collection_title: collection_title,
+                                collection_description: collection_description,
+                                collection_image: collection_image
+                            -%}
+                        {%- else -%}
+                            <p class="m-0">
+                                {{- 'This block does not have a "collection".' | escape -}}
+                            </p>
+                        {%- endif -%}
+                    </div>
+                {%- endfor -%}
+            </div>
+        {%- endif -%}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Featured Collections",
+    "settings": [
+        {
+            "type": "textarea",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "collection",
+            "name": "Collection",
+            "limit": 4,
+            "settings": [
+                {
+                    "type": "collection",
+                    "id": "collection",
+                    "label": "Collection"
+                },
+                {
+                    "type": "text",
+                    "id": "sub_heading",
+                    "label": "Sub Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "info": "Optionally over-ride the Collection's title."
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "info": "Optionally over-ride the Collection's description."
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Optionally over-ride the Collection's image."
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Featured Collections",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": [
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                },
+                {
+                    "type": "collection"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

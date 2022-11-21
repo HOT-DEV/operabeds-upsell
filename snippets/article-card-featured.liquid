@@ -1,0 +1,99 @@
+{% comment %}
+    Collection Card snippet.
+{% endcomment %}
+
+{%- if article != blank -%}
+    {%- liquid
+        assign truncate_words_limit = article_word_truncate_limit | default: 30
+        assign article_url = article.url
+        assign article_title = article.title
+        assign article_description = article.excerpt | strip_html | default: article.content | strip_html | truncatewords: truncate_words_limit | prepend: '<p>' | append: '</p>'
+        assign article_image = article.image
+        assign article_alt = article_image.alt | default: article_title | escape
+
+        assign article_url_parts = article.url | remove_first: '/' | split: '/'
+        if article_url_parts[0] == 'blogs'
+            assign article_blog_handle = article_url_parts[1]
+            assign article_blog_object = blogs[article_blog_handle]
+        endif
+
+        assign article_image_xs = 'https://via.placeholder.com/376x242'
+        assign article_image_sm = 'https://via.placeholder.com/480x242'
+        assign article_image_md = 'https://via.placeholder.com/292x242'
+        assign article_image_lg = 'https://via.placeholder.com/304x242'
+
+        if article_image != blank
+            assign article_image_xs = article_image | img_url: '376x'
+            assign article_image_sm = article_image | img_url: '680x'
+            assign article_image_md = article_image | img_url: '800x'
+            assign article_image_lg = article_image | img_url: '1200x'
+        endif
+    -%}
+    <div class="c-article-card-featured">
+        <div class="c-article-card-featured__body">
+            <div class="c-article-card-featured__header mb-6">
+                <ul class="c-tags-list text-elephant">
+                    <li>
+                        <svg class="mr-1" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-star-outline"></use>
+                        </svg>
+                        Featured
+                    </li>
+                    {%- if article_blog_object -%}
+                        <li>
+                            &#124;
+                        </li>
+                        <li>
+                            <a href="{{ article_blog_object.url }}" title="{{ article_blog_object.title | escape }}">
+                                {{ article_blog_object.title | escape }}
+                            </a>
+                        </li>
+                    {%- endif -%}
+                </ul>
+            </div>
+            <div class="c-article-card-featured__content">
+                {%- if article_title != blank -%}
+                    <h3 class="mb-5 text-20 text-lg-24 font-weight-normal leading-tight  text-elephant">
+                        <a class="" href="{{ article_url | url_escape }}" aria-label="{{ article_title | escape }}" title="{{ article_title | escape }}">
+                            {{- article_title | escape -}}
+                        </a>
+                    </h3>
+                {%- endif -%}
+                {%- if article_description != blank -%}
+                    <div class="text-14 text-abbey">
+                        {{- article_description | safe -}}
+                    </div>
+                {%- endif -%}
+            </div>
+            <div class="c-article-card-featured__footer">
+                <a class="c-article-card__cta" href="{{ article_url | url_escape }}" aria-label="{{ 'Continue Reading' | escape }}" title="{{ 'Continue Reading' | escape }}">
+                    <span>
+                        {{- 'Continue Reading' | escape -}}
+                    </span>
+                    <svg aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-chevron-right"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="c-article-card-featured__media">
+            <a class="d-block h-100" href="{{ article_url | url_escape }}" aria-label="{{ article_title | escape }}" title="{{ article_title | escape }}">
+                {%- capture image_source -%}
+                    <source srcset="{{ article_image_xs | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ article_image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                    <source srcset="{{ article_image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                    <source srcset="{{ article_image_lg | url }}" media="(min-width: 1024px)">
+                {%- endcapture -%}
+                <picture class="c-article-card__media__picture picture-cover js-lazy" data-iesrc="{{ article_image_xxxl | url }}" data-alt="{{- article_alt -}}">
+                    {{- image_source -}}
+                </picture>
+                <noscript>
+                    <picture class="c-article-card__media__picture picture-cover">
+                        {{- image_source -}}
+                        <img src="{{ article_image_xl | url }}" alt="{{- article_alt -}}"/>
+                    </picture>
+                </noscript>
+            </a>
+        </div>
+    </div>
+{%- endif -%}

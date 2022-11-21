@@ -1,0 +1,79 @@
+{% comment %}
+    Product Upsell snippet.
+{% endcomment %}
+
+{%- liquid
+
+    assign buttonTag = _buttonTag | replace: '_', ' '
+    assign button_tag_downcase = _buttonTag | downcase
+
+    assign image_xs = 'https://via.placeholder.com/376x226'
+    assign image_sm = 'https://via.placeholder.com/480x290'
+    assign image_md = 'https://via.placeholder.com/608x289'
+    assign image_lg = 'https://via.placeholder.com/300x180'
+    assign image_xl = 'https://via.placeholder.com/278x168'
+    assign image_xxl = 'https://via.placeholder.com/300x180'
+    assign image_xxxl = 'https://via.placeholder.com/400x242'
+
+    if _image.first.cloudinary_src
+        assign image = _image.first.cloudinary_src
+
+        assign image_xs = image | append: 'w_376,h_226'
+        assign image_sm = image | append: 'w_480,h_290'
+        assign image_md = image | append: 'w_608,h_289'
+        assign image_lg = image | append: 'w_300,h_180'
+        assign image_xl = image | append: 'w_278,h_168'
+        assign image_xxl = image | append: 'w_300,h_180'
+        assign image_xxxl = image | append: 'w_400,h_242'
+    else
+        assign image = _image
+        assign image_xs = image | file_img_url: '376x226'
+        assign image_sm = image | file_img_url: '480x290'
+        assign image_md = image | file_img_url: '608x289'
+        assign image_lg = image | file_img_url: '300x180'
+        assign image_xl = image | file_img_url: '278x168'
+        assign image_xxl = image | file_img_url: '300x180'
+        assign image_xxxl = image | file_img_url: '400x242'
+    endif
+    assign bullet_points = _bulletPoints | newline_to_br | split: '<br />' 
+-%}
+<div class="c-product-upsell" data-collection-style="{{ button_tag_downcase }}">
+    <div class="row mb-6 flex-nowrap justify-content-between align-items-center">
+        <div class="col-auto">
+            <h3 class="mb-1 text-24 leading-tight font-weight-bold text-elephant">
+                {{- _heading | escape -}}
+            </h3>
+            <p class="m-0 text-14 leading-none font-weight-bold text-tropical" hidden data-collection-style-price-from="{{ button_tag_downcase }}">
+                From {{ product.price | money }}
+            </p>
+        </div>
+        <div class="col-auto">
+            <a class="c-btn2" href="{{ collection.url | append: '/' | append: button_tag_downcase }}" aria-label="{{ 'View ' | append: buttonTag | escape }}" title="{{ 'View ' | append: buttonTag | escape }}">
+                {{- 'View' | escape -}}
+            </a>
+        </div>
+    </div>
+    <picture class="c-product-upsell__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image.alt | default: collection_title | escape }}">
+        <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+        <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+        <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+        <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+        <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+        <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+        <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+        {% comment %} <img alt="" /> {% endcomment %}
+    </picture>
+    <p class="my-6 text-18 leading-tight font-weight-bold">
+        {{- _introText | escape -}}
+    </p>
+    <ul class="c-product-upsell__list">
+        {%- for bulletPoint in bullet_points -%}
+            <li>
+                <svg aria-hidden="true" role="presentation">
+                    <use xlink:href="#sprite-check"></use>
+                </svg>
+                {{- bulletPoint | escape -}}
+            </li>
+        {%- endfor -%}
+    </ul>
+</div>

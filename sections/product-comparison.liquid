@@ -1,0 +1,165 @@
+{% comment %}
+    The Product Comparison section template.
+{% endcomment %}
+{%- liquid
+    assign heading = product.metafields.accentuate.compare_heading
+
+    assign product_1_name =         product.metafields.accentuate.compare1_feature_name
+    assign product_1_ticked =       product.metafields.accentuate.compare1_feature_ticked
+    assign product_1_not_ticked =   product.metafields.accentuate.compare1_feature_not_ticked
+
+    assign product_2_name =         product.metafields.accentuate.compare2_feature_name
+    assign product_2_ticked =       product.metafields.accentuate.compare2_feature_ticked
+    assign product_2_not_ticked =   product.metafields.accentuate.compare2_feature_not_ticked
+
+    assign product_3_name =         product.metafields.accentuate.compare3_feature_name
+    assign product_3_ticked =       product.metafields.accentuate.compare3_feature_ticked
+    assign product_3_not_ticked =   product.metafields.accentuate.compare3_feature_not_ticked
+-%}
+{%- if product_1_name or product_2_name or product_3_name -%}
+    <section id="product-comparison" class="s-product-comparison pb-16 pb-lg-20 pb-xxl-22" data-section-type="product-comparison" data-section-id="{{ section.id }}">
+        <div class="container site-padding">
+            <div class="row justify-content-center mb-14 mb-lg-18">
+                <div class="col-12 col-md-10 col-lg-9 col-xl-8 col-xxl-7 col-xxxl-6 text-center text-abbey">
+                    <h2 class="mb-0 u-heading-md text-elephant">
+                        {{- heading -}}
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="s-product-comparison__content" data-product-comparison-content>
+            <div class="container site-padding">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-xxl-10">
+                        <div class="row mb-n12 mb-md-n24 mb-lg-0">
+                            {%- if product_1_name -%}
+                                {%- liquid
+                                    assign products_name = product_1_name
+                                    assign products_ticked = product_1_ticked
+                                    assign products_not_ticked = product_1_not_ticked
+                                -%}
+                                <div class="col-12 col-lg-4 mb-12 mb-md-24 mb-lg-0 text-center">
+                                    <h3 class="mb-8 mb-lg-12 text-24 leading-none font-weight-bold text-elephant">
+                                        {{- products_name | escape -}}
+                                    </h3>
+                                    <ul class="c-check-list c-check-list--alt mb-n5 text-lg-left" aria-label="{{ products_name | escape }}">
+                                        {%- for feature_name in products_ticked -%}
+                                            <li class="mb-5">
+                                                <svg aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-check"></use>
+                                                </svg>
+                                                <span>
+                                                    {{- feature_name | escape -}}
+                                                </span>
+                                            </li>
+                                        {%- endfor -%}
+
+                                        {%- for feature_name in products_not_ticked -%}
+                                            <li class="mb-5 is-disabled">
+                                                <svg aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-check"></use>
+                                                </svg>
+                                                <span>
+                                                    {{- feature_name | escape -}}
+                                                </span>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            {%- endif -%}
+
+                            {%- if product_2_name -%}
+                                {%- liquid
+                                    assign products_name = product_2_name
+                                    assign products_ticked = product_2_ticked
+                                    assign products_not_ticked = product_2_not_ticked
+                                -%}
+                                <div class="col-12 col-lg-4 mb-12 mb-md-24 mb-lg-0 text-center">
+                                    <h3 class="mb-8 mb-lg-12 text-24 leading-none font-weight-bold text-elephant">
+                                        {{- products_name | escape -}}
+                                    </h3>
+                                    <ul class="c-check-list c-check-list--alt mb-n5 text-lg-left" aria-label="{{ products_name | escape }}">
+                                        {%- for feature_name in products_ticked -%}
+                                            <li class="mb-5">
+                                                <svg aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-check"></use>
+                                                </svg>
+                                                <span>
+                                                    {{- feature_name | escape -}}
+                                                </span>
+                                            </li>
+                                        {%- endfor -%}
+
+                                        {%- for feature_name in products_not_ticked -%}
+                                            <li class="mb-5 is-disabled">
+                                                <svg aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-check"></use>
+                                                </svg>
+                                                <span>
+                                                    {{- feature_name | escape -}}
+                                                </span>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            {%- endif -%}
+
+                            {%- if product_3_name -%}
+                                {%- liquid
+                                    assign products_name = product_3_name
+                                    assign products_ticked = product_3_ticked
+                                    assign products_not_ticked = product_3_not_ticked
+                                -%}
+                                <div class="col-12 col-lg-4 mb-12 mb-md-24 mb-lg-0 text-center">
+                                    <h3 class="mb-8 mb-lg-12 text-24 leading-none font-weight-bold text-elephant">
+                                        {{- products_name | escape -}}
+                                    </h3>
+                                    <ul class="c-check-list c-check-list--alt mb-n5 text-lg-left" aria-label="{{ products_name | escape }}">
+                                        {%- for feature_name in products_ticked -%}
+                                            <li class="mb-5">
+                                                <svg aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-check"></use>
+                                                </svg>
+                                                <span>
+                                                    {{- feature_name | escape -}}
+                                                </span>
+                                            </li>
+                                        {%- endfor -%}
+
+                                        {%- for feature_name in products_not_ticked -%}
+                                            <li class="mb-5 is-disabled">
+                                                <svg aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-check"></use>
+                                                </svg>
+                                                <span>
+                                                    {{- feature_name | escape -}}
+                                                </span>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-8 d-lg-none">
+            <button class="c-btn" type="button" data-product-comparison-toggle>
+                {{- 'View More' | escape -}}
+            </button>
+        </div>
+    </section>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Comparison",
+    "settings": [
+        {
+            "type":"header",
+            "content": "Content can be added through the 'App Accentuate'"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

@@ -1,0 +1,460 @@
+
+{% comment %}
+    The Article section for the Knowledge Hub blog.
+{% endcomment %}
+
+{{- 'knowledge-hub-article.css' | asset_url | stylesheet_tag -}}
+
+{% liquid
+    assign blog_title = blog.title
+    assign article_title = article.title
+    assign article_image = article.image
+    assign article_alt = article_image.alt | default: article_title | escape
+
+    assign article_url_parts = article.url | remove_first: '/' | split: '/'
+    if article_url_parts[0] == 'blogs'
+        assign article_blog_handle = article_url_parts[1]
+        assign article_blog_object = blogs[article_blog_handle]
+    endif
+
+    assign article_image_xs = 'https://via.placeholder.com/376x242'
+    assign article_image_sm = 'https://via.placeholder.com/480x242'
+    assign article_image_md = 'https://via.placeholder.com/292x242'
+    assign article_image_lg = 'https://via.placeholder.com/304x242'
+    assign article_image_xl = 'https://via.placeholder.com/283x242'
+    assign article_image_xxl = 'https://via.placeholder.com/316x242'
+    assign article_image_xxxl = 'https://via.placeholder.com/438x242'
+
+    if article_image != blank
+        assign article_image_xs = article_image | img_url: 'x384'
+        assign article_image_sm = article_image | img_url: '680x'
+        assign article_image_md = article_image | img_url: '800x'
+        assign article_image_lg = article_image | img_url: '1200x'
+        assign article_image_xl = article_image | img_url: '1400x'
+        assign article_image_xxl = article_image | img_url: '1600x'
+        assign article_image_xxxl = article_image | img_url: '2048x'
+    endif
+    
+
+    assign articleDate = article.published_at
+    assign articleDate_seconds = article.published_at | date: '%s'
+    assign secondsPerDay = 86400
+    assign dateTimeFormat = "%Y-%m-%dT%T%z"
+    assign datetime = articleDate | date: dateTimeFormat
+    assign daysAgo = 'now' | date: '%s' | minus: articleDate_seconds | date: '%s' | divided_by: secondsPerDay
+    assign hoursAgo = 'now' | date: '%s' | minus: articleDate_seconds | date: '%s' | divided_by: 3600
+%}
+
+{%- liquid
+    assign feature_points = section.blocks | where: 'type', 'feature_point'
+-%}
+
+<article data-section-type="article" data-section-id="{{ section.id }}" aria-labelledby="article-title" aria-describedby="article-description">
+  
+{% comment %}
+===========================================
+ SECTION - Hero content
+===========================================  
+  TO-DO
+  * Done
+===========================================
+{% endcomment %}   
+  
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-xxxl-8 mb-4 mb-md-0 px-0 px-md-4">
+  <header class="c-page-header" id="kh-article">
+        {%- capture image_source -%}
+            <source srcset="{{ article_image_xs | url }}" media="(max-width: 575px)">
+            <source srcset="{{ article_image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+            <source srcset="{{ article_image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+            <source srcset="{{ article_image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+            <source srcset="{{ article_image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+            <source srcset="{{ article_image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+            <source srcset="{{ article_image_xxxl | url }}" media="(min-width: 1670px)">
+        {%- endcapture -%}
+        <picture class="c-page-header__bg js-lazy" data-iesrc="{{ article_image_xxxl | url }}" data-alt="{{- article_alt -}}">
+            {{- image_source -}}
+        </picture>
+        <noscript>
+            <picture class="c-page-header__bg">
+                {{- image_source -}}
+                <img src="{{ article_image_xl | url }}" alt="{{- article_alt -}}"/>
+            </picture>
+        </noscript>
+        <div class="c-page-header__content h-100">
+            <div class="container site-padding h-100">
+                <div class="row h-100 align-items-center justify-content-center">
+                    <div class="col-12 text-center text-white">
+                        <h1 class="text-36 text-md-46 font-weight-medium mb-6">{{- article_title -}}</h1>
+                        <ul class="c-tags-list justify-content-center text-white">
+                          {%- if article_blog_object -%}
+                          <li>
+                            <small class="text-14 text-uppercase text-white font-weight-bold"><a href="{{ blog.url }}">{{- blog_title -}}</a></small>
+                          </li>
+
+                          <li>
+                            <small class="text-14 text-uppercase text-white font-weight-bold">&#124;</small>
+                          </li>
+                          <li>
+                            {%- for tag in article.tags -%}
+                            <a href="{{ article_blog_object.url }}/tagged/{{ tag | downcase | remove: '& ' | replace: ' ', '-' }}" title="{{ tag | escape }}" class="kh-article-tag">
+                              {{ tag | strip }}
+                              {%- if forloop.last == false -%}
+                              <span class="kh-divider mx-2">&#124;</span>
+                              {%- endif -%}
+                            </a>
+                            {%- endfor -%}
+                          </li>
+                          {%- endif -%}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="c-page-header__overlay" aria-hidden="true" role="presentation" id="kh-article"></div>
+    </header>
+  </div>
+      </div>
+  </div>      
+  
+{% comment %}
+===========================================
+ SECTION - Bio for Author / Article 
+===========================================  
+  TO-DO
+  * Add dynamic element for image, name, title of authors through Metafields
+===========================================
+{% endcomment %}     
+
+  <div class="container site-padding">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-xxxl-6 mb-4 mb-md-0">
+        <div class="my-8">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="kh-article-bio row align-items-center ml-0">  
+                {% if article.metafields.accentuate.author_image_link != blank %}                  
+              <div class="kh-article-bio_image mr-4 mr-md-6">
+                <picture class="author-img">
+                  <img src="{{ article.metafields.accentuate.author_image_link }}" style="width: 115px; height: 115px;"/> 
+                </picture>   
+              </div>   
+                {% endif %}              
+              <div class="kh-article-bio_author align-self-start align-self-md-center">
+                <p class="text-14 font-weight-medium mb-1">{{ 'Author'}}</p>
+				{% if article.metafields.accentuate.author_full_name != blank %}                
+                <p class="text-18 text-md-20 font-weight-medium mb-1">{{ article.metafields.accentuate.author_full_name }}</p>
+                {% else %}
+                <p class="text-18 text-md-20 font-weight-medium mb-1">{{ 'Opera Beds' }}</p>                
+                {% endif %}
+                {% if article.metafields.accentuate.author_job_title %}
+                <p class="text-12 font-weight-medium mb-0">{{ article.metafields.accentuate.author_job_title }}</p>             
+                {% endif %}                
+              </div>  
+            </div>
+
+            <div class="kh-article-readtime align-self-start align-self-md-center">  
+              <p class="text-14 font-weight-medium mb-1 d-none d-sm-block">{{ 'Read Time:'}}</p>
+              <p class="text-14 text-sm-20 font-weight-medium mb-0 d-none d-sm-block">
+                {% if section.settings.read_words_min != false %}
+                {% assign article_content = article.content %}
+                {% assign article_read_time = '' %}
+                {% if article_content!= blank %}
+                {% assign words = article_content | strip_html | split: ' '%}
+                {%- assign article_read_time = words.size | divided_by: 200 | round | at_least: 1 -%}
+                {{ article_read_time }} Minutes
+                {% endif %}
+                {% endif %} 
+              </p>
+              <p class="text-14 text-sm-20 font-weight-medium mb-0 d-sm-none">
+                {% if section.settings.read_words_min != false %}
+                {% assign article_content = article.content %}
+                {% assign article_read_time = '' %}
+                {% if article_content!= blank %}
+                {% assign words = article_content | strip_html | split: ' '%}
+                {%- assign article_read_time = words.size | divided_by: 200 | round | at_least: 1 -%}
+                {{ article_read_time }} Min
+                {% endif %}
+                {% endif %}                     
+              </p>              
+            </div>                      
+          </div>
+        </div>     
+        <hr class="light my-8"/>
+        <div class="my-8">{%- render 'breadcrumb' -%}</div>
+        {%- if article.content != blank -%}
+        <div class="c-rte">
+          {{- article.content | replace: '0333 222 8584', '<span class="rTapNumber413992">0333 222 8584</span>' -}}          
+        </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+  
+<!--  Custom Q&A Section for Blog posts
+
+  <div class="row flex-wrap flex-lg-nowrap align-items-stretch px-4 my-12">
+  <div class="col-12 col-lg-4 bg-elephant text-white text-left text-lg-center p-8">
+  <svg aria-hidden="true" role="presentation">
+  <use xlink:href="#sprite-resources-question-circle"></use>
+  </svg>
+  <p class="text-18 mt-4 mb-0 font-weight-medium">So why can other mobility companies show prices on their websites?</p>
+  </div>
+  <div class="col-12 col-lg-8 bg-porcelain2 p-8">
+  <p class="text-18 font-weight-medium">Companies that advertise with prices are able to do so because they offer stock beds in standard sizes with limited or basic accessories.</p>
+  <p class="text-16 font-weight-normal mb-0">Companies that advertise with prices are able to do so because they offer stock beds in standard sizes with limited or basic accessories.</p>
+  </div>
+  </div>
+  
+END   -->
+
+
+<!--  Custom CTA Section for Blog posts
+
+<div class="row flex-wrap flex-lg-nowrap align-items-stretch my-12 px-4 mx-0 pt-8 pb-12 position-relative" style="background-image: url(https://cdn.shopify.com/s/files/1/0585/5608/8478/files/OB_beds_at_home_2048x640_60519452-74de-4275-a8f7-eb70d284ba4f.jpg?v=1642396244); background-position: center; background-size: cover; background-repeat: no-repeat;">
+<div class="col-12 px-0 px-sm-auto" style="z-index: 99;">
+<div class="kh-page-cta__primary__content justify-content-start align-items-center text-left px-sm-4">        
+<div class="col-12 col-xl-8">
+<h3 class="text-24 text-white font-weight-medium">
+Take a look at Opera’s Adjustable Comfort Bed Range
+</h3>
+</div>
+<div class="promo-btn px-sm-4 mt-12 mb-8">
+<a href="#"
+class="text-uppercase font-weight-bold text-14 tracking-wide">
+Shop ADJUSTABLE BEDS<span class="ml-2">
+<svg aria-hidden="true" role="presentation" id="cta">
+<use xlink:href="#sprite-resources-btn-arrow"></use>
+</svg>
+</span>
+</a>
+</div>
+</div>
+</div>	
+<div class="c-page-header__overlay" aria-hidden="true" role="presentation"></div>
+</div>
+
+END     -->
+  
+  
+{% comment %}
+===========================================
+ SECTION - Quote
+===========================================  
+  TO-DO
+  * Add dynamic element for image, name, title and quote through Metafields
+===========================================
+{% endcomment %}   
+  
+  {% if article.metafields.accentuate.quote != blank %}
+  <div class="container-fluid bg-porcelain2 d-flex justify-content-center my-14 py-14">
+    <div class="container site-padding">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-xxxl-6 mb-4 mb-md-0">       
+          <div class="kh-article-bio row flex-wrap flex-lg-nowrap align-items-center">  
+            {% if article.metafields.accentuate.quote_image_link != blank %}
+            <div class="kh-article-bio_image mb-6 mr-lg-24 align-self-start">            
+                <picture class="quote-img">
+                  <img src="{{ article.metafields.accentuate.quote_image_link }}" style="height: 150px; width: 150px;"/> 
+                </picture>              
+            </div>         
+            {% endif %}
+            <div class="kh-article-bio_author">                      
+            <svg aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-resources-quotation"></use>
+            </svg>
+              <div class="col-12 text-20 font-weight-medium mb-1 pl-0 mt-n8">{{ article.metafields.accentuate.quote }}</div>
+              <hr class="light my-6"/>
+              <p class="text-20 font-weight-medium mb-1">{{ article.metafields.accentuate.full_name }}</p>
+              <p class="text-12 font-weight-medium mb-0">{{ article.metafields.accentuate.sub_heading }}</p>                
+            </div>  
+          </div>                    
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+    
+{% comment %}
+===========================================
+ SECTION - Quick Enquiry
+===========================================  
+  TO-DO
+  * Add unique success message for this form only (not popups) - possible with javascript? form.id does not work
+  * Send tracking url to Jed  
+===========================================
+{% endcomment %} 
+  
+  {% if article.metafields.accentuate.show_enquiryform != blank %}
+  <div class="container site-padding d-flex justify-content-center mt-14 mb-6">
+    <div class="col-12 col-md-8 col-xxxl-6 mb-4 mb-md-0">  
+  {% if article.metafields.accentuate.quote == blank %}
+      <hr class="light mb-14"/>    
+  {% endif %}
+      <div class="row justify-content-between">
+        <div class="c-rte col-lg-5 text-center text-lg-left px-0">
+          {%- if section.settings.enquiry_heading -%}
+          <h2 class="text-26 text-md-36 font-weight-semibol mt-0">
+            {{- section.settings.enquiry_heading | escape -}}
+          </h2>
+          {%- endif -%}
+          {%- if section.settings.enquiry_description -%}
+          <div class="mb-10">
+            {{- section.settings.enquiry_description | safe -}}
+          </div>
+          {%- endif -%}
+          {%- if feature_points -%}
+          <div class="mb-10">
+            <ul class="c-check-list d-flex flex-column align-items-center align-items-lg-start"
+                aria-label="{{ section.settings.accessibility_features_label | escape }}">
+              {%- for feature_point in feature_points -%}
+              {%- if feature_point.settings.title.size > 0 -%}
+              <li class="mb-5" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}"
+                  {{ block.shopify_attributes }}>
+                <svg aria-hidden="true" role="presentation" style="color: #00b67A;">
+                  <use xlink:href="#sprite-check"></use>
+                </svg>
+                <span>
+                  {{- feature_point.settings.title | escape -}}
+                </span>
+              </li>
+              {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+          {%- endif -%}
+        </div>
+        <div class="col-lg-6 col-xl-6">
+          <div class="c-page-form pt-lg-6">
+            {%- form 'contact', class: 'c-form c-form-alt', id: 'enquiry-form-knowledge-hub', aria-label: 'Enquiry form (Knowledge Hub)' -%}
+            <input type="hidden" name="contact[form]" value="Enquiry Form - Knowledge Hub">
+            {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+            <div class="c-form-field mb-6 c-form-field--white-bg">
+              <label class="white-bg" for="name">Name</label>
+              <input
+                     class="c-form-input {% if show_errors == true and form.errors contains 'name' %} c-input--error{% endif %}"
+                     id="name" name="contact[name]" placeholder="Enter your full name" type="text"
+                     {%- if form.name -%} value="{{ form.name }}" {%- endif -%} required />
+            </div>                   
+            <div class="c-form-field mb-6 c-form-field--white-bg">
+              <label for="email">Email</label>
+              <input
+                     class="c-form-input {% if show_errors == true and form.errors contains 'email' %} c-input--error{% endif %}"
+                     id="email" name="contact[email]" placeholder="Enter your email address" type="email"
+                     {%- if form.email -%} value="{{ form.email }}" {%- endif -%} required />
+            </div>
+            <div class="c-form-field mb-6 c-form-field--white-bg">
+              <label for="phone">Phone</label>
+              <input
+                     class="c-form-input {% if show_errors == true and form.errors contains 'phone' %} c-input--error{% endif %}"
+                     id="phone" name="contact[phone]" placeholder="Enter your phone number" type="number"
+                     {%- if form.phone -%} value="{{ form.phone }}" {%- endif -%} required />
+            </div>
+            <div class="c-form-field mb-6 c-form-field--white-bg" id="kh-page">
+              <label for="Message">Notes</label>
+              <textarea
+                        class="c-form-input {% if show_errors == true and form.errors contains 'message' %} c-input--error{% endif %}"
+                        id="message" name="contact[message]" placeholder="How can we help?">
+                {%- if form.body -%}
+                {{- form.body -}}
+                {%- endif -%}
+              </textarea>
+            </div>
+            {%- if form.posted_successfully? -%}
+            <div class="col-12 text-center bg-porcelain2 border-rounded py-2 mb-6 align-items-center">
+            <p class="c-alert c-alert--success text-tropical m-0" role="alert">Your enquiry was sent successfully.
+            </p>
+            </div>  
+            {%- endif -%}
+
+            <div class="d-flex justify-content-sm-end">
+              <button type="submit" class="c-form-contact-submit c-btn c-btn--blue">
+                Send
+              </button>
+            </div>
+            {%- endform -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  
+{% comment %}
+===========================================
+ SECTION - Ending of Article
+===========================================  
+  TO-DO
+  * Done
+===========================================
+{% endcomment %} 
+  
+  <div class="container site-padding">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-xxxl-6 mb-4 mb-md-0">  
+        <hr class="light my-12"/> 
+        <p class="text-20 text-elephant font-weight-normal mb-0">Find out how Opera could help you with your bed needs. </p>
+        <p class="text-20 text-elephant font-weight-normal mb-0"><a href="/pages/contact-us" style="text-decoration: underline;">Contact us</a>, or speak to our experts advisors on <a href="tel:03332228584" aria-label="Call 0333 222 8584" style="text-decoration: underline;"><span class="rTapNumber413992">0333 222 8584</span></a></p>
+        <hr class="light my-12"/>
+        <div class="my-10 my-md-14">{%- render 'breadcrumb' -%}</div>
+      </div>
+    </div>
+  </div>
+</article>
+
+{% schema %}
+{
+"name": "Article - KH - Main",
+"settings": [
+{
+"type": "header",
+"content": "====================="
+},
+{
+"type": "header",
+"content": "Quick Enquiry Details"
+},
+{
+"type": "paragraph",
+"content": "Feature points will be added as blocks. Add them by clicking the drop down arrow on the left hand side for this section"
+},
+{
+"type": "text",
+"id": "enquiry_heading",
+"label": "Heading"
+},
+{
+"type": "text",
+"id": "enquiry_description",
+"label": "Description"
+},
+{
+"type": "header",
+"content": "====================="
+},
+{
+"type": "paragraph",
+"content": "Words per minute settings for Blog"
+},
+{
+"type": "checkbox",
+"id": "read_words_min",
+"label": "Show readtime?",
+"default": true
+}
+],
+"blocks": [
+{
+"type": "feature_point",
+"name": "Feature Point",
+"settings": [
+{
+"type": "text",
+"id": "title",
+"label": "Text"
+}
+]
+}
+]
+}
+{% endschema %}

@@ -1,0 +1,141 @@
+{% comment %}
+    Section for the contracts team.
+	4PE - 1/12/2021
+{% endcomment %}
+
+<section class="s9-team py-12 py-lg-16 text-white" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row align-items-center justify-content-center justify-content-sm-between mb-6">
+            <div class="col-12 col-sm-auto mb-0 text-center text-sm-left">
+                {% if section.settings.heading != blank %}
+                <h2 class="text-26 text-lg-36 font-weight-semibold leading-tight text-elephant mb-4 mb-sm-0">
+                    {{- section.settings.heading | escape -}}
+                </h2>
+                {% endif %}
+            </div>
+            <div class="col-12 col-sm-auto ml-sm-auto">
+                <div class="row justify-content-center mr-sm-auto">
+                    <button type="button" class="s-testimonials__btn s9-swiper-button-prev ml-4 mr-4">
+                        <svg class="icon">
+                            <use xlink:href="#sprite-chevron-left"></use>
+                        </svg>
+                    </button>
+                    <button type="button" class="s-testimonials__btn s9-swiper-button-next">
+                        <svg class="icon">
+                            <use xlink:href="#sprite-chevron-right"></use>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {%- if section.blocks.size > 0 -%}
+    <div class="swiper-team s9team">
+        <div class="swiper-wrapper site-padding">
+            {%- for block in section.blocks -%}
+            <div class="swiper-slide" id="employee">
+                <div class="d-flex flex-wrap text-left text-elephant">
+                    <div class="col-12 p-0 m-0">
+                        {% if block.settings.image != blank %}
+                        <img src="{{ block.settings.image | img_url: 'large' }}" class="pb-4"
+                            alt="{{ block.settings.title }}" />
+                        {% endif %}
+                    </div>
+                    <div class="col-12 p-0 m-0">
+                        {% if block.settings.title != blank %}
+                        <p class="text-20 font-weight-semibold mb-2">{{- block.settings.title -}}</p>
+                        {% endif %}
+                        {% if block.settings.job_title != blank %}
+                        <p class="text-16 font-weight-medium mb-0">{{- block.settings.job_title -}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {%- endfor -%}
+        </div>
+    </div>
+    {%- endif -%}
+</section>
+
+       <script>
+      var swiper = new Swiper(".s9team", {
+        slidesPerView: 1.25,
+        spaceBetween: 20,
+        loop: true,
+        breakpoints: {
+            // when window width is >= 576px
+            576: {
+            slidesPerView: 2,
+            spaceBetween: 25,
+            },
+            // when window width is >= 768px
+            768: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+            },
+            // when window width is >= 992px
+            992: {
+            slidesPerView: 3,
+            spaceBetween: 30,
+            },
+            // when window width is >= 1200px
+            1200: {
+            slidesPerView: 5,
+            spaceBetween: 40,
+            },    
+            // when window width is >= 1600px
+            1600: {
+            slidesPerView: 5,
+            spaceBetween: 40,
+            }               
+        },
+        navigation: {
+          nextEl: ".s9-swiper-button-next",
+          prevEl: ".s9-swiper-button-prev",
+        },
+      });
+    </script>
+
+{% schema %}
+{
+    "name": "S9 - Contracts Team",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Your Contracts Team"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image-with-label",
+            "name": "Image with Label",
+            "settings": [  
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Recommendations: 800 x 800px (1:1 ratio)"
+                },                                           
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Name",
+					"default": "Employee Name"
+                },
+                {
+                    "type": "text",
+                    "id": "job_title",
+                    "label": "Job title",
+					"default": "Job Title"
+                }               
+            ]
+        }
+    ]
+}
+{% endschema %}

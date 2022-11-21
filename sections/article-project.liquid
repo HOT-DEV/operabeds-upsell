@@ -1,0 +1,191 @@
+{% comment %}
+    The Project section
+{% endcomment %}
+
+{%- liquid
+    assign project_title = article.title
+    assign project_image = article.image
+    assign project_content = article.content
+    assign project_img_xs = 'https://via.placeholder.com/576x476'
+    assign project_img_sm = 'https://via.placeholder.com/768x476'
+    assign project_img_md = 'https://via.placeholder.com/1024x476'
+    assign project_img_lg = 'https://via.placeholder.com/1280x540'
+    assign project_img_xl = 'https://via.placeholder.com/1440x600'
+    assign project_img_xxl = 'https://via.placeholder.com/1670x600'
+    assign project_img_xxxl = 'https://via.placeholder.com/1920x600'
+
+    if project_image != blank
+        assign project_img_xs = project_image | img_url: '600x'
+        assign project_img_sm = project_image | img_url: '800x'
+        assign project_img_md = project_image | img_url: '1100x'
+        assign project_img_lg = project_image | img_url: '1300x'
+        assign project_img_xl = project_image | img_url: '1500x'
+        assign project_img_xxl = project_image | img_url: '1900x'
+        assign project_img_xxxl = project_image | img_url: '2048x'
+    endif
+    assign project_image_alt = project_image.alt | default: project_title | escape
+
+    assign project_details_provider = article.metafields.accentuate.project_details_provider
+    assign project_details_size = article.metafields.accentuate.project_details_size
+    assign project_details_location = article.metafields.accentuate.project_details_location
+    assign project_details_link_text = article.metafields.accentuate.project_details_link_text
+    assign project_details_link_url = article.metafields.accentuate.project_details_link_url
+
+    if project_details_provider != blank or project_details_size != blank or project_details_location != blank
+        assign show_overview_panel = true
+    else
+        assign show_overview_panel = false
+    endif
+
+-%}
+
+{%- if show_overview_panel -%}
+    {%- capture project_overview -%}
+        <div class="col-12 col-md-4 ml-md-auto">
+            <p class="m-0 text-14 font-weight-bold text-uppercase leading-tight tracking-widest text-elephant">
+                {{- 'Project Overview' | escape -}}
+            </p>
+            <ul class="c-data-list mt-10 mb-12">
+                {%- if project_details_provider != blank -%}
+                    <li>
+                        <span>{{ 'Provider' | escape }}</span>
+                        <span>{{ project_details_provider | escape }}</span>
+                    </li>
+                {%- endif -%}
+                {%- if project_details_size != blank -%}
+                    <li>
+                        <span>{{ 'Size' | escape }}</span>
+                        <span>{{ project_details_size | escape }}</span>
+                    </li>
+                {%- endif -%}
+                {%- if project_details_location != blank -%}
+                    <li>
+                        <span>{{ 'Location' | escape }}</span>
+                        <span>{{ project_details_location | escape }}</span>
+                    </li>
+                {%- endif -%}
+            </ul>
+            {%- if project_details_link_text != blank and project_details_link_url != blank -%}
+                <a class="c-text-btn font-weight-semibold text-pale-oyster" href="{{ project_details_link_url }}" target="_blank" rel="noopener noreferrer">{{ project_details_link_text | escape }}</a>
+            {%- endif -%}
+        </div>
+    {%- endcapture -%}
+{%- endif -%}
+
+<section data-section-type="article-project" data-section-id="{{ section.id }}" aria-labelledby="project-title" aria-describedby="project-description">
+    <header class="c-page-header">
+        {%- capture project_img_sources -%}
+            <source srcset="{{ project_img_xs | url }}" media="(max-width: 575px)">
+            <source srcset="{{ project_img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+            <source srcset="{{ project_img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+            <source srcset="{{ project_img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+            <source srcset="{{ project_img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+            <source srcset="{{ project_img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+            <source srcset="{{ project_img_xxxl | url }}" media="(min-width: 1670px)">
+        {%- endcapture -%}
+        <picture class="c-page-header__bg js-lazy" data-iesrc="{{ project_img_xxxl | url }}" data-alt="{{ project_image_alt | escape }}">
+            {{- project_img_sources | safe -}}
+        </picture>
+        <noscript>
+            <picture class="c-page-header__bg">
+                {{- project_img_sources | safe -}}
+                <img src="{{ project_img_xxxl | url }}" alt="{{ project_image_alt }}">
+            </picture>
+        </noscript>
+        <div class="c-page-header__content h-100">
+            <div class="container site-padding h-100">
+                <div class="row h-100 align-items-center justify-content-center">
+                    <div class="col-12 col-lg-10 col-xl-8 col-xxl-7 text-center text-white">
+                        <p class="mb-5 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                            {{- section.settings.subtitle | escape -}}
+                        </p>
+                        <h1 class="m-0 text-36 text-lg-46 font-weight-medium leading-tight" id="page-title">
+                            {{ project_title | escape }}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="c-page-header__overlay" aria-hidden="true" role="presentation"></div>
+    </header>
+    <div class="container site-padding my-20 my-md-24 my-xxl-30">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="row">
+                    {%- if show_overview_panel -%}
+                        <div class="col-12 col-md-8 col-xl-7 col-xxl-6 mb-16 mb-md-0">
+                            <p class="m-0 text-14 font-weight-bold text-uppercase leading-tight tracking-widest text-elephant">
+                                {{- 'Description' | escape -}}
+                            </p>
+                            {%- if project_content != blank -%}
+                                <div class="mt-10 c-rte font-weight-normal">
+                                    {{- project_content | safe -}}
+                                </div>
+                            {%- endif -%}
+                        </div>
+                        {{- project_overview -}}
+                    {%- else -%}
+                        <div class="col-12 mb-16 mb-md-0">
+                            <p class="m-0 text-14 font-weight-bold text-uppercase leading-tight tracking-widest text-elephant">
+                                {{- 'Description' | escape -}}
+                            </p>
+                            {%- if project_content != blank -%}
+                                <div class="mt-10 c-rte font-weight-normal">
+                                    {{- project_content | safe -}}
+                                </div>
+                            {%- endif -%}
+                        </div>
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Project",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Default settings"
+        },
+        {
+            "type": "header",
+            "content": "Labels"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Subtitle",
+            "default": "Project Gallery"
+        },
+        {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "header",
+            "content": "CTA"
+        },
+        {
+            "type": "text",
+            "id": "cta_text_1",
+            "label": "Text",
+            "default": "View All Projects"
+        },
+        {
+            "type": "url",
+            "id": "cta_url_1",
+            "label": "Url"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

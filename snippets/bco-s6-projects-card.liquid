@@ -1,0 +1,69 @@
+{% comment %}
+    Template based on Article Card snippet.
+	4PE - 1/12/2021
+{% endcomment %}
+
+{%- if article != blank -%}
+    {%- liquid
+        assign truncate_words_limit = article_word_truncate_limit | default: 30
+        assign article_url = article.url
+        assign article_title = article.title
+        assign article_description = article.excerpt | strip_html | default: article.content | strip_html | truncatewords: truncate_words_limit | prepend: '<p>' | append: '</p>'
+        assign article_image = article.image
+
+        assign article_image_xs = 'https://via.placeholder.com/376x242'
+        assign article_image_sm = 'https://via.placeholder.com/480x242'
+
+        if article_image != blank
+            assign article_image_xs = article_image | img_url: '400x'
+            assign article_image_sm = article_image | img_url: '600x'
+        endif
+    -%}
+    <div class="c-article-card{% if class != blank %} {{ class }}{% endif %}">
+        <div class="c-article-card__media">
+            <a class="" href="{{ article_url | url_escape }}" aria-label="{{ article_title | escape }}" title="{{ article_title | escape }}">
+                <picture class="c-article-card__media__picture js-lazy" data-iesrc="{{ article_image_xxxl | url }}" data-alt="{{ article_image.alt | default: article_title | escape }}">
+                    <source srcset="{{ article_image_xs | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ article_image_sm | url }}" media="(min-width: 576px)">
+                </picture>
+                <noscript>
+                    <picture class="c-article-card__media__picture">
+                        <source srcset="{{ article_image_xs | url }}" media="(max-width: 575px)">
+                        <source srcset="{{ article_image_sm | url }}" media="(min-width: 576px)">
+                        <img src="{{ article_image_sm | url }}" alt="{{ article_image.alt | default: article_title | escape }}"/>
+                    </picture>
+                </noscript>
+            </a>
+            <div class="c-article-card__media__text">
+                {{ 'Posted: ' | escape }}
+                {{ article.published_at | time_tag: '%d/%m/%Y' }}
+            </div>
+        </div>
+        <div class="c-article-card__body">
+            <div class="c-article-card__content mb-2">
+                {%- if article_title != blank -%}
+                    <h3 class="mb-5 text-18 text-lg-24 font-weight-medium leading-tight text-elephant">
+                        <a class="" href="{{ article_url | url_escape }}" aria-label="{{ article_title | escape }}" title="{{ article_title | escape }}">
+                            {{- article_title | escape -}}
+                        </a>
+                    </h3>
+                {%- endif -%}
+                {%- if article_description != blank -%}
+                    <div class="text-14 text-abbey">
+                        {{- article_description | safe -}}
+                    </div>
+                {%- endif -%}
+            </div>
+            <div class="c-article-card__footer">
+                <a class="c-article-card__cta" href="{{ article_url | url_escape }}" aria-label="{{ 'Continue Reading' | escape }}" title="{{ 'Continue Reading' | escape }}">
+                    <span>
+                        {{- 'Continue Reading' | escape -}}
+                    </span>
+                    <svg aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-chevron-right"></use>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+{%- endif -%}

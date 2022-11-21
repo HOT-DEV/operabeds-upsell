@@ -1,0 +1,208 @@
+{% comment %}
+    Product Option snippet.
+{% endcomment %}
+
+{%- liquid
+    assign rendered_split_options = ''
+    assign split_options_name_downcase = split_options_name | downcase
+    assign product_1_name =         product.metafields.accentuate.compare1_feature_name
+    assign product_2_name =         product.metafields.accentuate.compare2_feature_name
+    assign product_3_name =         product.metafields.accentuate.compare3_feature_name
+    assign compare_modal_image =    product.metafields.accentuate.compare_modal_image
+-%}
+
+<div class="js s-product__option{% if class %} {{ class }}{% endif %}">
+    <div class="row justify-content-between align-items-center mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <label class="s-product__option__label" for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}">
+                {{- split_options_name | escape -}}
+            </label>
+
+            {%- if split_options_name_downcase == 'smart base' and product_1_name or product_2_name or product_3_name -%}
+                <p class="mb-0 text-14">
+                    <button
+                    class="c-text-btn"
+                    data-modal-open="{{ collection_h1 | escape }}"
+                    data-modal-title="{{ collection_h1 | escape }}"
+                    data-modal-content-selector="#compare">Compares</button>
+                </p>
+                <template id="compare">
+                    <img src="{{ 'smart-base-comparison.png' | asset_img_url: 'master' }}" />
+                </template>
+            {%- endif -%}
+        </div>
+      
+            {%- if product.handle contains 'motion-adjustable-smart-base' and split_options_name == 'Smart Base' -%}
+                  <div class="col-12 d-flex justify-content-between align-items-center">    
+                  <p class="text-14 pb-0 mb-0">{{'MotionPlus™ adds underbed light, back massage and app control.'}}</p>
+                  </div>
+            {%- endif  -%} 
+      
+                  {%- if split_options_name == 'Drawers' -%}
+                  <div class="col-12 d-flex justify-content-between align-items-center">    
+                  <p class="text-14 pb-0 mb-0">{{'Positioned to the left or right as you look at the bed from the foot-end.'}}</p>
+                  </div>
+            {%- endif  -%}  
+      
+    </div>
+
+    {%- case split_options_layout -%}
+        {%- when 'swatch' -%}
+            {% comment %} Swatches {% endcomment %}
+            <div class="s-product__option__swatches">
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign swatch_image = blank
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                        if split_options_name == 'Fabric'
+                            unless matching_split_value contains 'Fabric'
+                                assign image_name = 'swatch-' | append: matching_split_value | append: '-' | append: split_options_name | append: '.png' | replace: ' ', '-'
+                            else
+                                assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                            endunless
+                        else
+                            assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                        endif
+                        assign swatch_image = image_name | file_img_url: 'small' | downcase
+                    -%}
+                    {%- unless rendered_split_options contains matching_split_value -%}
+                        <div class="s-product__option__swatch">
+                            <input id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" name="options[{{ split_options_name | escape }}]" type="radio" value="{{ matching_split_value | escape }}"{% if is_split_option %} data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                            <label
+                                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                                {%- if swatch_image != blank -%}style="background-image: url({{ swatch_image }});"{%- endif -%}
+                            >
+                                <span>
+                                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                                </span>
+                            </label>
+                        </div>
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+            </div>
+
+        {%- when 'tab' -%}
+            {% comment %} Tabs {% endcomment %}
+            <div class="s-product__option__tabs">
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign new_split_char = ' & '
+                        assign split_values = value | split: new_split_char
+                        assign split_selected_values = option.selected_value | split: new_split_char
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                    -%}
+                    {%- unless rendered_split_options contains matching_split_value -%}
+                        <div class="s-product__option__tab">
+                            <input id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" name="options[{{ split_options_name | escape }}]" type="radio" value="{{ matching_split_value | escape }}"{% if is_split_option %} data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                            <label
+                                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                            >
+                                <span>
+                                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                                </span>
+                            </label>
+                        </div>
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+            </div>
+ 
+
+        {%- when 'tile' -%}
+            {% comment %} Tiles {% endcomment %}
+            <div class="s-product__option__tiles">
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign swatch_image = blank
+                        assign split_values = value | escape | split: split_character
+                        assign split_selected_values = option.selected_value | escape | split: split_character
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+
+                        assign image_name = 'swatch-' | append: matching_split_value | append: '.png' | replace: ' ', '-'
+                        assign swatch_image = image_name | file_img_url: 'small' | downcase
+                    -%}
+              
+              		{%- liquid
+                    	if product.handle == 'divan-adjustable-bed' and matching_split_value contains 'Emerald'
+                        	assign swatch_image = 'swatch-emerald-headboard.png' | file_img_url: 'small' | downcase
+                        endif
+                    	if product.handle == 'divan-adjustable-bed' and matching_split_value contains 'Pearl'
+                        	assign swatch_image = 'swatch-pearl-headboard.png' | file_img_url: 'small' | downcase
+                        endif                        
+              		-%}
+              		
+              
+                    {%- unless rendered_split_options contains matching_split_value -%}
+                        <div class="s-product__option__tile">
+                            <input id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}" name="options[{{ split_options_name | escape }}]" type="radio" value="{{ matching_split_value | escape }}"{% if is_split_option %} data-product-split-option{% endif %}{% if is_selected %} checked{% endif %}>
+                            <label
+                                for="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}-{{ forloop.index }}"
+                                {%- if swatch_image != blank -%}style="background-image: url({{ swatch_image }});"{%- endif -%}
+                            >
+                                <span>
+                                    {%-
+                                        render 'product-option-value-presenter',
+                                        value: matching_split_value
+                                    -%}
+                                </span>
+                            </label>
+                        </div>
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+            </div>
+
+        {%- else -%}
+            {% comment %} Select {% endcomment %}
+            <select class="s-product__option__select" id="productOption-{{ options_index | plus: 1 }}-{{ split_options_index | plus: 1 }}" name="options[{{ split_options_name | escape }}]"{% if is_split_option %} data-product-split-option{% endif %}>
+                {%- for value in option.values -%}
+                    {%- liquid
+                        assign split_values = value | escape | split: split_character
+                        assign split_selected_values = option.selected_value | escape | split: split_character
+
+                        assign matching_split_value = split_values[split_options_index]
+                        assign matching_split_selected_value = split_selected_values[split_options_index]
+                        assign is_selected = false
+                        if matching_split_value == matching_split_selected_value
+                            assign is_selected = true
+                        endif
+                    -%}
+                    {%- unless rendered_split_options contains matching_split_value -%}
+                        <option value="{{ matching_split_value | escape }}"{% if is_selected %} selected{% endif %}>
+                            {{- matching_split_value | escape -}}
+                        </option>
+                        {%- assign rendered_split_options = rendered_split_options | append: matching_split_value | append: ',' -%}
+                    {%- endunless -%}
+                {%- endfor -%}
+            </select>
+    {%- endcase -%}
+</div>

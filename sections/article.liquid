@@ -1,0 +1,123 @@
+{% comment %}
+    The Article section template.
+{% endcomment %}
+
+{% liquid
+    assign blog_title = blog.title
+    assign article_title = article.title
+    assign article_image = article.image
+    assign article_alt = article_image.alt | default: article_title | escape
+
+    assign article_url_parts = article.url | remove_first: '/' | split: '/'
+    if article_url_parts[0] == 'blogs'
+        assign article_blog_handle = article_url_parts[1]
+        assign article_blog_object = blogs[article_blog_handle]
+    endif
+
+    assign article_image_xs = 'https://via.placeholder.com/376x242'
+    assign article_image_sm = 'https://via.placeholder.com/480x242'
+    assign article_image_md = 'https://via.placeholder.com/292x242'
+    assign article_image_lg = 'https://via.placeholder.com/304x242'
+    assign article_image_xl = 'https://via.placeholder.com/283x242'
+    assign article_image_xxl = 'https://via.placeholder.com/316x242'
+    assign article_image_xxxl = 'https://via.placeholder.com/438x242'
+
+    if article_image != blank
+        assign article_image_xs = article_image | img_url: '376x'
+        assign article_image_sm = article_image | img_url: '680x'
+        assign article_image_md = article_image | img_url: '800x'
+        assign article_image_lg = article_image | img_url: '1200x'
+        assign article_image_xl = article_image | img_url: '1400x'
+        assign article_image_xxl = article_image | img_url: '1600x'
+        assign article_image_xxxl = article_image | img_url: '2048x'
+    endif
+
+    assign articleDate = article.published_at
+    assign articleDate_seconds = article.published_at | date: '%s'
+    assign secondsPerDay = 86400
+    assign dateTimeFormat = "%Y-%m-%dT%T%z"
+    assign datetime = articleDate | date: dateTimeFormat
+    assign daysAgo = 'now' | date: '%s' | minus: articleDate_seconds | date: '%s' | divided_by: secondsPerDay
+    assign hoursAgo = 'now' | date: '%s' | minus: articleDate_seconds | date: '%s' | divided_by: 3600
+%}
+
+<article data-section-type="article" data-section-id="{{ section.id }}" aria-labelledby="article-title" aria-describedby="article-description">
+    <header class="c-page-header">
+        {%- capture image_source -%}
+            <source srcset="{{ article_image_xs | url }}" media="(max-width: 575px)">
+            <source srcset="{{ article_image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+            <source srcset="{{ article_image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+            <source srcset="{{ article_image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+            <source srcset="{{ article_image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+            <source srcset="{{ article_image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+            <source srcset="{{ article_image_xxxl | url }}" media="(min-width: 1670px)">
+        {%- endcapture -%}
+        <picture class="c-page-header__bg js-lazy" data-iesrc="{{ article_image_xxxl | url }}" data-alt="{{- article_alt -}}">
+            {{- image_source -}}
+        </picture>
+        <noscript>
+            <picture class="c-page-header__bg">
+                {{- image_source -}}
+                <img src="{{ article_image_xl | url }}" alt="{{- article_alt -}}"/>
+            </picture>
+        </noscript>
+        <div class="c-page-header__content h-100">
+            <div class="container site-padding h-100">
+                <div class="row h-100 align-items-center justify-content-center">
+                    <div class="col-sm-10 col-md-8 text-center text-white">
+                        <small class="text-14 text-md-14 text-uppercase tracking-widest mb-6 mb-md-16 d-block">{{- blog_title -}}</small>
+                        <h1 class="text-36 text-md-46 font-weight-normal mb-6 mb-md-20">{{- article_title -}}</h1>
+                        <ul class="c-tags-list justify-content-center text-white">
+                            {%- if article_blog_object -%}
+                                <!-- <li>
+                                    <small class="text-14 text-uppercase text-white font-weight-bold">&#124;</small>
+                                </li> -->
+                                <li>
+                                    <a href="{{ article_blog_object.url }}" title="{{ article_blog_object.title | escape }}">
+                                        {{ article_blog_object.title | escape }}
+                                    </a>
+                                </li>
+                            {%- endif -%}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="c-page-header__overlay" aria-hidden="true" role="presentation"></div>
+    </header>
+
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-xxxl-6 mb-4 mb-md-0">
+                <div class="my-10 my-md-14">{%- render 'breadcrumb' -%}</div>
+                {%- if article.content != blank -%}
+                    <div class="c-rte">
+                        {{- article.content | replace: '0333 222 8584', '<span class="rTapNumber413992">0333 222 8584</span>' -}}
+                    </div>
+                {%- endif -%}
+                <hr class="light my-12"/>
+                <p class="text-20 text-elephant font-weight-normal mb-0">Find out how Opera could help you with your bed needs. </p>
+                <p class="text-20 text-elephant font-weight-normal mb-0">Contact us, or speak to our experts advisors on <a href="tel:03332228584" aria-label="Call 0333 222 8584"><span class="rTapNumber413992">0333 222 8584</span></a></p>
+                <hr class="light my-12"/>
+                <div class="my-10 my-md-14">{%- render 'breadcrumb' -%}</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+{% schema %}
+{
+    "name": {
+        "de": "Artikel",
+        "en": "Article",
+        "es": "Artículo",
+        "fr": "Article",
+        "it": "Articolo",
+        "ja": "記事",
+        "pt-BR": "Artigo"
+    },
+    "settings": [
+    ],
+    "blocks": []
+}
+{% endschema %}

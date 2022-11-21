@@ -1,0 +1,166 @@
+{% comment %}
+    The Customers - Addresses template.
+{% endcomment %}
+
+<section aria-labelledby="page-title">
+    <header>
+        <div class="container site-padding py-5">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h1 class="mb-0" id="page-title">Addresses</h1>
+                    <p class="mb-0">
+                        <a href="/account">My Account</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+    {%- paginate customer.addresses by 2 -%}
+        <div class="container site-padding">
+            <div class="row justify-content-md-between">
+                <div class="col-12 col-md-4 mb-4 mb-md-0">
+                    <button class="c-btn" type="button" data-address-toggle="new">Add New Address</button>
+                    {%- for address in customer.addresses -%}
+                        <div class="my-3">
+                            {%- if address == customer.default_address -%}
+                                <p class="mb-0"><strong>Default Address</strong></p>
+                            {%- endif -%}
+                            <address class="mb-0">
+                                {{- address | format_address | remove: '<p>' | remove: '</p>' -}}
+                            </address>
+                            <button class="c-btn" type="button" data-address-toggle="{{ address.id }}">Edit Address</button>
+                            <button class="c-btn c-btn-outline--light" type="button" data-address-delete="{{ address.id }}" data-confirm-message="">Delete Address</button>
+                        </div>
+                    {%- endfor -%}
+                    {%- if paginate.pages > 1 -%}
+                        {%- include 'pagination' -%}
+                    {%- endif -%}
+                </div>
+                <div class="col-12 col-md-7">
+                    {%- form 'customer_address', customer.new_address, class: 'c-form', aria-label: 'New Address form', data-address-form: 'new' -%}
+                        <div data-address-form-content{% unless form.errors %} hidden{% endunless %}>
+                            <div class="c-form__content">
+                                <h2 class="mb-3">New Address</h2>
+                                {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+                                <div data-address-form-fields>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="first-name-new">First Name</label>
+                                        <input id="first-name-new" class="c-form-input{% if show_errors == true and form.errors contains 'first_name' %} c-form-input--error{% endif %}" name="address[first_name]" type="text" placeholder="First Name" value="{{ form.first_name }}" autocapitalize="words" />
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="last-name-new">Last Name</label>
+                                        <input id="last-name-new" class="c-form-input{% if show_errors == true and form.errors contains 'last_name' %} c-form-input--error{% endif %}" name="address[last_name]" type="text" placeholder="Last Name" value="{{ form.last_name }}" autocapitalize="words" />
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="company-new">Company</label>
+                                        <input id="company-new" class="c-form-input{% if show_errors == true and form.errors contains 'company' %} c-form-input--error{% endif %}" name="address[company]" type="text" placeholder="Company" value="{{ form.company }}" autocapitalize="words" />
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="address1-new">Address 1</label>
+                                        <input id="address1-new" class="c-form-input{% if show_errors == true and form.errors contains 'address1' %} c-form-input--error{% endif %}" name="address[address1]" type="text" placeholder="Address 1" value="{{ form.address1 }}" autocapitalize="words" />
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="address2-new">Address 2</label>
+                                        <input id="address2-new" class="c-form-input{% if show_errors == true and form.errors contains 'address2' %} c-form-input--error{% endif %}" name="address[address2]" type="text" placeholder="Address 2" value="{{ form.address2 }}" autocapitalize="words" />
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="city-new">City</label>
+                                        <input id="city-new" class="c-form-input{% if show_errors == true and form.errors contains 'city' %} c-form-input--error{% endif %}" name="address[city]" type="text" placeholder="City" value="{{ form.city }}" autocapitalize="words" />
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="country-new">Country</label>
+                                        <select id="country-new" class="c-form-input{% if show_errors == true and form.errors contains 'country' %} c-form-input--error{% endif %}" name="address[country]" data-default="{{ form.country }}"></select>
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="province-new">Province</label>
+                                        <select id="province-new" class="c-form-input{% if show_errors == true and form.errors contains 'province' %} c-form-input--error{% endif %}" name="address[province]" data-default="{{ form.province }}"></select>
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="zip-new">Postcode</label>
+                                        <input id="zip-new" class="c-form-input{% if show_errors == true and form.errors contains 'zip' %} c-form-input--error{% endif %}" name="address[zip]" type="text" placeholder="Postcode" value="{{ form.zip }}" autocapitalize="characters" pattern="[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]? [0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}" />
+                                    </div>
+                                    <div class="c-form-field mb-4">
+                                        <label class="c-label" for="phone-number-new">Phone Number</label>
+                                        <input id="phone-number-new" class="c-form-input{% if show_errors == true and form.errors contains 'phone' %} c-form-input--error{% endif %}" name="address[phone]" type="tel" placeholder="Phone Number" value="{{ form.phone }}" />
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="c-label m-0">
+                                        {{ form.set_as_default_checkbox }}
+                                        <span>Set as your default address?</span>
+                                    </label>
+                                </div>
+                                <div>
+                                    <button class="c-btn" type="submit">Save</button>
+                                    <button class="c-btn" type="button" data-address-toggle="new">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    {%- endform -%}
+                    {%- for address in customer.addresses -%}
+                        {%- form 'customer_address', address, class: 'c-form', aria-label: 'Edit Address form', data-address-form: address.id -%}
+                            <div data-address-form-content{% unless form.errors %} hidden{% endunless %}>
+                                <div class="c-form__content">
+                                    <h2 class="mb-3">Edit Address</h2>
+                                    {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+                                    <div data-address-form-fields>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="first-name-{{ form.id }}">First Name</label>
+                                            <input id="first-name-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'first_name' %} c-form-input--error{% endif %}" name="address[first_name]" type="text" placeholder="First Name" value="{{ form.first_name }}" autocapitalize="words" />
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="last-name-{{ form.id }}">Last Name</label>
+                                            <input id="last-name-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'last_name' %} c-form-input--error{% endif %}" name="address[last_name]" type="text" placeholder="Last Name" value="{{ form.last_name }}" autocapitalize="words" />
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="company-{{ form.id }}">Company</label>
+                                            <input id="company-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'company' %} c-form-input--error{% endif %}" name="address[company]" type="text" placeholder="Company" value="{{ form.company }}" autocapitalize="words" />
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="address1-{{ form.id }}">Address 1</label>
+                                            <input id="address1-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'address1' %} c-form-input--error{% endif %}" name="address[address1]" type="text" placeholder="Address 1" value="{{ form.address1 }}" autocapitalize="words" />
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="address2-{{ form.id }}">Address 2</label>
+                                            <input id="address2-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'address2' %} c-form-input--error{% endif %}" name="address[address2]" type="text" placeholder="Address 2" value="{{ form.address2 }}" autocapitalize="words" />
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="city-{{ form.id }}">City</label>
+                                            <input id="city-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'city' %} c-form-input--error{% endif %}" name="address[city]" type="text" placeholder="City" value="{{ form.city }}" autocapitalize="words" />
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="country-{{ form.id }}">Country</label>
+                                            <select id="country-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'country' %} c-form-input--error{% endif %}" name="address[country]" data-default="{{ form.country }}"></select>
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="province-{{ form.id }}">Province</label>
+                                            <select id="province-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'province' %} c-form-input--error{% endif %}" name="address[province]" data-default="{{ form.province }}"></select>
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="zip-{{ form.id }}">Postcode</label>
+                                            <input id="zip-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'zip' %} c-form-input--error{% endif %}" name="address[zip]" type="text" placeholder="Postcode" value="{{ form.zip }}" autocapitalize="characters" pattern="[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]? [0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}" />
+                                        </div>
+                                        <div class="c-form-field mb-4">
+                                            <label class="c-label" for="phone-number-{{ form.id }}">Phone Number</label>
+                                            <input id="phone-number-{{ form.id }}" class="c-form-input{% if show_errors == true and form.errors contains 'phone' %} c-form-input--error{% endif %}" name="address[phone]" type="tel" placeholder="Phone Number" value="{{ form.phone }}" />
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="c-label m-0">
+                                            {{ form.set_as_default_checkbox }}
+                                            <span>Set as your default address?</span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <button class="c-btn c-btn--blue" type="submit">Save</button>
+                                        <button class="c-btn" type="button" data-address-toggle="{{ address.id }}">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        {%- endform -%}
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    {%- endpaginate -%}
+</section>

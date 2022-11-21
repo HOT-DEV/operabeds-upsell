@@ -1,0 +1,159 @@
+{% comment %}
+    The Featured Products section template.
+{% endcomment %}
+
+{%- liquid
+    assign featured_collection = collections[section.settings.collection] | default: collections['all']
+    assign more_url = section.settings.more_url
+    assign more_text = section.settings.more_text
+-%}
+
+<section class="s-featured-products my-16 my-lg-20" data-section-type="featured-products" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row align-items-md-center">
+            <div class="col-12 col-md-auto">
+                <h2 class="m-0 u-heading-md text-center text-lg-left text-elephant">
+                    {{- section.settings.title | escape -}}
+                </h2>
+            </div>
+            <div class="d-none col-md-auto ml-md-auto d-md-flex flex-md-row flex-md-nowrap align-items-md-center">
+                <a class="c-text-btn text-14" href="{{ more_url | url_escape }}" aria-label="{{ more_text | escape }}" title="{{ more_text | escape }}">
+                    {{- more_text | escape -}}
+                </a>
+                {%- if featured_collection.products.size > 0 -%}
+                    <div class="d-none d-md-flex flex-md-row flex-md-nowrap align-items-md-center ml-8">
+                        <button class="s-featured-products__btn swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-prev>
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-left"></use>
+                            </svg>
+                        </button>
+                        <button class="s-featured-products__btn swiper-button-next ml-2" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-next>
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-right"></use>
+                            </svg>
+                        </button>
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+    {%- if featured_collection.products.size > 0 -%}
+        <div class="s-featured-products__slider mt-7 mt-md-12">
+            <div class="container site-padding">
+                <div class="swiper-container pr-4 pr-sm-0" data-featured-products-slider>
+                    <div class="swiper-wrapper">
+                        {%- for product in featured_collection.products limit: section.settings.product_limit -%}
+                            <div class="swiper-slide" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                                {%-
+                                    render 'product-item',
+                                    class: 'w-100 h-100',
+                                    product: product
+                                -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row flex-nowrap align-items-center mt-8 d-md-none">
+                    <div class="col-auto">
+                        <button class="s-featured-products__prev swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}" data-featured-products-slider-prev>
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-left"></use>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <div class="s-featured-products__pagination swiper-pagination" data-featured-products-slider-pagination></div>
+                    </div>
+                    <div class="col-auto">
+                        <button class="s-featured-products__next swiper-button-next" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-featured-products-slider-next>
+                            <svg aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-chevron-right"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+    {%- if more_url -%}
+        <div class="container">
+            <div class="row justify-content-center mt-11 d-md-none">
+                <div class="col-12 text-center">
+                    <a class="c-btn c-btn--dark c-btn--2" href="{{ more_url | url_escape }}" aria-label="{{ more_text | escape }}" title="{{ more_text | escape }}">
+                        {{- more_text | escape -}}
+                    </a>
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+
+    <div class="mt-8">
+        {%- render 'typical-finance-example',
+            finance_amount: settings.typical_finance_amount,
+            finance_term: settings.typical_finance_term,
+            finance_apr: settings.typical_finance_apr,
+            finance_deposit: settings.typical_finance_deposit,
+            align: "center"
+        -%}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Featured Products",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Popular Products"
+        },
+        {
+            "type": "collection",
+            "id": "collection",
+            "label": "Selected collection",
+            "info": "You can manually adjust the order in the collection by changing the sort order to 'Manually' [Collections](/admin/collections)"
+        },
+        {
+            "type": "header",
+            "content": "View More Link"
+        },
+        {
+            "type": "text",
+            "id": "more_text",
+            "label": "Link text",
+            "default": "View all products"
+        },
+        {
+            "type": "url",
+            "id": "more_url",
+            "label": "Link url",
+            "info": "Leave url blank if you don't want to show the link"
+        },
+        {
+            "type": "header",
+            "content": "Section Settings"
+        },
+        {
+            "type": "range",
+            "id": "product_limit",
+            "min": 4,
+            "max": 12,
+            "step": 1,
+            "label": "Product limit",
+            "default": 4
+        }
+    ],
+    "blocks": [],
+    "presets": [
+        {
+            "name": "Featured Products",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": []
+        }
+    ]
+}
+{% endschema %}

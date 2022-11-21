@@ -1,0 +1,17 @@
+{% comment %}
+    Trustpoint snippet.
+{% endcomment %}
+
+<div class="c-trustpoint">
+    {%- assign icon_size = icon_size | default: 'md' -%}
+    {%- if icon != blank -%}
+        <svg class="c-trustpoint__icon c-trustpoint__icon--{{ icon_size | handleize }}" aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-{{ icon | handleize }}"></use>
+        </svg>
+    {%- endif -%}
+    {%- if text != blank -%}
+        <span class="c-trustpoint__text">
+            {{- text | escape | strip_html -}}
+        </span>
+    {%- endif -%}
+</div>

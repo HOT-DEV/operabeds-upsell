@@ -1,0 +1,45 @@
+{{ 'flyout-cart.css' | asset_url | stylesheet_tag }}
+
+<div class="container position-relative" style="max-width: 1650px;">
+  <div id="flyout-cart">
+    <span class="position-absolute" style="right: .5rem; top: 0rem; font-size: 1.5rem; cursor:pointer;"
+      id="close-x-flyout">&times;</span>
+
+    <div class="row justify-content-between font-weight-medium no-gutters">
+
+      <div class="col-6 text-left"><span style="font-weight: bold!important;">{{ cart.item_count }}</span>
+        {{ cart.item_count | pluralize: 'item', 'items' }} in Basket</div>
+      <div class="col-6 text-right">Basket Subtotal
+        <p class="text-tropical text-24 font-weight-bold mb-0">{{ cart.total_price | money_without_trailing_zeros }}</p>
+        <p class="text-14 mt-0">{{ cart.total_price | times: 1.2 | money_without_trailing_zeros }} inc. VAT</p>
+      </div>
+    </div>
+
+    <a class="c-btn2 t-cart-checkout py-5 mb-4 text-16" href="/cart">
+      View Basket
+    </a>
+
+    <div class="flyout-cart-basket">
+      <form id="cart_checkout" action="/cart" method="post" data-cart-form>
+        {%- for item in cart.items -%}
+        {%- render 'cart-item-flyout-cart',
+            item: item
+            _index: forloop.index,
+            _index0: forloop.index0,
+            _last: forloop.last,
+        -%}
+        {%- endfor -%}
+      </form>
+    </div>
+
+    <div class="flyout-cart-view-basket d-flex align-items-center justify-content-center pt-8"
+      style="border-top:1px solid rgba(37, 61, 82, 0.15);">
+      <p class="text-uppercase tracking-wider text-16 mb-0 text-elephant"
+        style="cursor: pointer; text-decoration: underline; text-underline-offset: 2px; font-weight: bold!important;"
+        id="close-flyout">Continue Shopping</p>
+    </div>
+
+  </div>
+</div>
+
+{{ 'flyout-cart.js' | asset_url | script_tag }}

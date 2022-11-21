@@ -1,0 +1,97 @@
+{% comment %}
+    The Product Cross Sell Card snippet.
+{% endcomment %}
+
+{%- liquid
+
+    assign product_image = product.featured_image
+    if product_image != blank
+        assign product_image_alt = product_image.alt | escape
+    else
+        assign product_image_alt = ''
+    endif
+
+    assign product_ribbon = blank
+    if product.type.size > 0
+        assign product_ribbon = product.type
+    else
+        for tag in product.tags
+            if tag contains 'Ribbon_'
+                assign product_ribbon = tag | split: '_' | last
+                break
+            endif
+        endfor
+    endif
+
+    assign product_title = product.title 
+
+    assign product_description = blank
+    assign product_description_more = false
+    if product.metafields.global.excerpt != blank
+        assign product_description = product.metafields.global.excerpt
+    else
+        assign description_parts = product.description | split: '</p>'
+        if description_parts.size > 0
+            assign product_description = description_parts | first | strip_html | strip
+            if truncate_description_chars != blank and truncate_description_chars > 0
+                assign product_description = product_description | truncatewords: truncate_description_chars
+                assign product_description_more = true
+            endif
+        endif
+    endif
+-%}
+
+{%- if bold_trade_customer_logged_in -%}
+    <script type="application/json" class="bold-product-json">
+        {{ product | json }}
+    </script>
+{%- endif -%}
+
+<div class="c-cross-sell-card" data-product-cross-sell-card>
+    <div class="c-cross-sell-card__image mb-4">
+        {%- if product_image != blank -%}
+            <img class="js-lazy"
+                src="{{- product_image | img_url: '100x60', crop: 'center' -}}"
+                data-src="{{- product_image | img_url: '480x288', crop: 'center' -}}"
+                data-srcset="{{- product_image | img_url: '720x432', crop: 'center' -}} 767w, {{- product_image | img_url: '480x288', crop: 'center' -}} 768w"
+                alt="{{- product_image_alt -}}" />
+            <noscript>
+                <img src="{{- product_image | img_url: '480x288', crop: 'center' -}}"
+                    srcset="{{- product_image | img_url: '720x432', crop: 'center' -}} 767w, {{- product_image | img_url: '480x288', crop: 'center' -}} 768w"
+                    alt="{{- product_image_alt -}}" />
+            </noscript>
+        {%- else -%}
+            <div class="c-placeholder-svg">
+                {{- 'image' | placeholder_svg_tag -}}
+            </div>
+        {%- endif -%}
+    </div>
+    <div class="c-cross-sell-card__content">
+        {%- if product_ribbon != blank -%}
+            <div class="c-cross-sell-card__ribbon">{{- product_ribbon -}}</div>
+        {%- endif -%}
+        {%- if product_title != blank -%}
+            <h6 class="c-cross-sell-card__title mb-4 mb-md-6">{{- product_title -}}</h6>
+        {%- endif -%}
+        {%- if product_description != blank -%}
+            <div class="c-cross-sell-card__description mb-4 mb-md-6">{{- product_description -}}</div>
+        {%- endif -%}
+        {%- if product.has_only_default_variant -%}
+            <input type="hidden" name="id" value="{{ product.variants.first.id }}" data-product-cross-sell-card-id />
+        {%- else -%}
+            <select class="s-product__option__select c-form-input mb-1 mb-md-3" id="productOptions" name="id" data-product-cross-sell-card-variants data-product-cross-sell-card-id>
+                {%- for variant in product.variants -%}
+                    <option value="{{ variant.id }}"{% if variant == current_variant %} selected{% endif %}{% unless variant.available %} disabled{% endunless %} data-product-cross-sell-card-variant-price="{{variant.price | money}}">
+                        {{ variant.title }} - {{ variant.price | money }}
+                    </option>
+                {%- endfor -%}
+            </select>
+        {%- endif -%}
+    </div>
+    {%- if show_select_btn == true -%}
+        <button class="c-cross-sell-card__select-btn mt-auto" type="button" data-product-cross-sell-card-select data-product-cross-sell-card-id="{{- product.selected_or_first_available_variant.id -}}" data-product-cross-sell-card-title="{{- product_title -}}" data-product-cross-sell-card-selected-price="{{- product.price_min | money -}}">
+            + <span class="money" data-product-id="{{- product.id -}}" data-product-cross-sell-card-price>{{ product.price_min | money }}</span>
+            | <span>{{ 'products.product.add_to_cart' | t }}</span>
+        </button>
+    {%- endif -%}
+</div>

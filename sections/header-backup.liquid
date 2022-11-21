@@ -1,0 +1,646 @@
+{% comment %}
+    The Header section template.
+{% endcomment %}
+{%- liquid
+    assign account_login = section.settings.account_login | default: routes.account_url
+    assign primary_menu = section.settings.primary_menu
+    assign secondary_menu = section.settings.secondary_menu
+    assign button_link = section.settings.button_link
+    assign button_text = section.settings.button_text
+    assign comms_text = section.settings.comms_text
+
+    assign tel_link = button_link | remove: ' '
+    assign tel_text = button_link | remove: 'tel:'
+    assign tel_prefix = button_text | escape
+    assign tel_label =  tel_prefix | append: ' ' | append: tel_text
+
+-%}
+
+{%- capture action_links -%}
+    <li role="presentation">
+        <button aria-label="{{ 'Search' | escape }}" title="{{ 'Search' | escape }}" aria-controls="header-search-dropdown" aria-expanded="false" role="button" data-search-toggle>
+            <svg focusable="false" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-search"></use>
+            </svg>
+        </button>
+    </li>
+    <li>
+        <a href="{{ account_login | url_escape }}" aria-label="{{ 'Account' | escape }}" title="{{ 'Account' | escape }}">
+            <svg focusable="false" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-user"></use>
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a href="{{ routes.cart_url | url_escape }}" class="cart" aria-label="{{ 'Cart' | escape }}" title="{{ 'Cart' | escape }}">
+            {%- if cart.item_count > 0 -%}
+                <span class="cart">{{- cart.item_count -}}</span>
+            {%- endif -%}
+            <svg focusable="false" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-shopping-bag"></use>
+            </svg>
+        </a>
+    </li>
+{%- endcapture -%}
+
+{%- capture action_links_mob -%}
+    <li role="presentation">
+        <button aria-label="{{ 'Search' | escape }}" title="{{ 'Search' | escape }}" aria-controls="header-search-dropdown" aria-expanded="false" role="button" data-search-toggle>
+            <svg focusable="false" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-search"></use>
+            </svg>
+        </button>
+    </li>
+    <li>
+        <a href="tel:03332228584" class="phone" aria-label="{{ 'Phone' | escape }}" title="{{ 'Phone' | escape }}">
+            <svg focusable="false" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-call" id="icon-mob-call"></use>
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a href="{{ routes.cart_url | url_escape }}" class="cart" aria-label="{{ 'Cart' | escape }}" title="{{ 'Cart' | escape }}">
+            {%- if cart.item_count > 0 -%}
+                <span class="cart">{{- cart.item_count -}}</span>
+            {%- endif -%}
+            <svg focusable="false" aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-shopping-bag"></use>
+            </svg>
+        </a>
+    </li>
+{%- endcapture -%}
+
+{%- capture logo -%}
+    <img src="{{ 'opera-beds-logo.svg' | asset_url }}" alt="{{ shop.name | escape }}">
+{%- endcapture -%}
+
+
+<div data-section-type="header" data-section-id="{{ section.id }}">
+    {%- if button_text.size > 0 and button_link.size > 0 -%}
+        <div class="sticky-cta">
+            <a href="{{- tel_link -}}" aria-label="{{- tel_label -}}">
+                {{- tel_prefix }} <span class="rTapNumber413992">{{- tel_text -}}</span>
+            </a>
+        </div>
+    {%- endif -%}
+    <div class="utils-menu">
+      <div class="container site-padding">
+                                        {%- if section.settings.festive_show != false -%}
+          
+      			<div class="festive-msg d-none d-xl-inline position-absolute" style="padding-right: 15rem;">
+                  <span class="text-14"><span class="font-weight-semibold">{{- section.settings.festive_title -}}</span> {{ section.settings.festive_msg }}</span>
+                  </div>
+        								{%- else -%}
+          								{%- endif -%}
+            <div class="wrapper">
+                                        {%- if section.settings.festive_show != false -%}
+          
+      			<div class="festive-msg mb-0 d-xl-none px-4">
+                  <span class="text-14 text-center">{{ section.settings.festive_msg_mob }}</span>
+                  </div>
+                        								{%- else -%}              
+
+                <p class="mb-0 d-xl-none">
+                    <a href="{{- tel_link -}}" class="text-uppercase font-weight-bold tracking-wider text-16" aria-label="{{- tel_label -}}">
+                        {{- tel_prefix }} <span class="rTapNumber413992">{{- tel_text -}}</span>
+                    </a>
+                </p> 
+                        								{%- endif -%}              
+
+                <ul class="secondary-menu d-none d-xl-flex" role="menu">
+                    {%- for link in linklists[secondary_menu].links -%}
+                        <li role="presentation">
+                            <a href="{{ link.url }}" title="{{ link.title | escape }}" role="menuitem">
+                                {{- link.title | escape -}}
+                            </a>
+                        </li>
+                    {%- endfor -%}
+                </ul>
+                <ul class="action-menu d-none d-xl-flex" role="menu">
+                    {{- action_links -}}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="main-menu">
+        <div class="container site-padding">
+            <div class="wrapper">
+                <div class="logo">
+                    {%- if template.name == 'index' -%}
+                        {{- logo -}}
+                    {%- else -%}
+                        <a href="{{ routes.root_url | url_escape }}" rel="home">
+                            {{- logo -}}
+                        </a>
+                    {%- endif -%}
+                </div>
+                <ul class="action-menu d-xl-none" role="menu">
+                    {{- action_links_mob -}}
+                    <li>
+                        <button class="c-menu-btn" title="{{ 'Toggle Navigation' | escape }}" type="button" data-nav-open>
+                            <svg focusable="false" aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-bars"></use>
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+                <div class="navigation" data-nav>
+                    <div class="header d-xl-none">
+                        <span class="heading">{{- 'Menu' | escape -}}</span>
+                        <button class="menu-close" type="button" aria-label="Close" data-nav-close>
+                            <svg focusable="false" aria-hidden="true" role="presentation">
+                                <use xlink:href="#sprite-close"></use>
+                            </svg>
+                        </button>
+                        <div class="menu-back" data-nav-back>
+                            <button type="button" aria-label="Back">
+                                <svg focusable="false" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-left"></use>
+                                </svg>
+                                {{- 'Back' | escape -}}
+                            </button>
+                        </div>
+                        <ul class="action-menu" role="menu">
+                            <li role="presentation">
+                                <a href="{{ routes.search_url | url_escape }}" aria-label="{{ 'Search' | escape }}"  title="{{ 'Search' | escape }}">
+                                    <svg focusable="false" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-search"></use>
+                                    </svg>
+                                </a>
+                            </li>
+                            <li role="presentation" id="call-nav">
+                                <a href="tel:03332228584" aria-label="{{ 'Phone' | escape }}"  title="{{ 'Phone' | escape }}">
+                                    <svg focusable="false" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-call"></use>
+                                    </svg>
+                                </a>
+                            </li>                          
+<!--                             <li>
+                                <a href="{{ account_login | url_escape }}" aria-label="{{ 'Account' | escape }}" title="{{ 'Account' | escape }}">
+                                    <svg focusable="false" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-user"></use>
+                                    </svg>
+                                </a>
+                            </li> -->
+                            <li>
+                                <a href="{{ routes.cart_url | url_escape }}" class="cart" aria-label="{{ 'Cart' | escape }}" title="{{ 'Cart' | escape }}">
+                                    {%- if cart.item_count > 0 -%}
+                                        <span class="cart">{{- cart.item_count -}}</span>
+                                    {%- endif -%}
+                                    <svg focusable="false" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-shopping-bag"></use>
+                                    </svg>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="menu-wrapper">
+                        <nav class="primary-menu" role="navigation">
+                            <ul class="tier-1" aria-label="{{ 'sections.header.nav_aria_label' | t -}}" role="menu" data-nav-list>
+                                {%- for link in linklists[primary_menu].links -%}
+                                    {% liquid
+                                        assign link_blocks = section.blocks | map: 'settings' | where: 'title', link.handle
+                                    %}
+                                    <li class="" role="presentation" data-nav-list-item>
+                                        <a href="{{ link.url }}" title="{{ link.title | escape }}" role="menuitem" data-nav-link>
+                                            {{- link.title | escape -}}
+                                            <svg class="d-xl-none" focusable="false" aria-hidden="true" role="presentation">
+                                                <use xlink:href="#sprite-caret-right"></use>
+                                            </svg>
+                                        </a>
+                                        {%- if link.links != blank -%}
+                                            <div class="dropdown" data-nav-dropdown style="border-bottom: 1px solid #0a2438; box-shadow: 0 3px 10px rgb(0 0 0 / 0.75);">
+                                                <div class="dropdown-wrapper site-padding">
+                                                    <div class="content-header">
+                                                        <h2>{{- link.title -}}</h2>
+                                                        {%- if link_blocks.size > 0 -%}
+                                                            {%- for link_block in link_blocks limit: 1 -%}
+                                                                {{- link_block.text -}}
+                                                            {%- endfor -%}
+                                                        {%- endif -%}
+                                                    </div>
+                                                    <hr/>
+                                                    <ul class="tier-2">
+                                                        {%- for childlink in link.links -%}
+                                                            {% liquid
+                                                                assign image = childlink.object.products.first | img_url: '400x'
+                                                                assign description = childlink.object.metafields.accentuate.short_description
+                                                                assign childlink_title = childlink.title
+
+                                                                assign found_block = section.blocks | map: 'settings' | where: 'title', childlink.object.handle | first
+
+                                                                if found_block
+                                                                    if found_block.heading.size > 0
+                                                                        assign childlink_title = found_block.heading
+                                                                    endif
+                                                                    if found_block.image.size > 0
+                                                                        assign image = found_block.image | img_url: '400x'
+                                                                    endif
+                                                                    if found_block.text.size > 0
+                                                                        assign description = found_block.text
+                                                                    endif
+                                                                endif
+                                                            %}
+                                                            <li role="presentation">
+                                                                {%- if image != blank -%}
+                                                                    <img src="{{- image -}}" height="300" width="200" alt="{{- childlink_title -}}" loading="lazy" />
+                                                                {%- endif -%}
+                                                                <div class="content">
+                                                                    <a href="{{ childlink.url }}" title="{{ childlink_title }}" role="menuitem" class="stretched-link">
+                                                                        {{- childlink_title -}}
+                                                                        <svg focusable="false" aria-hidden="true" role="presentation">
+                                                                            <use xlink:href="#sprite-caret-right"></use>
+                                                                        </svg>
+                                                                    </a>
+                                                                    <p>{{- description -}}</p>
+                                                                </div>
+                                                                <hr/>
+                                                            </li>
+                                                        {%- endfor -%}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        {%- endif -%}
+                                        {%- if link.title == 'Discover Opera' -%}
+                                            {%- liquid
+                                                for block in section.blocks
+                                                    if block.type contains 'explore'
+
+                                                        if explore_blocks == null
+                                                            assign explore_blocks = block | sort
+                                                        else
+                                                            assign explore_object = block | sort
+                                                            assign explore_blocks = explore_blocks | concat: explore_object
+                                                        endif
+                                                        assign name_object = block.settings.name | uniq
+                                                        assign explore_names = explore_names | concat: name_object
+
+                                                    endif
+                                                endfor
+                                                assign explore_names = explore_names | uniq
+
+                                                assign found_icon_block = null
+                                                assign icon_blocks = section.blocks | where: 'type', 'mega_menu_icons'
+                                                for icon_block in icon_blocks
+                                                    assign link_title_handleized = link.title | handleize
+                                                    if icon_block.settings.title == link_title_handleized
+                                                        assign found_icon_block = icon_block.settings
+                                                    endif
+                                                endfor
+                                            -%}
+
+                                            {%- if explore_names.size > 0 -%}
+                                                <div class="dropdown" data-nav-dropdown style="border-bottom: 1px solid #0a2438; box-shadow: 0 3px 10px rgb(0 0 0 / 0.75);">
+                                                    <div class="dropdown-tabs-wrapper site-padding pt-0">
+                                                        <div class="tabs-container" data-nav-tabs>
+                                                            <ul>
+                                                                {%- for tab_name in explore_names -%}
+                                                                    <li>
+                                                                        <button id="panel-{{ tab_name | handleize }}" type="button"  aria-controls="panel-{{ tab_name | handleize }}" data-nav-tab-button>
+                                                                            {{ tab_name }}
+                                                                        </button>
+                                                                    </li>
+                                                                {%- endfor -%}
+                                                            </ul>
+                                                            {%- for tab_name in explore_names -%}
+                                                                <div id="panel-{{ tab_name | handleize }}" data-tab-content-name="panel-{{ tab_name | handleize }}" aria-labelledby="panel-{{ tab_name | handleize }}" class="panel" role="tabpanel" tabindex="{{ forloop.index }}" data-nav-tab-panel>
+                                                                    <div class="heading">
+                                                                        <h2 class="text-24">{{ tab_name }}</h2>
+                                                                        <button type="button"aria-label="Close" data-nav-tab-close>
+                                                                            <svg focusable="false" aria-hidden="true" role="presentation">
+                                                                                <use xlink:href="#sprite-close"></use>
+                                                                            </svg>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="grid">
+                                                                        {% comment %}
+                                                                            Blocks here
+                                                                        {% endcomment %}
+                                                                        {%- assign index = 0 -%}
+                                                                        {%- for mega_menu in explore_blocks -%}
+                                                                            {%- if mega_menu.settings.name == tab_name %}
+                                                                                {%- assign index = index | plus: 1 -%}
+                                                                                {%- render 'navigation-item-presenter',
+                                                                                    _index:     index,
+                                                                                    _mega_menu: mega_menu.settings,
+                                                                                -%}
+                                                                            {%- endif -%}
+                                                                        {%- endfor -%}
+                                                                    </div>
+                                                                </div>
+                                                            {%- endfor -%}
+                                                        </div>
+                                                        {%- render 'navigation-item-icons'
+                                                            block_settings: found_icon_block
+                                                        -%}
+                                                    </div>
+                                                </div>
+                                            {%- endif -%}
+                                        {%- endif -%}
+                                    </li>
+                                {%- endfor -%}
+                            </ul>
+                        </nav>
+                        <nav class="secondary-menu d-xl-none" role="navigation">
+                            <ul aria-label="{{ 'sections.header.nav_aria_label' | t -}}" role="menu" data-nav-list>
+                                {%- for link in linklists[secondary_menu].links -%}
+                                    <li class="" role="presentation">
+                                        <a href="{{ link.url }}" title="{{ link.title | escape }}" role="menuitem" data-nav-link>
+                                            {{- link.title | escape -}}
+                                        </a>
+                                    </li>
+                                {%- endfor -%}
+                            </ul>
+                        </nav>
+                    </div>                         
+                  
+              {% if collection.handle == 'profiling-care-beds' or collection.handle == 'hospital-beds' or collection.handle == 'rotating-chair-beds' or collection.handle == 'pressure-care-mattresses' or collection.handle == 'care-bed-accessories' %} 
+                  
+                  <div class="supplier-to-nhs">
+                    <img src="{{ 'nhs-supplier.svg' | asset_url }}" alt="Supplier to NHS">
+                  </div>
+     
+                    {%- if button_text.size > 0 and button_link.size > 0 -%}
+               
+                        <div class="tel-number" style="margin-left:20px!important;">
+
+                            <a href="{{- tel_link -}}" aria-label="{{- tel_label -}}">
+                                {{- tel_prefix }} <span class="rTapNumber413992">{{ tel_text -}}</span>
+                            </a>
+                        </div>                  
+              
+                    {%- endif -%}                  
+                  
+              {% else %}
+                  
+                    {%- if button_text.size > 0 and button_link.size > 0 -%}
+               
+                        <div class="tel-number">
+
+                            <a href="{{- tel_link -}}" aria-label="{{- tel_label -}}">
+                                {{- tel_prefix }} <span class="rTapNumber413992">{{ tel_text -}}</span>
+                            </a>
+                        </div>                  
+              
+                    {%- endif -%}
+              {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="search" data-search-form>
+        {%- render 'search-form' -%}
+    </div>
+</div>
+
+<style>
+  .utils-menu {
+	{%- if section.settings.festive_snow_show != false -%}background: url("{{- 'snow.gif' | asset_url -}}");{%-endif-%}    
+    text-shadow: 1px 1px {{- section.settings.festive_shadow -}};
+      }
+ .action-menu svg {stroke: #FFFFFF;}
+  #call-nav svg {stroke: #0a2438;}
+  
+</style>  
+
+{% schema %}
+{
+    "name": "Header",
+    "settings": [
+        {
+            "type": "link_list",
+            "id": "primary_menu",
+            "label": "Primary Menu"
+        },
+        {
+            "type": "link_list",
+            "id": "secondary_menu",
+            "label": "Secondary Menu"
+        },
+        {
+            "type": "url",
+            "id": "account_login",
+            "label": "Account Login (Override)"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Tel Number",
+            "info": "This will also be used in the comms message on mobile"
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Nav Button Text",
+            "default": "Discover Your Bed"
+        },
+        {
+            "type": "text",
+            "id": "comms_text",
+            "label": "Mobile comms text",
+            "default": "Call for Advice or Sales: "
+        },
+                {
+                    "type": "header",
+                    "content": "Announcement Message"
+                },
+
+        {
+            "type": "checkbox",
+            "id": "festive_show",
+            "label": "Show announcement message?",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "festive_snow_show",
+            "label": "Show falling snow background?",
+            "default": false
+        },  
+		{
+            "type": "text",
+            "id": "festive_title",
+            "label": "Title Bold - Desktop",
+            "default": "Festive Period:"
+        },
+        {
+            "type": "text",
+            "id": "festive_msg",
+            "label": "Message - Desktop",
+            "default": "Order now for delivery before Christmas"
+        },
+        {
+            "type": "text",
+            "id": "festive_msg_mob",
+            "label": "Message - Mobile",
+            "default": "Order Now for Pre-Christmas Delivery"
+        },
+		{
+            "type": "color",
+            "id": "festive_shadow",
+            "label": "Colour text shadow",
+			"default": "transparent"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "menu_item_override",
+            "name": "Menu: Item Override",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Navigation handle to bind on e.g. 'adjustable-beds'"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Recommended image size is 660px x 420px. As the devices get smaller on desktop the image will be cropped left and right and will become a portrait image – concentrate the image in the center. As the browser hits tablet the image will become landscape to fill the available space. "
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading (Override)"
+                },
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "Text (Override)"
+                }
+            ]
+        },
+        {
+            "type": "mega_explore_one_high",
+            "name": "Explore: One High",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Section Name"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "Group Name"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Recommended image size is 440px x 360px. As the devices get smaller on desktop the image will be cropped left and right and will become a portrait image – concentrate the image in the center. As the browser hits tablet the image will become landscape to fill the available space."
+                }
+            ]
+        },
+        {
+            "type": "mega_explore_two_high",
+            "name": "Explore: Two High",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Section Name"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "Group Name"
+                },
+                {
+                    "type": "header",
+                    "content": "Panel 1"
+                },
+                {
+                    "type": "url",
+                    "id": "tile_1_link",
+                    "label": "Link"
+                },
+                {
+                    "type": "text",
+                    "id": "tile_1_heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "tile_1_image",
+                    "label": "Image",
+                    "info": "Recommended image size is 440px x 170px. As the devices get smaller on desktop the image will be cropped left and right and will become a portrait image – concentrate the image in the center. As the browser hits tablet the image will become landscape to fill the available space."
+                },
+                {
+                    "type": "header",
+                    "content": "Panel 2"
+                },
+                {
+                    "type": "url",
+                    "id": "tile_2_link",
+                    "label": "Link"
+                },
+                {
+                    "type": "text",
+                    "id": "tile_2_heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "tile_2_image",
+                    "label": "Image",
+                    "info": "Recommended image size is 440px x 170px. As the devices get smaller on desktop the image will be cropped left and right and will become a portrait image – concentrate the image in the center. As the browser hits tablet the image will become landscape to fill the available space."
+                }
+            ]
+        },
+        {
+            "type": "mega_explore_testimonial",
+            "name": "Explore: Testimonial",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Section Name"
+                },
+                {
+                    "type": "text",
+                    "id": "name",
+                    "label": "Group Name"
+                },
+                {
+                    "type": "richtext",
+                    "id": "testimonial",
+                    "label": "Testimonial"
+                },
+                {
+                    "type": "text",
+                    "id": "author",
+                    "label": "Author"
+                }
+            ]
+        },
+        {
+            "type": "summary",
+            "name": "Dropdown Summary",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Position",
+                    "info": "You must specify the exact name from level 1 of the navigation."
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Summary"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

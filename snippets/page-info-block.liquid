@@ -1,0 +1,54 @@
+<section class="bg-elephant text-white">
+    <div class="container site-padding py-18">
+        <div class="row justify-content-center align-items-md-stretch mb-n18 mb-xl-0 mx-md-n8 mx-xxxl-n16">
+            {%- if _settings.panel_1_heading -%}
+                <div class="col-12 col-md-6 col-xl-3 mb-18 mb-xl-0 px-md-8 px-xxxl-16">
+                    {%-
+                        render 'info-block',
+                        class: 'w-100 h-100',
+                        href: _settings.panel_1_url,
+                        icon: _settings.panel_1_icon,
+                        heading: _settings.panel_1_heading,
+                        content: _settings.panel_1_text,
+                    -%}
+                </div>
+            {%- endif -%}
+            {%- if _settings.panel_2_heading -%}
+                <div class="col-12 col-md-6 col-xl-3 mb-18 mb-xl-0 px-md-8 px-xxxl-16">
+                    {%-
+                        render 'info-block',
+                        class: 'w-100 h-100',
+                        href: _settings.panel_2_url,
+                        icon: _settings.panel_2_icon,
+                        heading: _settings.panel_2_heading,
+                        content: _settings.panel_2_text,
+                    -%}
+                </div>
+            {%- endif -%}
+            {%- if _settings.panel_3_heading -%}
+                <div class="col-12 col-md-6 col-xl-3 mb-18 mb-xl-0 px-md-8 px-xxxl-16">
+                    {%-
+                        render 'info-block',
+                        class: 'w-100 h-100',
+                        href: _settings.panel_3_url,
+                        icon: _settings.panel_3_icon,
+                        heading: _settings.panel_3_heading,
+                        content: _settings.panel_3_text,
+                    -%}
+                </div>
+            {%- endif -%}
+            {%- if _settings.panel_4_heading -%}
+                <div class="col-12 col-md-6 col-xl-3 mb-18 mb-xl-0 px-md-8 px-xxxl-16">
+                    {%-
+                        render 'info-block',
+                        class: 'w-100 h-100',
+                        href: _settings.panel_4_url,
+                        icon: _settings.panel_4_icon,
+                        heading: _settings.panel_4_heading,
+                        content: _settings.panel_4_text,
+                    -%}
+                </div>
+            {%- endif -%}
+        </div>
+    </div>
+</section>

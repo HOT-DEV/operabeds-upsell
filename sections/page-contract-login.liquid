@@ -1,0 +1,195 @@
+{% comment %}
+    The contract login section template.
+{% endcomment %}
+<section aria-labelledby="page-title">
+    {%- 
+        render 'page-header',
+        image_mobile:           null,
+        image_tablet:           null,
+        image_desktop:          section.settings.hero_image,
+        image_alt:              null,
+        heading:                page.title,
+        strapline:              null,
+        page_content:           null,
+        _add_header_element:    null,
+        _image_store:           null,
+    -%}
+    <div class="container site-padding pb-5 my-16">
+        <div class="row mb-5 justify-content-md-between">
+            <div class="col-12 col-md-6">
+                <div class="c-rte">
+                    <h2 class="c-heading-md mb-4">{{ section.settings.cp_title }}</h2>
+                    {{ section.settings.cp_text }}
+                </div>
+            </div>
+            <div class="col-12 col-md-5 mt-5 mt-md-0">
+                <div class="c-page-box c-page-box--grey">
+                    {%- if customer -%}
+                        <h3 class="c-heading-md mb-4">Logged in as: {{ customer.name }}</h3>
+                        <a class="c-btn c-btn--blue" href="{{ routes.account_url | url_escape }}" aria-label="{{ 'Search' | escape }}" title="{{ 'Search' | escape }}">
+                            View your account page
+                        </a>
+                    {%- else -%}
+                        <h3 class="c-heading-md mb-4">{{ section.settings.si_title }}</h3>
+                        {%- render 'login-form' 
+                            _show_create_link: section.settings.show_create_link
+                        -%}
+                    {%- endif -%}
+                </div>
+            </div>
+        </div>
+
+        {%- assign content_blocks = section.blocks | where: 'type', 'content' -%}
+        {% for block in content_blocks %}
+            {% if forloop.first == true %}
+                {% assign row_margin = 'mt-16' %}
+            {% else %}
+                {% assign row_margin = 'mt-3' %}
+            {% endif %}
+            {% if block.settings.reverse_flow %}
+                {% assign direction = 'flex-md-row-reverse' %}
+            {% else %}
+                {% assign direction = '' %}
+            {% endif %}
+            <div class="row {{ row_margin }}">
+                <div class="col">
+                    <div class="t-brochure-content">
+                        <div class="row justify-content-md-between align-items-stretch {{ direction }}">
+                            <div class="col-lg-5 d-flex flex-column justify-content-md-center p-4 p-lg-5">
+                                <p class="c-heading-sm">{{ block.settings.category }}</p>
+                                <h2 class="c-heading-md">{{ block.settings.title }}</h2>
+                                {{ block.settings.text }}
+                                {% if block.settings.url != blank %}
+                                    <a href="{{ block.settings.url }}" class="c-btn c-btn--trans-light">{{ block.settings.button_text }}</a>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mt-4 mt-md-0">
+                                <picture class="c-picture c-picture--contain js-lazy" data-iesrc="{{ block.settings.image | img_url: '600x' }}" data-alt="">
+                                    <source media="(min-width:1024px)" srcset="{{ block.settings.image | img_url: '800x' }}" />
+                                    <source media="(max-width:800px)" srcset="{{ block.settings.image | img_url: '600x' }}" />
+                                </picture>
+                                <noscript>
+                                    <picture class="c-picture c-picture--contain">
+                                        <img srcset="{{ block.settings.image | img_url: '800x' }} 2x {{ block.settings.image | img_url: '600x' }} 1x" src="{{ block.settings.image | img_url: '600x' }}" alt=""/>
+                                    </picture>
+                                </noscript>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Contract Pricing",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image"
+        },
+        {
+            "type": "header",
+            "content": "Contract Pricing"
+        },
+        {
+            "type": "text",
+            "id": "cp_title",
+            "label": "Title"
+        },
+        {
+            "type": "richtext",
+            "id": "cp_text",
+            "label": "Text"
+        },
+        {
+            "type": "header",
+            "content": "Sign In"
+        },
+        {
+            "type": "text",
+            "id": "si_title",
+            "label": "Title",
+            "default": "Sign in"
+        },
+        {
+            "type": "header",
+            "content": "Show Create Login"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_create_link",
+            "label": "Show Create Link",
+            "default": false
+        }
+    ],
+    "blocks": [
+        {
+            "type": "benefits",
+            "name": "Benefit",
+            "settings": [
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                }
+            ]
+        },
+        {
+            "type": "content",
+            "name": "Content Block",
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "reverse_flow",
+                    "label": "Text on right - Image on left",
+                    "default": false
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "category",
+                    "label": "Category Title"
+                },
+                {
+                    "type": "textarea",
+                    "id": "title",
+                    "label": "Title"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "Page Link"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Button Text"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Contract Pricing",
+            "category": "General"
+        }
+    ]
+}
+{% endschema %}

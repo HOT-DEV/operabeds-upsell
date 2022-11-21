@@ -1,0 +1,150 @@
+{% comment %}
+    The bed range section template.
+{% endcomment %}
+
+{{ 'bed-range.css' | asset_url | stylesheet_tag }}
+
+<section class="my-8 my-lg-18" data-section-id="{{ section.id }}" id="bed-range">
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+            <h2 class="u-heading-md text-elephant">{{ section.settings.s_title }}</h2>
+        </div>
+        <div class="d-flex flex-column flex-md-row flex-md-wrap flex-xl-nowrap justify-content-between align-items-center text-center mt-20">
+            {%- if section.blocks.size > 0 -%}
+            {%- for block in section.blocks -%}
+
+            <div class="comparison-box-br col-12 col-md-6 col-xl-3 pt-14 pb-8 mb-30 mb-xl-0"
+                {%- if block.settings.green_tones != false -%} style="border-bottom: 5px solid #1C6E5D;!important;"
+                {%- endif -%}>
+                {%- if block.settings.image -%}
+                {%- if block.settings.btn_url -%}<a href="{{ block.settings.btn_url }}" class="link-card">{%- endif -%} 
+                <div class="comparison-box-br__icon w-100"><img src="{{ block.settings.image | img_url: '800x' }}">
+                </div>
+                {%- if block.settings.btn_url -%}</a>{%- endif -%} 
+                {%- endif -%}
+                {%- if block.settings.pre_header -%}
+                <p class="text-14 font-weight-bold leading-tight tracking-widest text-uppercase mt-12 mt-md-8 mb-0"
+                    {%- if block.settings.green_tones != false -%} style="color:#1C6E5D!important;" {%- endif -%}>
+                    {{ block.settings.pre_header }}</p>
+                {%- endif -%}
+                {%- if block.settings.btn_url -%}<a href="{{ block.settings.btn_url }}" class="link-card">{%- endif -%} 
+                {%- if block.settings.title -%}
+                <h2 class="text-24 text-xl-25 font-weight-semibold my-6">{{ block.settings.title }}</h2>
+                {%- endif -%}
+                {%- if block.settings.feature_1 -%}
+                <ul class="bed-range-list">
+                    <li class="mb-2">{{ block.settings.feature_1 }}</li>
+                    {%- if block.settings.feature_2 -%}
+                    <li class="mb-2">{{ block.settings.feature_2 }}</li>
+                    {%- endif -%}
+                    {%- if block.settings.feature_3 -%}
+                    <li class="mb-2">{{ block.settings.feature_3 }}</li>
+                    {%- endif -%}
+                </ul>
+                {%- endif -%}
+                {%- if block.settings.btn_url -%}</a>{%- endif -%} 
+                {%- if block.settings.btn_url -%}
+                <div class="row justify-content-center align-items-center">
+                    <a class="bedrange-btn c-btn-outline my-6"
+                        href="{{ block.settings.btn_url }}">{{ block.settings.btn_label }}</a>
+                </div>
+                {%- endif -%}
+            </div>         
+            {%- endfor -%}
+            {%- endif -%}
+        </div>
+    </div>
+</section>
+
+<style>
+  .link-card:hover {text-decoration: none;}
+</style>
+
+{% schema %}
+{
+    "name": "OB: Bed Range",
+    "max_blocks": 4,
+    "settings": [
+        {
+            "type": "text",
+            "id": "s_title",
+            "label": "Section Title",
+			"default": "The Opera Range"
+        }
+    ],
+    "blocks": [
+    {
+        "type": "Block",
+        "name": "Block",
+        "settings": [           
+			{
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image",
+				"info": "Recommendations: 800 x 420px with transparent background and the object centered in the image (MANDATORY FIELD)"
+            },
+            {
+                "type": "text",
+                "id": "pre_header",
+                "label": "Card pre-header",
+				"default": "Opera & Beds"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Card title",
+				"default": "Card title"
+
+            },
+            {
+                "type": "checkbox",
+                "id": "green_tones",
+				"label": "Should this card have green tones?",
+				"default": false
+            }, 
+            {
+                "type": "text",
+                "id": "feature_1",
+                "label": "Feature 1",
+				"default": "Feature 1"
+
+            },
+            {
+                "type": "text",
+                "id": "feature_2",
+                "label": "Feature 2",
+				"default": "Feature 2"
+            },
+            {
+                "type": "text",
+                "id": "feature_3",
+                "label": "Feature 3",
+				"default": "Feature 3"
+            },
+            {
+                "type": "url",
+                "id": "btn_url",
+                "label": "Button - Url",
+				"info": "Add url to show CTA button with link, remove if you don't want to show a button"
+
+            },
+            {
+                "type": "text",
+                "id": "btn_label",
+                "label": "Button - Label",
+				"default": "Shop all"
+            }
+]
+    }
+],
+    "presets": [
+        {
+            "name": "OB: Bed Range",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": [
+            ]
+        }
+    ]
+}
+{% endschema %}

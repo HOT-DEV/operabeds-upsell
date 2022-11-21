@@ -1,0 +1,103 @@
+{% comment %}
+    The online needs assessments section template.
+{% endcomment %}
+<section aria-labelledby="page-title">
+    {%-
+        render 'page-header',
+        image_mobile:           null,
+        image_tablet:           null,
+        image_desktop:          section.settings.hero_image,
+        image_alt:              null,
+        heading:                page.title,
+        strapline:              null,
+        page_content:           null,
+        _add_header_element:    null,
+        _image_store:           null,
+    -%}
+
+    <div class="container site-padding my-12 mt-lg-14 mb-lg-24">
+        <div class="row justify-content-center justify-content-xl-between">
+            {%- if page.content != blank -%}
+                <div class="c-rte mb-12 mb-lg-14 col-lg-6">
+                    {{- page.content -}}
+                </div>
+            {%- endif -%}
+
+            <div class="col-md-8 col-lg-6 col-xl-5 mt-4 mt-lg-0">
+                <div class="c-page-form pt-lg-6">
+                    {%- form 'contact', class: 'c-form c-form-alt', id: 'brochure-request-form', aria-label: 'Brochure Request form' -%}
+                        <input type="hidden" name="contact[form]" value="Brochure Request Form">
+                        {%- if form.posted_successfully? -%}
+                            <p class="c-alert c-alert--success" role="alert">Your message was sent successfully.</p>
+                        {%- endif -%}
+                        {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+                        <div class="c-form-field mb-6 c-form-field--white-bg">
+                            <label for="name">Name</label>
+                            <input class="c-form-input {% if show_errors == true and form.errors contains 'name' %} c-input--error{% endif %}" id="name" name="contact[name]" placeholder="Enter your full name" type="text"{%- if form.name -%} value="{{ form.name }}"{%- endif -%} required />
+                        </div>
+                        <div class="c-form-field mb-6 c-form-field--white-bg">
+                            <label for="email">E-Mail Address</label>
+                            <input class="c-form-input {% if show_errors == true and form.errors contains 'email' %} c-input--error{% endif %}" id="email" name="contact[email]" placeholder="Enter your email address"  type="email" {%- if form.email -%} value="{{ form.email }}"{%- endif -%} required />
+                        </div>
+                        <div class="c-form-field mb-6 c-form-field--white-bg">
+                            <label for="phone">Phone</label>
+                            <input class="c-form-input {% if show_errors == true and form.errors contains 'phone' %} c-input--error{% endif %}" id="phone" name="contact[phone]" placeholder="Enter your phone number"  type="number" {%- if form.phone -%} value="{{ form.phone }}"{%- endif -%}  />
+                        </div>
+                        <div class="c-form-field textarea mb-6 c-form-field--white-bg">
+                            <label for="Message">Address</label>
+                            <textarea class="c-form-input {% if show_errors == true and form.errors contains 'message' %} c-input--error{% endif %}" id="message" name="contact[body]" placeholder="Address" required>
+                                {%- if form.body -%}
+                                    {{- form.body -}}
+                                {%- endif -%}
+                            </textarea>
+                        </div>
+                        <div class="c-form-field mb-6 c-form-field--white-bg">
+                            <label for="notes">Notes</label>
+                            <input class="c-form-input {% if show_errors == true and form.errors contains 'name' %} c-input--error{% endif %}" id="notes" name="contact[notes]" placeholder="Enter notes" type="text"{%- if form.name -%} value="{{ form.name }}"{%- endif -%} />
+                        </div>
+                        <!---<div class="c-form-field mb-6 c-form-field--white-bg">
+                            <label for="subject">Enquiry</label>
+                            <select id="subject" name="contact[subject]" class="c-form-input" required>
+                                {% liquid
+                                    assign brochure_options = section.settings.brochure_options | split: '</p>'
+                                %}
+                                <option>{{- 'Select your brochure' | escape -}}</option>
+                                {%- for option in brochure_options -%}
+                                    <option>{{- option -}}</option>
+                                {%- endfor -%}
+                            </select>
+                        </div>--->
+                        <div class="d-flex justify-content-sm-end">
+                            <button type="submit" class="c-form-contact-submit c-btn c-btn--blue">
+                                Send
+                            </button>
+                        </div>
+                    {%- endform -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Brochure Request",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image"
+        },
+        {
+            "type": "richtext",
+            "id": "brochure_options",
+            "label": "Brochure enquiry options",
+            "info": "Add each option on a new line"
+        }
+    ]
+}
+{% endschema %}

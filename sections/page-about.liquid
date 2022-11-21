@@ -1,0 +1,594 @@
+{% comment %}
+    The Why Opera page section template.
+{% endcomment %}
+{%- liquid
+    assign jump_to_links = section.blocks | map: 'settings' | map: 'title'
+-%}
+<section class="t-bespoke-design" aria-labelledby="page-title" data-section-type="bespoke-design" data-section-id="{{ section.id }}">
+    <header class="c-page-header">
+        {%- render 'page-header',
+            image_mobile:       null,
+            image_tablet:       null,
+            image_desktop:      section.settings.hero_image,
+            image_alt:          null,
+            heading:            page.title,
+            strapline:          section.settings.page_strapline,
+            page_content:       section.settings.page_content,
+            _image_store:       null,
+            _add_header_element: false,
+        -%}
+        {%- if section.settings.hero_video_url -%}
+            <div class="c-page-header__content h-100">
+                <div class="container site-padding h-100">
+                    <div class="row h-100 align-items-center justify-content-center">
+                        <div class="col-sm-10 col-md-8 text-center text-white">
+                            <a href="{{ section.settings.hero_video_url }}" class="c-btn px-4">
+                                <svg class="icon mr-4">
+                                    <use xlink:href="#sprite-play-circle"></use>
+                                </svg>
+                                {{- section.settings.hero_video_text | escape -}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c-page-header__overlay" aria-hidden="true" role="presentation"></div>
+        {%- endif -%}
+    </header>
+    <div class="container site-padding pt-14 pb-32 pb-md-26">
+        <div class="row justify-content-sm-center">
+            <div class="col-md-8 col-xxxl-6 text-center">
+                <h1 class="text-14 text-md-14 text-elephant text-uppercase tracking-widest mb-6 mb-md-8">{{- page.title -}}</h1>
+                <h2 class="text-36 text-md-46 font-weight-normal text-elephant mb-7 mb-md-10 leading-tight">{{ section.settings.heading }}</h2>
+                <p>{{ section.settings.text }}</p>
+            </div>
+        </div>
+        <div class="t-why-opera__tabs mt-10 mt-md-18" data-tabs>
+            <nav class="c-tabs">
+                <ul class="c-tabs__tablist" role="tablist">
+                    {%- for jump_to_link in jump_to_links -%}
+                        {%- if jump_to_link.size > 0 -%}
+                            <li role="none">
+                                <a href="#{{ jump_to_link | handleize }}" class="c-tabs__box">
+                                    {{ jump_to_link }}
+                                </a>
+                            </li>
+                        {%- endif -%}
+                    {%- endfor -%}
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    {%- for block in section.blocks -%}
+        {%- liquid
+            assign image = null
+            assign image_alt = null
+        -%}
+        <div data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }} id="{{ block.settings.title | handleize }}" {% if forloop.last %}class="mb-24"{% endif %}>
+            {%- if block.type == 'text-tab' -%}
+                <div class="container site-padding">
+                    <div class="row justify-content-sm-center">
+                        <div class="col-sm-10 col-md-8 col-xxxl-6">
+                            <div class="c-tabs__tabpanel" id="product-tabpanel-{{ forloop.index }}" aria-labelledby="product-tab-{{ forloop.index }}" tabindex="{{ forloop.index0 }}" role="tabpanel" data-tabs-panel {% unless forloop.first %}hidden{% endunless %}>
+                                <div class="row justify-content-md-between">
+                                    <div class="col-xl-5 mb-8 mb-mxl-0">
+                                        <span class="text-24 text-md-36 font-weight-normal text-elephant">{{ block.settings.heading }}</span>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        {{ block.settings.text }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {%- elsif block.type == 'full-image-text-tab' -%}
+                {%- liquid
+                    assign image = block.settings.image
+                    assign image_alt = image.alt | default: block.settings.heading
+                    if block.settings.text_panel_position == 'right'
+                        assign position = 'justify-content-md-end'
+                    else
+                        assign position = ''
+                    endif
+                -%}
+                <div class="c-image-and-text mt-24">
+                    <picture class="c-image-and-text__bg js-lazy" data-iesrc="{{- image_url -}}" data-alt="{{ image_alt }}">
+                        <source srcset="{{ image | img_url: '600x' }}" media="(max-width: 575px)">
+                        <source srcset="{{ image | img_url: '800x' }}" media="(min-width: 576px) and (max-width: 767px)">
+                        <source srcset="{{ image | img_url: '1100x' }}" media="(min-width: 768px) and (max-width: 1023px)">
+                        <source srcset="{{ image | img_url: '1300x' }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                        <source srcset="{{ image | img_url: '1500x' }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                        <source srcset="{{ image | img_url: '1800x' }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                        <source srcset="{{ image | img_url: '2048x' }}" media="(min-width: 1670px)">
+                    </picture>
+
+                    <div class="container site-padding">
+                        <div class="row {{ position }}">
+                            <div class="col-lg-5">
+                                <div class="c-image-and-text__content">
+                                    <h2 class="text-14 font-weight-normal font-weight-md-bold text-uppercase tracking-widest text-elephant mb-6 mb-md-8">
+                                        {{ block.settings.heading }}
+                                    </h2>
+                                    <h3 class="text-24 text-md-36 text-elephant font-weight-normal mb-9 mb-md-7 leading-tight">{{ block.settings.subheading }}</h3>
+                                    {{ block.settings.text }}
+                                    {%- if block.settings.cta_url -%}
+                                        <a href="{{ block.settings.cta_url }}" class="c-btn-outline c-btn-outline--blue c-btn--lg mt-6">{{ block.settings.cta_text }}</a>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {%- elsif block.type == 'image-and-text-tab' -%}
+                {%- render 'page-image-and-text-tab'
+                    _image: block.settings.image
+                    _heading: block.settings.heading,
+                    _text_panel_position: block.settings.text_panel_position,
+                    _text: block.settings.text,
+                    _cta_url: block.settings.cta_url
+                    _cta_text: block.settings.cta_text,
+                -%}
+            {%- elsif block.type == 'delivery-tab' -%}
+                <div class="bg-porcelain2 bg-md-white py-10 py-md-14">
+                    <div class="container site-padding text-center">
+                        <h2 class="text-14 text-16 text-uppercase tracking-widest text-elephant font-weight-bold mb-0">{{ block.settings.heading }}</h2>
+                    </div>
+                </div>
+                <div class="t-why-opera__map-bg">
+                    <div class="t-why-opera__map-bg__removal">
+                        <div class="t-why-opera__map-bg__content">
+                            <svg class="">
+                                <use xlink:href="#sprite-{{ block.settings.panel_1_icon }}"></use>
+                            </svg>
+                            <div class="t-why-opera__map-bg__content__text">
+                                <h2 class="text-26 text-md-24 font-weight-normal leading-tight mb-7 mb-lg-8">{{ block.settings.panel_1_heading }}</h2>
+                                {{ block.settings.panel_1_text }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="t-why-opera__map-bg__delivery">
+                        <div class="t-why-opera__map-bg__content">
+                            <svg class="">
+                                <use xlink:href="#sprite-{{ block.settings.panel_2_icon }}"></use>
+                            </svg>
+                            <div class="t-why-opera__map-bg__content__text">
+                                <h2 class="text-26 text-md-24 font-weight-normal leading-tight mb-7 mb-lg-8">{{ block.settings.panel_2_heading }}</h2>
+                                {{ block.settings.panel_2_text }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {%- endif -%}
+        </div>
+    {%- endfor -%}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-sm-10 col-md-8 col-xl-6 text-center">
+                <div class="py-12 px-6 py-md-8 px-md-20 py-md-24">
+                    <h3 class="text-24 text-md-36 text-elephant font-weight-normal mb-6">{{ section.settings.form_heading }}</h3>
+                    {%-
+                        render 'contact-form',
+                        _form_options: section.settings.form_subject
+                    -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "About - Why Opera",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image"
+        },
+        {
+            "type": "textarea",
+            "id": "page_strapline",
+            "label": "Header Strapline (add line break for design)",
+            "default": "Page\r\nstrapline"
+        },
+        {
+            "type": "url",
+            "id": "hero_video_url",
+            "label": "Hero Video Url"
+        },
+        {
+            "type": "text",
+            "id": "hero_video_text",
+            "label": "Hero Text",
+            "default": "Watch the video"
+        },
+        {
+            "type": "header",
+            "content": "Intro Panel"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Intro Heading",
+            "default": "Enhancing Lives, Delivery Comfort"
+        },
+        {
+            "type": "richtext",
+            "id": "text",
+            "label": "Intro Text",
+            "default": "<p>Welcome to Opera®, the trusted experts in care beds and mattresses for the UK long-term care sector. We work with care providers, carers, designers, end users and family members who want to ensure outstanding care in a homely, pleasant environment.<\/p>"
+        },
+        {
+            "type": "header",
+            "content": "Form"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_form",
+            "label": "Show Form",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "form_heading",
+            "label": "Heading",
+            "default": "Send us a message"
+        },
+        {
+            "type": "richtext",
+            "id": "form_subject",
+            "label": "Form enquiry options",
+            "info": "Add each option on a new line"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "text-tab",
+            "name": "Text Tab",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                }
+            ]
+        },
+        {
+            "type": "full-image-text-tab",
+            "name": "Full Image Text Tab",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image Picker"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "subheading",
+                    "label": "Sub Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                },
+                {
+                    "type": "header",
+                    "content": "Call To Action"
+                },
+                {
+                    "type": "text",
+                    "id": "cta_text",
+                    "label": "Text",
+                    "default": "Learn more"
+                },
+                {
+                    "type": "url",
+                    "id": "cta_url",
+                    "label": "Url"
+                },
+                {
+                    "type": "header",
+                    "content": "Text Panel Positioning"
+                },
+                {
+                    "type": "select",
+                    "id": "text_panel_position",
+                    "label": "Text Panel Position (Left/Right)",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                    ],
+                    "default": "left",
+                    "info": "Set the position of the text panel"
+                }
+            ]
+        },
+        {
+            "type": "image-and-text-tab",
+            "name": "Image & Text Tab",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image Picker"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                },
+                {
+                    "type": "header",
+                    "content": "Call To Action"
+                },
+                {
+                    "type": "text",
+                    "id": "cta_text",
+                    "label": "Text",
+                    "default": "Learn more"
+                },
+                {
+                    "type": "url",
+                    "id": "cta_url",
+                    "label": "Url"
+                },
+                {
+                    "type": "header",
+                    "content": "Text Panel Positioning"
+                },
+                {
+                    "type": "select",
+                    "id": "text_panel_position",
+                    "label": "Text Panel Position (Left/Right)",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                    ],
+                    "default": "left",
+                    "info": "Set the position of the text panel"
+                }
+            ]
+        },
+        {
+            "type": "delivery-tab",
+            "name": "Delivery Tab",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Tab Name"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "header",
+                    "content": "Panel 1"
+                },
+                {
+                    "type": "select",
+                    "id": "panel_1_icon",
+                    "options": [
+                    { "value": "advice", "label": "Advice"},
+                    { "value": "arrow-down", "label": "Arrow Down"},
+                    { "value": "arrow-left", "label": "Arrow Left"},
+                    { "value": "arrow-right", "label": "Arrow Right"},
+                    { "value": "arrow-up", "label": "Arrow Up"},
+                    { "value": "bars", "label": "Bars"},
+                    { "value": "bed", "label": "Bed"},
+                    { "value": "bespoke-service", "label": "Bespoke Service"},
+                    { "value": "brochure2", "label": "Brochure2"},
+                    { "value": "brush-square", "label": "Brush Square"},
+                    { "value": "caret-down", "label": "Caret Down"},
+                    { "value": "caret-left", "label": "Caret Left"},
+                    { "value": "caret-right", "label": "Caret Right"},
+                    { "value": "caret-up", "label": "Caret Up"},
+                    { "value": "check-circle", "label": "Check Circle"},
+                    { "value": "check", "label": "Check"},
+                    { "value": "chevron-down", "label": "Chevron Down"},
+                    { "value": "chevron-left", "label": "Chevron Left"},
+                    { "value": "chevron-right", "label": "Chevron Right"},
+                    { "value": "chevron-up", "label": "Chevron Up"},
+                    { "value": "circulation", "label": "Circulation"},
+                    { "value": "close", "label": "Close"},
+                    { "value": "comfort", "label": "Comfort"},
+                    { "value": "customisable", "label": "Customisable"},
+                    { "value": "delivery-lg", "label": "Delivery Lg"},
+                    { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                    { "value": "delivery-time", "label": "Delivery Time"},
+                    { "value": "delivery", "label": "Delivery"},
+                    { "value": "delivery2", "label": "Delivery2"},
+                    { "value": "discover", "label": "Discover"},
+                    { "value": "documents", "label": "Documents"},
+                    { "value": "documents2", "label": "Documents2"},
+                    { "value": "double-quote", "label": "Double Quote"},
+                    { "value": "facebook-f", "label": "Facebook F"},
+                    { "value": "finance", "label": "Finance"},
+                    { "value": "finance2", "label": "Finance2"},
+                    { "value": "headboards", "label": "Headboards"},
+                    { "value": "headset", "label": "Headset"},
+                    { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                    { "value": "heart-outline", "label": "Heart Outline"},
+                    { "value": "light-bulb", "label": "Light Bulb"},
+                    { "value": "linkedin-in", "label": "Linkedin In"},
+                    { "value": "maintenance", "label": "Maintenance"},
+                    { "value": "minus", "label": "Minus"},
+                    { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                    { "value": "parts", "label": "Parts"},
+                    { "value": "play-circle", "label": "Play Circle"},
+                    { "value": "plus", "label": "Plus"},
+                    { "value": "posture", "label": "Posture"},
+                    { "value": "recycle-lg", "label": "Recycle Lg"},
+                    { "value": "sales", "label": "Sales"},
+                    { "value": "search", "label": "Search"},
+                    { "value": "secure-checkout", "label": "Secure Checkout"},
+                    { "value": "shopping-bag", "label": "Shopping Bag"},
+                    { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                    { "value": "star-fill", "label": "Star Fill"},
+                    { "value": "star-outline", "label": "Star Outline"},
+                    { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                    { "value": "twitter", "label": "Twitter"},
+                    { "value": "uk-map", "label": "Uk Map"},
+                    { "value": "union-jack", "label": "Union Jack"},
+                    { "value": "user-check", "label": "User Check"},
+                    { "value": "user", "label": "User"},
+                    { "value": "warranty", "label": "Warranty"},
+                    { "value": "widths", "label": "Widths"},
+                    { "value": "wireless", "label": "Wireless"}
+                    ],
+                    "label": "Icon"
+                },
+                {
+                    "type": "text",
+                    "id": "panel_1_heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "panel_1_text",
+                    "label": "Text"
+                },
+                {
+                    "type": "header",
+                    "content": "Panel 2"
+                },
+                {
+                    "type": "select",
+                    "id": "panel_2_icon",
+                    "options": [
+                    { "value": "advice", "label": "Advice"},
+                    { "value": "arrow-down", "label": "Arrow Down"},
+                    { "value": "arrow-left", "label": "Arrow Left"},
+                    { "value": "arrow-right", "label": "Arrow Right"},
+                    { "value": "arrow-up", "label": "Arrow Up"},
+                    { "value": "bars", "label": "Bars"},
+                    { "value": "bed", "label": "Bed"},
+                    { "value": "bespoke-service", "label": "Bespoke Service"},
+                    { "value": "brochure2", "label": "Brochure2"},
+                    { "value": "brush-square", "label": "Brush Square"},
+                    { "value": "caret-down", "label": "Caret Down"},
+                    { "value": "caret-left", "label": "Caret Left"},
+                    { "value": "caret-right", "label": "Caret Right"},
+                    { "value": "caret-up", "label": "Caret Up"},
+                    { "value": "check-circle", "label": "Check Circle"},
+                    { "value": "check", "label": "Check"},
+                    { "value": "chevron-down", "label": "Chevron Down"},
+                    { "value": "chevron-left", "label": "Chevron Left"},
+                    { "value": "chevron-right", "label": "Chevron Right"},
+                    { "value": "chevron-up", "label": "Chevron Up"},
+                    { "value": "circulation", "label": "Circulation"},
+                    { "value": "close", "label": "Close"},
+                    { "value": "comfort", "label": "Comfort"},
+                    { "value": "customisable", "label": "Customisable"},
+                    { "value": "delivery-lg", "label": "Delivery Lg"},
+                    { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                    { "value": "delivery-time", "label": "Delivery Time"},
+                    { "value": "delivery", "label": "Delivery"},
+                    { "value": "delivery2", "label": "Delivery2"},
+                    { "value": "discover", "label": "Discover"},
+                    { "value": "documents", "label": "Documents"},
+                    { "value": "documents2", "label": "Documents2"},
+                    { "value": "double-quote", "label": "Double Quote"},
+                    { "value": "facebook-f", "label": "Facebook F"},
+                    { "value": "finance", "label": "Finance"},
+                    { "value": "finance2", "label": "Finance2"},
+                    { "value": "headboards", "label": "Headboards"},
+                    { "value": "headset", "label": "Headset"},
+                    { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                    { "value": "heart-outline", "label": "Heart Outline"},
+                    { "value": "light-bulb", "label": "Light Bulb"},
+                    { "value": "linkedin-in", "label": "Linkedin In"},
+                    { "value": "maintenance", "label": "Maintenance"},
+                    { "value": "minus", "label": "Minus"},
+                    { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                    { "value": "parts", "label": "Parts"},
+                    { "value": "play-circle", "label": "Play Circle"},
+                    { "value": "plus", "label": "Plus"},
+                    { "value": "posture", "label": "Posture"},
+                    { "value": "recycle-lg", "label": "Recycle Lg"},
+                    { "value": "sales", "label": "Sales"},
+                    { "value": "search", "label": "Search"},
+                    { "value": "secure-checkout", "label": "Secure Checkout"},
+                    { "value": "shopping-bag", "label": "Shopping Bag"},
+                    { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                    { "value": "star-fill", "label": "Star Fill"},
+                    { "value": "star-outline", "label": "Star Outline"},
+                    { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                    { "value": "twitter", "label": "Twitter"},
+                    { "value": "uk-map", "label": "Uk Map"},
+                    { "value": "union-jack", "label": "Union Jack"},
+                    { "value": "user-check", "label": "User Check"},
+                    { "value": "user", "label": "User"},
+                    { "value": "warranty", "label": "Warranty"},
+                    { "value": "widths", "label": "Widths"},
+                    { "value": "wireless", "label": "Wireless"}
+                    ],
+                    "label": "Icon"
+                },
+                {
+                    "type": "text",
+                    "id": "panel_2_heading",
+                    "label": "Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "panel_2_text",
+                    "label": "Text"
+                }
+            ]
+        }
+
+    ]
+}
+{% endschema %}

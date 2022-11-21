@@ -1,0 +1,24 @@
+{%- if _mega_menu.link -%}
+    {%- render              'navigation-item-one-high'
+        _index:             _index,
+        _link:              _mega_menu.link,
+        _title:             _mega_menu.heading,
+        _image:             _mega_menu.image,
+    -%}
+{%- elsif _mega_menu.tile_1_heading -%}
+    {%- render              'navigation-item-two-high'
+        _index:             _index,
+        _tile_1_link:       _mega_menu.tile_1_link,
+        _tile_1_title:      _mega_menu.tile_1_heading,
+        _tile_1_image:      _mega_menu.tile_1_image,
+        _tile_2_link:       _mega_menu.tile_2_link,
+        _tile_2_title:      _mega_menu.tile_2_heading,
+        _tile_2_image:      _mega_menu.tile_2_image,
+    -%}
+{%- elsif _mega_menu.testimonial -%}
+    {%- render              'navigation-item-testimonial'
+        _index:             _index,
+        _text:              _mega_menu.testimonial,
+        _author:            _mega_menu.author
+    -%}
+{%- endif -%}

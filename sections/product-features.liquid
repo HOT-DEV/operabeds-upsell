@@ -1,0 +1,41 @@
+{% comment %}
+    The Product Features section template.
+{% endcomment %}
+{%- liquid
+    assign feature_sections = product.metafields.accentuate.feature_heading
+-%}
+{%- if feature_sections.size > 0 -%}
+<section class="pb-16 pb-lg-20 pb-xxl-22 bg-white text-elephant" data-section-type="product-features" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row justify-content-center px-lg-16">
+            <div class="col-12 col-xxl-10">
+                <div class="row mx-n2 mb-n4">
+                    {%- for i in (1..feature_sections.size) -%}
+                        <div class="col-12 col-md-6 col-lg-4 mb-4 px-2">
+                            {%-
+                                render 'product-feature-card',
+                                class: 'w-100 h-100',
+                                icon: product.metafields.accentuate.feature_icon[forloop.index0],
+                                heading: product.metafields.accentuate.feature_heading[forloop.index0],
+                                content: product.metafields.accentuate.feature_text[forloop.index0],
+                            -%}
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{%- endif -%}
+{% schema %}
+{
+    "name": "Features",
+    "settings": [
+        {
+            "type":"header",
+            "content": "Content can be added through the 'App Accentuate'"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

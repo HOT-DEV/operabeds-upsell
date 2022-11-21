@@ -1,0 +1,103 @@
+{%- liquid
+    assign image = section.settings.panel_1_image
+    assign image_xs = image | img_url: 'x600'
+    assign image_sm = image | img_url: '800x'
+    assign image_md = image | img_url: '1100x'
+    assign image_lg = image | img_url: '1300x'
+    assign image_xl = image | img_url: '1500x'
+    assign image_xxl = image | img_url: '1800x'
+    assign image_xxxl = image | img_url: '2048x'
+-%}
+
+<section class="kh-page-cta" data-section-id="{{ section.id }}">
+  <div class="container site-padding">
+    <div class="s-promotions__primary py-35 mb-md-12">
+      {%- if image -%}
+      <picture class="s-promotions__primary__bg js-lazy" data-iesrc="{{ image_xxxl | url }}"
+               data-alt="{{ image.alt | default: section.settings.title | escape }}">
+        <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+        <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+        <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+        <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+        <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+        <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+        <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+        {% comment %} <img alt="" /> {% endcomment %}
+      </picture>
+      {%- endif -%}
+      <div class="kh-page-cta__primary__content justify-content-center align-items-center text-center px-4">
+        {%- if section.settings.panel_1_subheading -%}              
+        <p class="mb-4 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">{{ section.settings.panel_1_subheading }}</p>
+        {%- endif -%}             
+        {%- if section.settings.panel_1_heading -%}
+        <h3 class="text-36 text-white font-weight-medium">
+          {{- section.settings.panel_1_heading | escape -}}
+        </h3>
+        {%- endif -%}
+        {%- if section.settings.panel_1_description -%}                            
+        <p class="font-weight-medium text-20 mt-2">{{ section.settings.panel_1_description }}</p>
+        {%- endif -%}              
+        {%- if section.settings.panel_1_button_url -%}
+        <div class="promo-btn mt-12">
+          <a href="{{ section.settings.panel_1_button_url | url_escape }}"
+             class="text-uppercase font-weight-bold text-14 tracking-wide">
+            {{- section.settings.panel_1_button_text | escape -}} <span class="ml-2"><svg
+                                                                                          xmlns="http://www.w3.org/2000/svg" width="3" height="5" viewBox="0 0 3 5">
+            <path id="Polygon_2" data-name="Polygon 2" d="M2.5,0,5,3H0Z"
+                  transform="translate(3) rotate(90)" fill="#fff" />
+            </svg>
+            </span>
+          </a>
+        </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+                
+{% schema %}
+{
+    "name": "Knowledge Hub - CTA",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "panel_1_image",
+            "label": "Image",
+            "info": "2600x1200 recommended"
+
+        },
+        {
+            "type": "text",
+            "id": "panel_1_subheading",
+            "label": "Subheading",
+            "default": "Get help"
+        },
+        {
+            "type": "text",
+            "id": "panel_1_heading",
+            "label": "Heading",
+            "default": "Need more help?"
+        },
+        {
+            "type": "textarea",
+            "id": "panel_1_description",
+            "label": "Description",
+            "default": "Contact our expert team for dedicated, personal advice."
+        },
+        {
+            "type": "text",
+            "id": "panel_1_button_text",
+            "label": "Button label",
+            "default": "Get in touch"
+        },
+        {
+            "type": "url",
+            "id": "panel_1_button_url",
+            "label": "Button link"
+        }
+    ]
+}
+{% endschema %}
+
+
+            

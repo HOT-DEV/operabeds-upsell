@@ -1,0 +1,264 @@
+{% comment %}
+    The Promotions section template.
+
+    TODO:
+    - Add settings for controlling both of the sections content areas.
+
+    OPTIONAL
+    - The image requires a gradient (like the Hero), consider adding the Gradient Builder
+{% endcomment %}
+
+{%- liquid
+    assign image = section.settings.panel_1_image
+    assign image_xs = image | img_url: '376x447'
+    assign image_sm = image | img_url: '480x423'
+    assign image_md = image | img_url: '608x433'
+    assign image_lg = image | img_url: '390x595'
+    assign image_xl = image | img_url: '532x595'
+    assign image_xxl = image | img_url: '694x595'
+    assign image_xxxl = image | img_url: '1086x595'
+
+    assign feature_points = section.blocks | where: 'type', 'panel_2_feature_point'
+-%}
+<section class="s-promotions my-8 my-lg-18" data-section-type="promotions" data-section-id="{{ section.id }}" id="{{ section.settings.section_id }}">
+    <div class="container site-padding">
+        <div class="row mx-lg-n2">
+            <div class="col-12 col-lg-5 col-xl-6 col-xxl-7 mb-8 mb-lg-0 px-lg-2">
+                <div class="s-promotions__primary w-100 h-100 px-6 py-16 px-lg-8 px-xl-12 px-xxxl-20">
+                    {%- if image -%}
+                        <picture class="s-promotions__primary__bg js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image.alt | default: section.settings.title | escape }}">
+                            <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+                            <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                            <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                            <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                            <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                            <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                            <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+                            {% comment %} <img alt="" /> {% endcomment %}
+                        </picture>
+                    {%- endif -%}
+                    <div class="s-promotions__primary__content w-100 h-100 mx-auto mx-lg-0 text-center text-lg-left">
+                        {%- if section.settings.title -%}
+                            <p class="mb-7 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                                {{- section.settings.title | escape -}}
+                            </p>
+                        {%- endif -%}
+                        {%- if section.settings.panel_1_heading -%}
+                            <h2 class="u-heading-md">
+                                {{- section.settings.panel_1_heading | escape -}}
+                            </h2>
+                        {%- endif -%}
+                        {%- if section.settings.panel_1_paragraph -%}
+                            <div class="mb-10">
+                                {{- section.settings.panel_1_paragraph | safe -}}
+                            </div>
+                        {%- endif -%}
+                        {%- if section.settings.panel_1_button_url -%}
+                            <div class="mt-lg-auto mb-lg-11">
+                                <a class="c-btn-outline c-btn-outline--light c-btn--3" href="{{ section.settings.panel_1_button_url | url_escape }}" aria-label="{{ section.settings.panel_1_button_text | escape }}" title="{{ section.settings.panel_1_button_text | escape }}">
+                                    {{- section.settings.panel_1_button_text | escape -}}
+                                </a>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-7 col-xl-6 col-xxl-5 px-0 px-sm-4">
+                <div class="s-promotions__secondary w-100 h-100 px-6 py-16 px-lg-8 px-xl-12 px-xxxl-20">
+                    <div class="s-promotions__secondary__content w-100 h-100 mx-auto mx-lg-0 text-center text-lg-left">
+                        {%- if section.settings.panel_2_heading -%}
+                        <h2 class="u-heading-md">
+                            {{- section.settings.panel_2_heading | escape -}}
+                        </h2>
+                        {%- endif -%}
+                        {%- if section.settings.panel_2_paragraph -%}
+                            <div class="mb-10">
+                                {{- section.settings.panel_2_paragraph | safe -}}
+                            </div>
+                        {%- endif -%}
+                        {%- if feature_points -%}
+                            <div class="mb-10">
+                                <ul class="c-check-list" aria-label="{{ section.settings.accessibility_features_label | escape }}">
+                                    {%- for feature_point in feature_points -%}
+                                        {%- if feature_point.settings.title.size > 0 -%}
+                                            <li class="mb-5" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                                                <svg aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-check-circle"></use>
+                                                </svg>
+                                                <span>
+                                                    {{- feature_point.settings.title | escape -}}
+                                                </span>
+                                            </li>
+                                        {%- endif -%}
+                                    {%- endfor -%}
+                                </ul>
+                            </div>
+                        {%- endif -%}
+                        {%- if section.settings.panel_2_primary_button_url -%}
+                            <div class="c-btn-group d-sm-inline-flex flex-xxxl-nowrap m-n2">
+                                <a class="c-btn c-btn--gold-2 c-btn--2 m-2" href="{{ section.settings.panel_2_primary_button_url | escape_url }}" aria-label="{{ section.settings.panel_2_primary_button_text | escape }}" title="{{ section.settings.panel_2_primary_button_text | escape }}">
+                                    <span>
+                                        {{- section.settings.panel_2_primary_button_text | escape -}}
+                                    </span>
+                                </a>
+                                <a class="c-btn-outline c-btn-outline--dark-text c-btn--2 m-2" href="{{  section.settings.panel_2_secondary_button_url | escape_url }}" aria-label="{{ section.settings.panel_2_secondary_button_text | escape }}" title="{{  section.settings.panel_2_secondary_button_text | escape }}">
+                                    {{-  section.settings.panel_2_secondary_button_text | escape -}}
+                                </a>
+                            </div>
+                        {%- endif -%}
+                        <div class="mt-5">
+                            <p class="m-0">
+                                {%- if section.settings.panel_2_additional_text -%}
+                                    <span class="d-block d-lg-inline-block text-16 text-md-14">
+                                        {{  section.settings.panel_2_additional_text | escape }}
+                                    </span>
+                                {%- endif -%}
+                                {%- if section.settings.panel_2_additional_link_url -%}
+                                    <a class="c-text-btn text-16 text-md-14 ml-1" href="{{ section.settings.panel_2_additional_link_url | url_escape }}" aria-label="{{ section.settings.panel_2_additional_link_text | escape }}" title="{{ section.settings.panel_2_additional_link_text | escape }}">
+                                        {{- section.settings.panel_2_additional_link_text | escape -}}
+                                    </a>
+                                {%- endif -%}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Promotions",
+    "settings": [
+        {
+            "type": "header",
+            "content": "First Panel"
+        },
+        {
+            "type": "text",
+            "id": "section_id",
+            "label": "Section ID",
+            "info": "Use if you want to be able to link to this specfic section from another link"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+        },
+        {
+            "type": "text",
+            "id": "panel_1_heading",
+            "label": "Heading"
+        },
+        {
+            "type": "richtext",
+            "id": "panel_1_paragraph",
+            "label": "Paragraph"
+        },
+        {
+            "type": "image_picker",
+            "id": "panel_1_image",
+            "label": "Image"
+        },
+        {
+            "type": "text",
+            "id": "panel_1_button_text",
+            "label": "Text",
+            "default": "Learn more"
+        },
+        {
+            "type": "url",
+            "id": "panel_1_button_url",
+            "label": "Link"
+        },
+        {
+            "type": "header",
+            "content": "Second Panel",
+            "info": "The points can be adjusted using the blocks."
+        },
+        {
+            "type": "text",
+            "id": "panel_2_heading",
+            "label": "Heading"
+        },
+        {
+            "type": "richtext",
+            "id": "panel_2_paragraph",
+            "label": "Paragraph"
+        },
+        {
+            "type": "text",
+            "id": "panel_2_primary_button_text",
+            "label": "Primary Button Text",
+            "default": "Discover your bed"
+        },
+        {
+            "type": "url",
+            "id": "panel_2_primary_button_url",
+            "label": "Link"
+        },
+        {
+            "type": "text",
+            "id": "panel_2_secondary_button_text",
+            "label": "Text",
+            "default": "Book a call"
+        },
+        {
+            "type": "url",
+            "id": "panel_2_secondary_button_url",
+            "label": "Link"
+        },
+        {
+            "type": "text",
+            "id": "panel_2_additional_text",
+            "label": "Additional text",
+            "info": "This is located below the buttons",
+            "default": "You can also chat with us instantly."
+        },
+        {
+            "type": "text",
+            "id": "panel_2_additional_link_text",
+            "label": "Live chat text",
+            "default": "Live Chat now."
+        },
+        {
+            "type": "url",
+            "id": "panel_2_additional_link_url",
+            "label": "Live chat Url"
+        },
+        {
+            "type": "header",
+            "content": "Accessibility"
+        },
+        {
+            "type": "text",
+            "id": "accessibility_features_label",
+            "label": "Features label",
+            "info": "The label to be used for accessibility on the Features list",
+            "default": "Features"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "panel_2_feature_point",
+            "name": "Panel 2 Feature Point",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Text"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Promotions",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": []
+        }
+    ]
+}
+{% endschema %}

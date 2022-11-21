@@ -1,0 +1,2957 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Opera Beds",
+    "theme_version": "2.0.0",
+    "theme_author": "META",
+    "theme_support_email": "info@meta.co.uk",
+    "theme_documentation_url": "https:\/\/www.meta.co.uk\/contact\/"
+  },
+  {
+    "name": "Branding",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "theme_logo",
+        "label": "Logo",
+        "info": "Will be used in the header of all pages and on the password page."
+      },
+      {
+        "type": "text",
+        "id": "brand_strapline",
+        "label": "Strapline"
+      },
+      {
+        "type": "image_picker",
+        "id": "theme_favicon",
+        "label": "Favicon",
+        "info": "At least 180x180, will be scaled accordingly."
+      },
+      {
+        "type": "color",
+        "id": "theme_colour",
+        "label": "Theme color",
+        "default": "#ffffff",
+        "info": "Suggest a colour that browsers should use to customise the outer browser window, typically seen on modern smartphones."
+      }
+    ]
+  },
+  {
+    "name": "Trade Customers",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Trade Customer Settings"
+      },
+      {
+        "type": "text",
+        "id": "trade_customer_tag",
+        "label": "Customers Tag",
+        "info": "Customers with this tag will be shown the navigation",
+        "default": "Trade_Customer"
+      },
+      {
+        "type": "header",
+        "content": "Bold Customer Pricing"
+      },
+      {
+        "type": "text",
+        "id": "trade_customer_tag_bold_app",
+        "label": "Bold Customers Tag",
+        "info": "Customers with this tag will be shown discounted prices",
+        "default": "Trade_Customer"
+      }
+    ]
+  },
+  {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "search_enable_product_search",
+        "default": true,
+        "label": "Enable search of products"
+      },
+      {
+        "type": "checkbox",
+        "id": "search_enable_article_search",
+        "default": false,
+        "label": "Enable search of articles"
+      },
+      {
+        "type": "checkbox",
+        "id": "search_enable_page_search",
+        "default": false,
+        "label": "Enable search of pages"
+      }
+    ]
+  },
+  {
+    "name": "Cookie Bar",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "cookie_bar_enable",
+        "label": "Enable the cookie bar",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "cookie_bar_tracking_id",
+        "label": "Google Analytics Tracking ID",
+        "info": "Enter your Google Analytics Tracking ID."
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "select",
+        "id": "cookie_bar_position",
+        "label": "Position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "left"
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_notes_enable",
+        "label": "Enable cart notes"
+      }
+    ]
+  },
+  {
+    "name": "Theme Tax Settings",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Tax Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "tax_settings_enabled",
+        "default": true,
+        "label": "Tax Settings Enabled",
+        "info": "When enabled the theme will either remove or add VAT to prices for microdata"
+      },
+      {
+        "type": "checkbox",
+        "id": "taxes_products_include_tax",
+        "default": true,
+        "label": "All prices include tax",
+        "info": "If your products include tax, make sure this is enabled you can check here [Settings > Taxes](\/admin\/settings\/taxes)"
+      },
+      {
+        "type": "text",
+        "id": "taxes_vat_multiplier",
+        "label": "Store default vat multiplier e.g. 20% for UK",
+        "default": "20"
+      }
+    ]
+  },
+  {
+    "name": "Company Information",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Contact Details"
+      },
+      {
+        "type": "textarea",
+        "id": "company_address",
+        "label": "Address"
+      },
+      {
+        "type": "text",
+        "id": "company_phone",
+        "label": "Telephone Number",
+        "info": "Please enter your telephone number.",
+        "placeholder": "0123456789"
+      },
+      {
+        "type": "text",
+        "id": "company_email",
+        "label": "E-Mail Address",
+        "info": "Please enter your e-mail address.",
+        "placeholder": "me@mycompany.com"
+      },
+      {
+        "type": "header",
+        "content": "Company Details"
+      },
+      {
+        "type": "text",
+        "id": "company_legal_name",
+        "label": "Legal Name of Business"
+      },
+      {
+        "type": "text",
+        "id": "company_number",
+        "label": "Registered Company Number",
+        "info": "Please enter your company number.",
+        "placeholder": "0123456789"
+      },
+      {
+        "type": "text",
+        "id": "company_vat_number",
+        "label": "VAT Number",
+        "info": "Please enter your company VAT number.",
+        "placeholder": "GB0123456789"
+      },
+      {
+        "type": "textarea",
+        "id": "opening_hours",
+        "label": "Opening Hours",
+        "placeholder": "Monday to Friday 9am-5.30pm"
+      }
+    ]
+  },
+  {
+    "name": "Microdata (JSON+LD)",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Local Business"
+      },
+      {
+        "type": "image_picker",
+        "id": "microdata_logo",
+        "label": "Microdata logo",
+        "info": "Schema company logo (600px x 600px)"
+      },
+      {
+        "type": "image_picker",
+        "id": "microdata_featured_image",
+        "label": "Featured Image"
+      },
+      {
+        "type": "text",
+        "id": "microdata_map",
+        "label": "Google Maps Link"
+      },
+      {
+        "type": "checkbox",
+        "id": "microdata_show_opening_hours",
+        "label": "Show opening hours?"
+      },
+      {
+        "type": "text",
+        "id": "microdata_opening_hours",
+        "label": "Opening Hours - Must be in schema.org format - see (Schema OpeningHours)[http:\/\/schema.org\/openingHours]",
+        "placeholder": "Mo,Tu,We,Th,Fr 07:00-16:30"
+      },
+      {
+        "type": "header",
+        "content": "Product"
+      },
+      {
+        "type": "select",
+        "id": "product_microdata_display_until",
+        "label": "Display Until",
+        "options": [
+          {
+            "value": "14",
+            "label": "14 Days"
+          },
+          {
+            "value": "30",
+            "label": "30 Days"
+          },
+          {
+            "value": "45",
+            "label": "45 Days"
+          },
+          {
+            "value": "60",
+            "label": "60 Days"
+          },
+          {
+            "value": "90",
+            "label": "90 Days"
+          },
+          {
+            "value": "120",
+            "label": "120 Days"
+          },
+          {
+            "value": "150",
+            "label": "150 Days"
+          },
+          {
+            "value": "180",
+            "label": "180 Days"
+          },
+          {
+            "value": "365",
+            "label": "365 Days"
+          }
+        ],
+        "default": "30"
+      }
+    ]
+  },
+  {
+    "name": "Social media & Microdata",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Social sharing image"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Image",
+        "info": "Shown when sharing a link on social media. [Learn more](https:\/\/help.shopify.com\/manual\/using-themes\/troubleshooting\/showing-social-media-thumbnail-images\/) about image thumbnails."
+      },
+      {
+        "type": "text",
+        "id": "social_image_width",
+        "label": "Image Width"
+      },
+      {
+        "type": "text",
+        "id": "social_image_height",
+        "label": "Image Height"
+      },
+      {
+        "type": "header",
+        "content": "Social Media Optimisation"
+      },
+      {
+        "type": "text",
+        "id": "social_og_locale",
+        "label": "OG Locale - http:\/\/ogp.me\/",
+        "default": "en_GB"
+      },
+      {
+        "type": "text",
+        "id": "geo_position",
+        "label": "Geo Position - http:\/\/www.geo-tag.de\/generator\/en.html",
+        "placeholder": "example: 53.718847, -0.426806"
+      },
+      {
+        "type": "text",
+        "id": "geo_place_name",
+        "label": "Geo Place Name",
+        "placeholder": "example: name of the building\/address"
+      },
+      {
+        "type": "header",
+        "content": "Social sharing options"
+      },
+      {
+        "type": "checkbox",
+        "id": "share_facebook",
+        "label": "Share on Facebook",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "share_twitter",
+        "label": "Tweet on Twitter",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "share_instagram",
+        "label": "Share on Instagram",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Social links"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_link",
+        "label": "Twitter link"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook link"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram link"
+      },
+      {
+        "type": "text",
+        "id": "social_linkedin_link",
+        "label": "Linkedin link"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest_link",
+        "label": "Pinterest link"
+      }
+    ]
+  },
+  {
+    "name": "Tracking & Verification",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Google Search Console",
+        "info": "Google Site Verification"
+      },
+      {
+        "type": "text",
+        "id": "google_site_verification",
+        "label": "Add the Google verification content (only the content part, the meta tag will be created for you). You can specify multiple codes by CSV"
+      },
+      {
+        "type": "header",
+        "content": "Bing Site Verification"
+      },
+      {
+        "type": "text",
+        "id": "bing_site_verification",
+        "label": "Add the Bing verification content (only the content part, the meta tag will be created for you). You can specify multiple codes by CSV"
+      },
+      {
+        "type": "header",
+        "content": "Google Tag Manager"
+      },
+      {
+        "type": "checkbox",
+        "id": "tracking_gtm_show_errors",
+        "label": "Show Installation Errors?",
+        "info": "Show installation errors in a banner on the site",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "tracking_gtm_id",
+        "label": "Google Tag Manager ID",
+        "info": "You can specify multiple codes by CSV"
+      },
+      {
+        "type": "header",
+        "content": "Bing Ads"
+      },
+      {
+        "type": "checkbox",
+        "id": "tracking_bing_ads_show_errors",
+        "label": "Show Installation Errors?",
+        "info": "Show installation errors in a banner on the site",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "tracking_bing_ads_id",
+        "label": "Bing Ads [ID]",
+        "info": "You can specify multiple codes by CSV NOTE you will need to request the conversion script to be added to this theme"
+      }
+    ]
+  },
+  {
+    "name": "Finance",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Finance Settings"
+      },
+      {
+        "type": "number",
+        "id": "finance_minimum_value_to_show",
+        "label": "Minimum Value to Show Finance for",
+        "default": 350
+      },
+      {
+        "type": "number",
+        "id": "finance_maximum_value_to_show",
+        "label": "Maximum Value to Show Finance for",
+        "default": 50000
+      },
+      {
+        "type": "header",
+        "content": "Repayment Calculator Settings"
+      },
+      {
+        "type": "number",
+        "id": "finance_deposit_percent",
+        "label": "Deposit %",
+        "default": 10
+      },
+      {
+        "type": "number",
+        "id": "finance_step",
+        "label": "Calculator +\/- button steps",
+        "default": 50
+      },
+      {
+        "type": "number",
+        "id": "finance_repayment_calculator_default_value",
+        "label": "Calculator default value",
+        "default": 5000
+      },
+      {
+        "type": "header",
+        "content": "Product Item - Finance Settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "finance_product_item_enabled",
+        "label": "Show finance?",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "finance_number_of_payments",
+        "label": "Number of Payments (months)",
+        "default": 48
+      },
+      {
+        "type": "number",
+        "id": "finance_rate",
+        "label": "Finance rate (e.g. 7.9% APR)",
+        "default": 8
+      },
+      {
+        "type": "header",
+        "content": "Representative Example"
+      },
+      {
+        "type": "text",
+        "id": "typical_finance_amount",
+        "label": "Finance Amount (£)",
+        "info": "e.g. £10,000"
+      },
+      {
+        "type": "text",
+        "id": "typical_finance_term",
+        "label": "Term",
+        "info": "e.g. 24 months"
+      },
+      {
+        "type": "text",
+        "id": "typical_finance_deposit",
+        "label": "Deposit",
+        "info": "e.g. £2,500 or 25%"
+      },
+      {
+        "type": "text",
+        "id": "typical_finance_apr",
+        "label": "APR (%)",
+        "info": "e.g. 9.9%"
+      },
+      {
+        "type": "checkbox",
+        "id": "typical_finance_show",
+        "label": "Show Typical Example",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Sidebar Menu",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Menu Item 1"
+      },
+      {
+        "type": "select",
+        "id": "sidebar_icon_01",
+        "label": "Icon",
+        "options": [
+          {
+            "value": "advice",
+            "label": "Advice"
+          },
+          {
+            "value": "arrow-down",
+            "label": "Arrow Down"
+          },
+          {
+            "value": "arrow-left",
+            "label": "Arrow Left"
+          },
+          {
+            "value": "arrow-right",
+            "label": "Arrow Right"
+          },
+          {
+            "value": "arrow-up",
+            "label": "Arrow Up"
+          },
+          {
+            "value": "bars",
+            "label": "Bars"
+          },
+          {
+            "value": "bed",
+            "label": "Bed"
+          },
+          {
+            "value": "bespoke-service",
+            "label": "Bespoke Service"
+          },
+          {
+            "value": "brochure2",
+            "label": "Brochure2"
+          },
+          {
+            "value": "brush-square",
+            "label": "Brush Square"
+          },
+          {
+            "value": "caret-down",
+            "label": "Caret Down"
+          },
+          {
+            "value": "caret-left",
+            "label": "Caret Left"
+          },
+          {
+            "value": "caret-right",
+            "label": "Caret Right"
+          },
+          {
+            "value": "caret-up",
+            "label": "Caret Up"
+          },
+          {
+            "value": "check-circle",
+            "label": "Check Circle"
+          },
+          {
+            "value": "check",
+            "label": "Check"
+          },
+          {
+            "value": "chevron-down",
+            "label": "Chevron Down"
+          },
+          {
+            "value": "chevron-left",
+            "label": "Chevron Left"
+          },
+          {
+            "value": "chevron-right",
+            "label": "Chevron Right"
+          },
+          {
+            "value": "chevron-up",
+            "label": "Chevron Up"
+          },
+          {
+            "value": "circulation",
+            "label": "Circulation"
+          },
+          {
+            "value": "close",
+            "label": "Close"
+          },
+          {
+            "value": "comfort",
+            "label": "Comfort"
+          },
+          {
+            "value": "customisable",
+            "label": "Customisable"
+          },
+          {
+            "value": "delivery-lg",
+            "label": "Delivery Lg"
+          },
+          {
+            "value": "delivery-pallet",
+            "label": "Delivery Pallet"
+          },
+          {
+            "value": "delivery-time",
+            "label": "Delivery Time"
+          },
+          {
+            "value": "delivery",
+            "label": "Delivery"
+          },
+          {
+            "value": "delivery2",
+            "label": "Delivery2"
+          },
+          {
+            "value": "discover",
+            "label": "Discover"
+          },
+          {
+            "value": "documents",
+            "label": "Documents"
+          },
+          {
+            "value": "documents2",
+            "label": "Documents2"
+          },
+          {
+            "value": "double-quote",
+            "label": "Double Quote"
+          },
+          {
+            "value": "facebook-f",
+            "label": "Facebook F"
+          },
+          {
+            "value": "finance",
+            "label": "Finance"
+          },
+          {
+            "value": "finance2",
+            "label": "Finance2"
+          },
+          {
+            "value": "headboards",
+            "label": "Headboards"
+          },
+          {
+            "value": "headset",
+            "label": "Headset"
+          },
+          {
+            "value": "heart-hands-lg",
+            "label": "Heart Hands Lg"
+          },
+          {
+            "value": "heart-outline",
+            "label": "Heart Outline"
+          },
+          {
+            "value": "light-bulb",
+            "label": "Light Bulb"
+          },
+          {
+            "value": "linkedin-in",
+            "label": "Linkedin In"
+          },
+          {
+            "value": "maintenance",
+            "label": "Maintenance"
+          },
+          {
+            "value": "minus",
+            "label": "Minus"
+          },
+          {
+            "value": "padded-mattress-platform",
+            "label": "Padded Mattress Platform"
+          },
+          {
+            "value": "parts",
+            "label": "Parts"
+          },
+          {
+            "value": "play-circle",
+            "label": "Play Circle"
+          },
+          {
+            "value": "plus",
+            "label": "Plus"
+          },
+          {
+            "value": "posture",
+            "label": "Posture"
+          },
+          {
+            "value": "recycle-lg",
+            "label": "Recycle Lg"
+          },
+          {
+            "value": "sales",
+            "label": "Sales"
+          },
+          {
+            "value": "search",
+            "label": "Search"
+          },
+          {
+            "value": "secure-checkout",
+            "label": "Secure Checkout"
+          },
+          {
+            "value": "shopping-bag",
+            "label": "Shopping Bag"
+          },
+          {
+            "value": "sleep-in-bed",
+            "label": "Sleep In Bed"
+          },
+          {
+            "value": "star-fill",
+            "label": "Star Fill"
+          },
+          {
+            "value": "star-outline",
+            "label": "Star Outline"
+          },
+          {
+            "value": "trustpilot-primary-dark",
+            "label": "Trustpilot Primary Dark"
+          },
+          {
+            "value": "twitter",
+            "label": "Twitter"
+          },
+          {
+            "value": "uk-map",
+            "label": "Uk Map"
+          },
+          {
+            "value": "union-jack",
+            "label": "Union Jack"
+          },
+          {
+            "value": "user-check",
+            "label": "User Check"
+          },
+          {
+            "value": "user",
+            "label": "User"
+          },
+          {
+            "value": "warranty",
+            "label": "Warranty"
+          },
+          {
+            "value": "widths",
+            "label": "Widths"
+          },
+          {
+            "value": "wireless",
+            "label": "Wireless"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "sidebar_title_01",
+        "label": "Title"
+      },
+      {
+        "type": "url",
+        "id": "sidebar_url_01",
+        "label": "Link"
+      },
+      {
+        "type": "header",
+        "content": "Menu Item 2"
+      },
+      {
+        "type": "select",
+        "id": "sidebar_icon_02",
+        "label": "Icon",
+        "options": [
+          {
+            "value": "advice",
+            "label": "Advice"
+          },
+          {
+            "value": "arrow-down",
+            "label": "Arrow Down"
+          },
+          {
+            "value": "arrow-left",
+            "label": "Arrow Left"
+          },
+          {
+            "value": "arrow-right",
+            "label": "Arrow Right"
+          },
+          {
+            "value": "arrow-up",
+            "label": "Arrow Up"
+          },
+          {
+            "value": "bars",
+            "label": "Bars"
+          },
+          {
+            "value": "bed",
+            "label": "Bed"
+          },
+          {
+            "value": "bespoke-service",
+            "label": "Bespoke Service"
+          },
+          {
+            "value": "brochure2",
+            "label": "Brochure2"
+          },
+          {
+            "value": "brush-square",
+            "label": "Brush Square"
+          },
+          {
+            "value": "caret-down",
+            "label": "Caret Down"
+          },
+          {
+            "value": "caret-left",
+            "label": "Caret Left"
+          },
+          {
+            "value": "caret-right",
+            "label": "Caret Right"
+          },
+          {
+            "value": "caret-up",
+            "label": "Caret Up"
+          },
+          {
+            "value": "check-circle",
+            "label": "Check Circle"
+          },
+          {
+            "value": "check",
+            "label": "Check"
+          },
+          {
+            "value": "chevron-down",
+            "label": "Chevron Down"
+          },
+          {
+            "value": "chevron-left",
+            "label": "Chevron Left"
+          },
+          {
+            "value": "chevron-right",
+            "label": "Chevron Right"
+          },
+          {
+            "value": "chevron-up",
+            "label": "Chevron Up"
+          },
+          {
+            "value": "circulation",
+            "label": "Circulation"
+          },
+          {
+            "value": "close",
+            "label": "Close"
+          },
+          {
+            "value": "comfort",
+            "label": "Comfort"
+          },
+          {
+            "value": "customisable",
+            "label": "Customisable"
+          },
+          {
+            "value": "delivery-lg",
+            "label": "Delivery Lg"
+          },
+          {
+            "value": "delivery-pallet",
+            "label": "Delivery Pallet"
+          },
+          {
+            "value": "delivery-time",
+            "label": "Delivery Time"
+          },
+          {
+            "value": "delivery",
+            "label": "Delivery"
+          },
+          {
+            "value": "delivery2",
+            "label": "Delivery2"
+          },
+          {
+            "value": "discover",
+            "label": "Discover"
+          },
+          {
+            "value": "documents",
+            "label": "Documents"
+          },
+          {
+            "value": "documents2",
+            "label": "Documents2"
+          },
+          {
+            "value": "double-quote",
+            "label": "Double Quote"
+          },
+          {
+            "value": "facebook-f",
+            "label": "Facebook F"
+          },
+          {
+            "value": "finance",
+            "label": "Finance"
+          },
+          {
+            "value": "finance2",
+            "label": "Finance2"
+          },
+          {
+            "value": "headboards",
+            "label": "Headboards"
+          },
+          {
+            "value": "headset",
+            "label": "Headset"
+          },
+          {
+            "value": "heart-hands-lg",
+            "label": "Heart Hands Lg"
+          },
+          {
+            "value": "heart-outline",
+            "label": "Heart Outline"
+          },
+          {
+            "value": "light-bulb",
+            "label": "Light Bulb"
+          },
+          {
+            "value": "linkedin-in",
+            "label": "Linkedin In"
+          },
+          {
+            "value": "maintenance",
+            "label": "Maintenance"
+          },
+          {
+            "value": "minus",
+            "label": "Minus"
+          },
+          {
+            "value": "padded-mattress-platform",
+            "label": "Padded Mattress Platform"
+          },
+          {
+            "value": "parts",
+            "label": "Parts"
+          },
+          {
+            "value": "play-circle",
+            "label": "Play Circle"
+          },
+          {
+            "value": "plus",
+            "label": "Plus"
+          },
+          {
+            "value": "posture",
+            "label": "Posture"
+          },
+          {
+            "value": "recycle-lg",
+            "label": "Recycle Lg"
+          },
+          {
+            "value": "sales",
+            "label": "Sales"
+          },
+          {
+            "value": "search",
+            "label": "Search"
+          },
+          {
+            "value": "secure-checkout",
+            "label": "Secure Checkout"
+          },
+          {
+            "value": "shopping-bag",
+            "label": "Shopping Bag"
+          },
+          {
+            "value": "sleep-in-bed",
+            "label": "Sleep In Bed"
+          },
+          {
+            "value": "star-fill",
+            "label": "Star Fill"
+          },
+          {
+            "value": "star-outline",
+            "label": "Star Outline"
+          },
+          {
+            "value": "trustpilot-primary-dark",
+            "label": "Trustpilot Primary Dark"
+          },
+          {
+            "value": "twitter",
+            "label": "Twitter"
+          },
+          {
+            "value": "uk-map",
+            "label": "Uk Map"
+          },
+          {
+            "value": "union-jack",
+            "label": "Union Jack"
+          },
+          {
+            "value": "user-check",
+            "label": "User Check"
+          },
+          {
+            "value": "user",
+            "label": "User"
+          },
+          {
+            "value": "warranty",
+            "label": "Warranty"
+          },
+          {
+            "value": "widths",
+            "label": "Widths"
+          },
+          {
+            "value": "wireless",
+            "label": "Wireless"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "sidebar_title_02",
+        "label": "Title"
+      },
+      {
+        "type": "url",
+        "id": "sidebar_url_02",
+        "label": "Link"
+      },
+      {
+        "type": "header",
+        "content": "Menu Item 3"
+      },
+      {
+        "type": "select",
+        "id": "sidebar_icon_03",
+        "label": "Icon",
+        "options": [
+          {
+            "value": "advice",
+            "label": "Advice"
+          },
+          {
+            "value": "arrow-down",
+            "label": "Arrow Down"
+          },
+          {
+            "value": "arrow-left",
+            "label": "Arrow Left"
+          },
+          {
+            "value": "arrow-right",
+            "label": "Arrow Right"
+          },
+          {
+            "value": "arrow-up",
+            "label": "Arrow Up"
+          },
+          {
+            "value": "approved-retailer-white",
+            "label": "Approved Retailer (white)"
+          },
+          {
+            "value": "bars",
+            "label": "Bars"
+          },
+          {
+            "value": "bed",
+            "label": "Bed"
+          },
+          {
+            "value": "bespoke-service",
+            "label": "Bespoke Service"
+          },
+          {
+            "value": "brochure2",
+            "label": "Brochure2"
+          },
+          {
+            "value": "brush-square",
+            "label": "Brush Square"
+          },
+          {
+            "value": "caret-down",
+            "label": "Caret Down"
+          },
+          {
+            "value": "caret-left",
+            "label": "Caret Left"
+          },
+          {
+            "value": "caret-right",
+            "label": "Caret Right"
+          },
+          {
+            "value": "caret-up",
+            "label": "Caret Up"
+          },
+          {
+            "value": "check-circle",
+            "label": "Check Circle"
+          },
+          {
+            "value": "check",
+            "label": "Check"
+          },
+          {
+            "value": "chevron-down",
+            "label": "Chevron Down"
+          },
+          {
+            "value": "chevron-left",
+            "label": "Chevron Left"
+          },
+          {
+            "value": "chevron-right",
+            "label": "Chevron Right"
+          },
+          {
+            "value": "chevron-up",
+            "label": "Chevron Up"
+          },
+          {
+            "value": "circulation",
+            "label": "Circulation"
+          },
+          {
+            "value": "close",
+            "label": "Close"
+          },
+          {
+            "value": "comfort",
+            "label": "Comfort"
+          },
+          {
+            "value": "customisable",
+            "label": "Customisable"
+          },
+          {
+            "value": "delivery-lg",
+            "label": "Delivery Lg"
+          },
+          {
+            "value": "delivery-pallet",
+            "label": "Delivery Pallet"
+          },
+          {
+            "value": "delivery-time",
+            "label": "Delivery Time"
+          },
+          {
+            "value": "delivery",
+            "label": "Delivery"
+          },
+          {
+            "value": "delivery2",
+            "label": "Delivery2"
+          },
+          {
+            "value": "discover",
+            "label": "Discover"
+          },
+          {
+            "value": "documents",
+            "label": "Documents"
+          },
+          {
+            "value": "documents2",
+            "label": "Documents2"
+          },
+          {
+            "value": "double-quote",
+            "label": "Double Quote"
+          },
+          {
+            "value": "facebook-f",
+            "label": "Facebook F"
+          },
+          {
+            "value": "finance",
+            "label": "Finance"
+          },
+          {
+            "value": "finance2",
+            "label": "Finance2"
+          },
+          {
+            "value": "headboards",
+            "label": "Headboards"
+          },
+          {
+            "value": "headset",
+            "label": "Headset"
+          },
+          {
+            "value": "heart-hands-lg",
+            "label": "Heart Hands Lg"
+          },
+          {
+            "value": "heart-outline",
+            "label": "Heart Outline"
+          },
+          {
+            "value": "light-bulb",
+            "label": "Light Bulb"
+          },
+          {
+            "value": "linkedin-in",
+            "label": "Linkedin In"
+          },
+          {
+            "value": "maintenance",
+            "label": "Maintenance"
+          },
+          {
+            "value": "minus",
+            "label": "Minus"
+          },
+          {
+            "value": "padded-mattress-platform",
+            "label": "Padded Mattress Platform"
+          },
+          {
+            "value": "parts",
+            "label": "Parts"
+          },
+          {
+            "value": "play-circle",
+            "label": "Play Circle"
+          },
+          {
+            "value": "plus",
+            "label": "Plus"
+          },
+          {
+            "value": "posture",
+            "label": "Posture"
+          },
+          {
+            "value": "recycle-lg",
+            "label": "Recycle Lg"
+          },
+          {
+            "value": "sales",
+            "label": "Sales"
+          },
+          {
+            "value": "search",
+            "label": "Search"
+          },
+          {
+            "value": "secure-checkout",
+            "label": "Secure Checkout"
+          },
+          {
+            "value": "shopping-bag",
+            "label": "Shopping Bag"
+          },
+          {
+            "value": "sleep-in-bed",
+            "label": "Sleep In Bed"
+          },
+          {
+            "value": "star-fill",
+            "label": "Star Fill"
+          },
+          {
+            "value": "star-outline",
+            "label": "Star Outline"
+          },
+          {
+            "value": "trustpilot-primary-dark",
+            "label": "Trustpilot Primary Dark"
+          },
+          {
+            "value": "twitter",
+            "label": "Twitter"
+          },
+          {
+            "value": "uk-map",
+            "label": "Uk Map"
+          },
+          {
+            "value": "union-jack",
+            "label": "Union Jack"
+          },
+          {
+            "value": "user-check",
+            "label": "User Check"
+          },
+          {
+            "value": "user",
+            "label": "User"
+          },
+          {
+            "value": "warranty",
+            "label": "Warranty"
+          },
+          {
+            "value": "widths",
+            "label": "Widths"
+          },
+          {
+            "value": "wireless",
+            "label": "Wireless"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "sidebar_title_03",
+        "label": "Title"
+      },
+      {
+        "type": "url",
+        "id": "sidebar_url_03",
+        "label": "Link"
+      }
+    ]
+  },
+  {
+    "name": "Popup - Book a Call",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Use by adding #consultation-call as the url-link."
+      },
+      {
+        "type": "text",
+        "id": "popup_call_title",
+        "label": "Headline",
+        "default": "Book a call with our expert advisors"
+      },
+      {
+        "type": "text",
+        "id": "popup_call_ctalabel",
+        "label": "Button - Label",
+        "default": "Book a call"
+      }
+    ]
+  },
+  {
+    "name": "Popup - Request Brochure",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Use by adding #request-brochure as the url-link."
+      },
+      {
+        "type": "text",
+        "id": "popup_brochure_title",
+        "label": "Headline",
+        "default": "Get your free brochure in the post"
+      },
+      {
+        "type": "richtext",
+        "id": "popup_brochure_info",
+        "label": "More information",
+        "default": "<p>Request a free brochure by completing the form below. Submit before 3pm Monday to Friday and your brochure will be delivered through your door the very next day.<\/p>"
+      },
+      {
+        "type": "text",
+        "id": "popup_brochure_ctalabel",
+        "label": "Button - Label",
+        "default": "Request a Brochure"
+      }
+    ]
+  },
+  {
+    "name": "Popup - View Retailers",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Use by adding #view-retailers as the url-link."
+      },
+      {
+        "type": "text",
+        "id": "popup_retailers_title",
+        "label": "Headline",
+        "default": "Find your nearest retailer"
+      },
+      {
+        "type": "richtext",
+        "id": "popup_retailers_info",
+        "label": "More information",
+        "default": "<p>Enter your details below and we’ll be in touch with a list of your nearest retailers. Please specify the product type you want to try so we can suggest appropriate retailers.<\/p>"
+      },
+      {
+        "type": "text",
+        "id": "popup_retailers_ctalabel",
+        "label": "Button - Label",
+        "default": "Request retailers"
+      }
+    ]
+  },
+  {
+    "name": "Popup - Bespoke Design Service",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Use by adding #bespoke-design-service as the url-link."
+      },
+      {
+        "type": "text",
+        "id": "popup_bed-service_subheading",
+        "label": "Sub heading",
+        "default": "Bespoke Design Service"
+      },
+      {
+        "type": "text",
+        "id": "popup_bed-service_title-main",
+        "label": "Title - Main",
+        "default": "Red Velvet? Tall Headboard? Tartan Weave?"
+      },
+      {
+        "type": "textarea",
+        "id": "popup_bed-service_description",
+        "label": "Add description"
+      },
+      {
+        "type": "header",
+        "content": "CTA section"
+      },
+      {
+        "type": "text",
+        "id": "popup_bed-service_title-cta",
+        "label": "Title - CTA",
+        "default": "Create your own bespoke design"
+      },
+      {
+        "type": "text",
+        "id": "popup_bed-service_btn-label",
+        "label": "Button - Label",
+        "default": "Learn More"
+      },
+      {
+        "type": "url",
+        "id": "popup_bed-service_btn-url",
+        "label": "Button - Url"
+      },
+      {
+        "type": "text",
+        "id": "popup_bed-service_link-label",
+        "label": "Link - Label",
+        "default": "Call 0333 222 8484"
+      }
+    ]
+  },
+  {
+    "name": "Adj Beds - Upgrade Packages",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Settings for option 'Upgrade Packages' (only applies to beds in 'Adjustable Beds' collection)"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_title",
+        "label": "Title for options",
+        "default": "Upgrade Packages"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o1",
+        "label": "Title for Standard option",
+        "default": "No Upgrade"
+      },
+      {
+        "type": "header",
+        "content": "--- Features for Plus option"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o2_f1",
+        "label": "Feature #1 (Plus)",
+        "default": "Additional head tilt"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o2_f2",
+        "label": "Feature #2 (Plus)",
+        "default": "Underbed lightning"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o2_f3",
+        "label": "Feature #3 (Plus)",
+        "default": "Back massage"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o2_f4",
+        "label": "Feature #4 (Plus)",
+        "default": "Smartphone app"
+      },
+      {
+        "type": "header",
+        "content": "--- Features for Luxe option"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o3_f1",
+        "label": "Feature #1 (Luxe)",
+        "default": "All 'Plus' featured"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o3_f2",
+        "label": "Feature #2 (Luxe)",
+        "default": "Full body massage"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o3_f3",
+        "label": "Feature #3 (Luxe)",
+        "default": "Alexa pairing"
+      },
+      {
+        "type": "text",
+        "id": "adj_upgrade_o3_f4",
+        "label": "Feature #4 (Luxe)",
+        "default": "Wall hugging"
+      }
+    ]
+  },
+  {
+    "name": "Smart Base Selector",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Features for Smart Base Motion"
+      },
+      {
+        "type": "checkbox",
+        "id": "feature_motion_checkmark1",
+        "label": "Tick if you want to hide the checkmark for text in Feature 1",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "feature_motion_1",
+        "label": "Motion feature 1",
+        "default": "Back Adjustment"
+      },
+      {
+        "type": "text",
+        "id": "feature_motion_2",
+        "label": "Motion feature 2",
+        "default": "Leg Adjustment"
+      },
+      {
+        "type": "text",
+        "id": "feature_motion_3",
+        "label": "Motion feature 3",
+        "default": "Zero Gravity Mode"
+      },
+      {
+        "type": "text",
+        "id": "feature_motion_4",
+        "label": "Motion feature 4",
+        "default": "Anti-Snore Mode"
+      },
+      {
+        "type": "text",
+        "id": "feature_motion_5",
+        "label": "Motion feature 5",
+        "default": "Backlit Wireless Handset"
+      },
+      {
+        "type": "header",
+        "content": "Features for Smart Base MotionPlus"
+      },
+      {
+        "type": "checkbox",
+        "id": "feature_motionplus_checkmark1",
+        "label": "Tick if you want to hide the checkmark for text in Feature 1",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "feature_motionplus_1",
+        "label": "MotionPlus feature 1",
+        "default": "Motion™ base features and:"
+      },
+      {
+        "type": "text",
+        "id": "feature_motionplus_2",
+        "label": "MotionPlus feature 2",
+        "default": "App Control"
+      },
+      {
+        "type": "text",
+        "id": "feature_motionplus_3",
+        "label": "MotionPlus feature 3",
+        "default": "Massage"
+      },
+      {
+        "type": "text",
+        "id": "feature_motionplus_4",
+        "label": "MotionPlus feature 4",
+        "default": "Underbed Light"
+      },
+      {
+        "type": "text",
+        "id": "feature_motionplus_5",
+        "label": "MotionPlus feature 5",
+        "default": "Neck Tilt"
+      },
+      {
+        "type": "header",
+        "content": "Features for Smart Base MotionLuxe"
+      },
+      {
+        "type": "checkbox",
+        "id": "feature_motionluxe_checkmark1",
+        "label": "Tick if you want to hide the checkmark for text in Feature 1",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "feature_motionluxe_1",
+        "label": "MotionLuxe feature 1",
+        "default": "MotionPlus™ base features and:"
+      },
+      {
+        "type": "text",
+        "id": "feature_motionluxe_2",
+        "label": "MotionLuxe feature 2",
+        "default": "Alexa Voice Control"
+      },
+      {
+        "type": "text",
+        "id": "feature_motionluxe_3",
+        "label": "MotionLuxe feature 3",
+        "default": "Wall Hugging"
+      },
+      {
+        "type": "text",
+        "id": "feature_motionluxe_4",
+        "label": "MotionLuxe feature 4",
+        "default": "Back\/Leg\/Feet Massage"
+      },
+      {
+        "type": "text",
+        "id": "feature_motionluxe_5",
+        "label": "MotionLuxe feature 5"
+      }
+    ]
+  },
+  {
+    "name": "Custom - Header trustbar",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content settings for the 4 column trustbar, hidden on devices <1280px."
+      },
+      {
+        "type": "checkbox",
+        "id": "show_trustbar",
+        "default": true,
+        "label": "Untick if you want to hide the trustbar"
+      },
+      {
+        "type": "header",
+        "content": "Column 1"
+      },
+      {
+        "type": "select",
+        "id": "trustbar_1_icon",
+        "options": [
+          {
+            "value": "bed-home-trial",
+            "label": "Bed Home 10DT"
+          },
+          {
+            "value": "trustpilot-stars",
+            "label": "Trustpilot stars"
+          },
+          {
+            "value": "advice",
+            "label": "Advice"
+          },
+          {
+            "value": "arrow-down",
+            "label": "Arrow Down"
+          },
+          {
+            "value": "arrow-left",
+            "label": "Arrow Left"
+          },
+          {
+            "value": "arrow-right",
+            "label": "Arrow Right"
+          },
+          {
+            "value": "arrow-up",
+            "label": "Arrow Up"
+          },
+          {
+            "value": "bars",
+            "label": "Bars"
+          },
+          {
+            "value": "bed",
+            "label": "Bed"
+          },
+          {
+            "value": "bespoke-service",
+            "label": "Bespoke Service"
+          },
+          {
+            "value": "brochure2",
+            "label": "Brochure2"
+          },
+          {
+            "value": "brush-square",
+            "label": "Brush Square"
+          },
+          {
+            "value": "caret-down",
+            "label": "Caret Down"
+          },
+          {
+            "value": "caret-left",
+            "label": "Caret Left"
+          },
+          {
+            "value": "caret-right",
+            "label": "Caret Right"
+          },
+          {
+            "value": "caret-up",
+            "label": "Caret Up"
+          },
+          {
+            "value": "check-circle",
+            "label": "Check Circle"
+          },
+          {
+            "value": "check",
+            "label": "Check"
+          },
+          {
+            "value": "chevron-down",
+            "label": "Chevron Down"
+          },
+          {
+            "value": "chevron-left",
+            "label": "Chevron Left"
+          },
+          {
+            "value": "chevron-right",
+            "label": "Chevron Right"
+          },
+          {
+            "value": "chevron-up",
+            "label": "Chevron Up"
+          },
+          {
+            "value": "circulation",
+            "label": "Circulation"
+          },
+          {
+            "value": "close",
+            "label": "Close"
+          },
+          {
+            "value": "comfort",
+            "label": "Comfort"
+          },
+          {
+            "value": "customisable",
+            "label": "Customisable"
+          },
+          {
+            "value": "delivery-lg",
+            "label": "Delivery Lg"
+          },
+          {
+            "value": "delivery-pallet",
+            "label": "Delivery Pallet"
+          },
+          {
+            "value": "delivery-time",
+            "label": "Delivery Time"
+          },
+          {
+            "value": "delivery",
+            "label": "Delivery"
+          },
+          {
+            "value": "delivery2",
+            "label": "Delivery2"
+          },
+          {
+            "value": "discover",
+            "label": "Discover"
+          },
+          {
+            "value": "documents",
+            "label": "Documents"
+          },
+          {
+            "value": "documents2",
+            "label": "Documents2"
+          },
+          {
+            "value": "double-quote",
+            "label": "Double Quote"
+          },
+          {
+            "value": "facebook-f",
+            "label": "Facebook F"
+          },
+          {
+            "value": "finance",
+            "label": "Finance"
+          },
+          {
+            "value": "finance2",
+            "label": "Finance2"
+          },
+          {
+            "value": "headboards",
+            "label": "Headboards"
+          },
+          {
+            "value": "headset",
+            "label": "Headset"
+          },
+          {
+            "value": "heart-hands-lg",
+            "label": "Heart Hands Lg"
+          },
+          {
+            "value": "heart-outline",
+            "label": "Heart Outline"
+          },
+          {
+            "value": "light-bulb",
+            "label": "Light Bulb"
+          },
+          {
+            "value": "linkedin-in",
+            "label": "Linkedin In"
+          },
+          {
+            "value": "maintenance",
+            "label": "Maintenance"
+          },
+          {
+            "value": "minus",
+            "label": "Minus"
+          },
+          {
+            "value": "padded-mattress-platform",
+            "label": "Padded Mattress Platform"
+          },
+          {
+            "value": "parts",
+            "label": "Parts"
+          },
+          {
+            "value": "play-circle",
+            "label": "Play Circle"
+          },
+          {
+            "value": "plus",
+            "label": "Plus"
+          },
+          {
+            "value": "posture",
+            "label": "Posture"
+          },
+          {
+            "value": "recycle-lg",
+            "label": "Recycle Lg"
+          },
+          {
+            "value": "sales",
+            "label": "Sales"
+          },
+          {
+            "value": "search",
+            "label": "Search"
+          },
+          {
+            "value": "secure-checkout",
+            "label": "Secure Checkout"
+          },
+          {
+            "value": "shopping-bag",
+            "label": "Shopping Bag"
+          },
+          {
+            "value": "sleep-in-bed",
+            "label": "Sleep In Bed"
+          },
+          {
+            "value": "star-fill",
+            "label": "Star Fill"
+          },
+          {
+            "value": "star-outline",
+            "label": "Star Outline"
+          },
+          {
+            "value": "trustpilot-primary-dark",
+            "label": "Trustpilot Primary Dark"
+          },
+          {
+            "value": "twitter",
+            "label": "Twitter"
+          },
+          {
+            "value": "uk-map",
+            "label": "Uk Map"
+          },
+          {
+            "value": "union-jack",
+            "label": "Union Jack"
+          },
+          {
+            "value": "user-check",
+            "label": "User Check"
+          },
+          {
+            "value": "user",
+            "label": "User"
+          },
+          {
+            "value": "warranty",
+            "label": "Warranty"
+          },
+          {
+            "value": "widths",
+            "label": "Widths"
+          },
+          {
+            "value": "wireless",
+            "label": "Wireless"
+          }
+        ],
+        "label": "Column 1 - Icon"
+      },
+      {
+        "type": "text",
+        "id": "trustbar_1_title",
+        "label": "Column 1 - Title",
+        "default": "Made in UK & Europe"
+      },
+      {
+        "type": "url",
+        "id": "trustbar_1_link",
+        "label": "Column 1 - Link"
+      },
+      {
+        "type": "header",
+        "content": "Column 2"
+      },
+      {
+        "type": "select",
+        "id": "trustbar_2_icon",
+        "options": [
+          {
+            "value": "bed-home-trial",
+            "label": "Bed Home 10DT"
+          },
+          {
+            "value": "trustpilot-stars",
+            "label": "Trustpilot stars"
+          },
+          {
+            "value": "advice",
+            "label": "Advice"
+          },
+          {
+            "value": "arrow-down",
+            "label": "Arrow Down"
+          },
+          {
+            "value": "arrow-left",
+            "label": "Arrow Left"
+          },
+          {
+            "value": "arrow-right",
+            "label": "Arrow Right"
+          },
+          {
+            "value": "arrow-up",
+            "label": "Arrow Up"
+          },
+          {
+            "value": "bars",
+            "label": "Bars"
+          },
+          {
+            "value": "bed",
+            "label": "Bed"
+          },
+          {
+            "value": "bespoke-service",
+            "label": "Bespoke Service"
+          },
+          {
+            "value": "brochure2",
+            "label": "Brochure2"
+          },
+          {
+            "value": "brush-square",
+            "label": "Brush Square"
+          },
+          {
+            "value": "caret-down",
+            "label": "Caret Down"
+          },
+          {
+            "value": "caret-left",
+            "label": "Caret Left"
+          },
+          {
+            "value": "caret-right",
+            "label": "Caret Right"
+          },
+          {
+            "value": "caret-up",
+            "label": "Caret Up"
+          },
+          {
+            "value": "check-circle",
+            "label": "Check Circle"
+          },
+          {
+            "value": "check",
+            "label": "Check"
+          },
+          {
+            "value": "chevron-down",
+            "label": "Chevron Down"
+          },
+          {
+            "value": "chevron-left",
+            "label": "Chevron Left"
+          },
+          {
+            "value": "chevron-right",
+            "label": "Chevron Right"
+          },
+          {
+            "value": "chevron-up",
+            "label": "Chevron Up"
+          },
+          {
+            "value": "circulation",
+            "label": "Circulation"
+          },
+          {
+            "value": "close",
+            "label": "Close"
+          },
+          {
+            "value": "comfort",
+            "label": "Comfort"
+          },
+          {
+            "value": "customisable",
+            "label": "Customisable"
+          },
+          {
+            "value": "delivery-lg",
+            "label": "Delivery Lg"
+          },
+          {
+            "value": "delivery-pallet",
+            "label": "Delivery Pallet"
+          },
+          {
+            "value": "delivery-time",
+            "label": "Delivery Time"
+          },
+          {
+            "value": "delivery",
+            "label": "Delivery"
+          },
+          {
+            "value": "delivery2",
+            "label": "Delivery2"
+          },
+          {
+            "value": "discover",
+            "label": "Discover"
+          },
+          {
+            "value": "documents",
+            "label": "Documents"
+          },
+          {
+            "value": "documents2",
+            "label": "Documents2"
+          },
+          {
+            "value": "double-quote",
+            "label": "Double Quote"
+          },
+          {
+            "value": "facebook-f",
+            "label": "Facebook F"
+          },
+          {
+            "value": "finance",
+            "label": "Finance"
+          },
+          {
+            "value": "finance2",
+            "label": "Finance2"
+          },
+          {
+            "value": "headboards",
+            "label": "Headboards"
+          },
+          {
+            "value": "headset",
+            "label": "Headset"
+          },
+          {
+            "value": "heart-hands-lg",
+            "label": "Heart Hands Lg"
+          },
+          {
+            "value": "heart-outline",
+            "label": "Heart Outline"
+          },
+          {
+            "value": "light-bulb",
+            "label": "Light Bulb"
+          },
+          {
+            "value": "linkedin-in",
+            "label": "Linkedin In"
+          },
+          {
+            "value": "maintenance",
+            "label": "Maintenance"
+          },
+          {
+            "value": "minus",
+            "label": "Minus"
+          },
+          {
+            "value": "padded-mattress-platform",
+            "label": "Padded Mattress Platform"
+          },
+          {
+            "value": "parts",
+            "label": "Parts"
+          },
+          {
+            "value": "play-circle",
+            "label": "Play Circle"
+          },
+          {
+            "value": "plus",
+            "label": "Plus"
+          },
+          {
+            "value": "posture",
+            "label": "Posture"
+          },
+          {
+            "value": "recycle-lg",
+            "label": "Recycle Lg"
+          },
+          {
+            "value": "sales",
+            "label": "Sales"
+          },
+          {
+            "value": "search",
+            "label": "Search"
+          },
+          {
+            "value": "secure-checkout",
+            "label": "Secure Checkout"
+          },
+          {
+            "value": "shopping-bag",
+            "label": "Shopping Bag"
+          },
+          {
+            "value": "sleep-in-bed",
+            "label": "Sleep In Bed"
+          },
+          {
+            "value": "star-fill",
+            "label": "Star Fill"
+          },
+          {
+            "value": "star-outline",
+            "label": "Star Outline"
+          },
+          {
+            "value": "trustpilot-primary-dark",
+            "label": "Trustpilot Primary Dark"
+          },
+          {
+            "value": "twitter",
+            "label": "Twitter"
+          },
+          {
+            "value": "uk-map",
+            "label": "Uk Map"
+          },
+          {
+            "value": "union-jack",
+            "label": "Union Jack"
+          },
+          {
+            "value": "user-check",
+            "label": "User Check"
+          },
+          {
+            "value": "user",
+            "label": "User"
+          },
+          {
+            "value": "warranty",
+            "label": "Warranty"
+          },
+          {
+            "value": "widths",
+            "label": "Widths"
+          },
+          {
+            "value": "wireless",
+            "label": "Wireless"
+          }
+        ],
+        "label": "Column 2 - Icon"
+      },
+      {
+        "type": "text",
+        "id": "trustbar_2_title",
+        "label": "Column 2 - Title",
+        "default": "4.9\/5 'Excellent'"
+      },
+      {
+        "type": "url",
+        "id": "trustbar_2_link",
+        "label": "Column 2 - Link"
+      },
+      {
+        "type": "header",
+        "content": "Column 3"
+      },
+      {
+        "type": "select",
+        "id": "trustbar_3_icon",
+        "options": [
+          {
+            "value": "bed-home-trial",
+            "label": "Bed Home 10DT"
+          },
+          {
+            "value": "trustpilot-stars",
+            "label": "Trustpilot stars"
+          },
+          {
+            "value": "advice",
+            "label": "Advice"
+          },
+          {
+            "value": "arrow-down",
+            "label": "Arrow Down"
+          },
+          {
+            "value": "arrow-left",
+            "label": "Arrow Left"
+          },
+          {
+            "value": "arrow-right",
+            "label": "Arrow Right"
+          },
+          {
+            "value": "arrow-up",
+            "label": "Arrow Up"
+          },
+          {
+            "value": "bars",
+            "label": "Bars"
+          },
+          {
+            "value": "bed",
+            "label": "Bed"
+          },
+          {
+            "value": "bespoke-service",
+            "label": "Bespoke Service"
+          },
+          {
+            "value": "brochure2",
+            "label": "Brochure2"
+          },
+          {
+            "value": "brush-square",
+            "label": "Brush Square"
+          },
+          {
+            "value": "caret-down",
+            "label": "Caret Down"
+          },
+          {
+            "value": "caret-left",
+            "label": "Caret Left"
+          },
+          {
+            "value": "caret-right",
+            "label": "Caret Right"
+          },
+          {
+            "value": "caret-up",
+            "label": "Caret Up"
+          },
+          {
+            "value": "check-circle",
+            "label": "Check Circle"
+          },
+          {
+            "value": "check",
+            "label": "Check"
+          },
+          {
+            "value": "chevron-down",
+            "label": "Chevron Down"
+          },
+          {
+            "value": "chevron-left",
+            "label": "Chevron Left"
+          },
+          {
+            "value": "chevron-right",
+            "label": "Chevron Right"
+          },
+          {
+            "value": "chevron-up",
+            "label": "Chevron Up"
+          },
+          {
+            "value": "circulation",
+            "label": "Circulation"
+          },
+          {
+            "value": "close",
+            "label": "Close"
+          },
+          {
+            "value": "comfort",
+            "label": "Comfort"
+          },
+          {
+            "value": "customisable",
+            "label": "Customisable"
+          },
+          {
+            "value": "delivery-lg",
+            "label": "Delivery Lg"
+          },
+          {
+            "value": "delivery-pallet",
+            "label": "Delivery Pallet"
+          },
+          {
+            "value": "delivery-time",
+            "label": "Delivery Time"
+          },
+          {
+            "value": "delivery",
+            "label": "Delivery"
+          },
+          {
+            "value": "delivery2",
+            "label": "Delivery2"
+          },
+          {
+            "value": "discover",
+            "label": "Discover"
+          },
+          {
+            "value": "documents",
+            "label": "Documents"
+          },
+          {
+            "value": "documents2",
+            "label": "Documents2"
+          },
+          {
+            "value": "double-quote",
+            "label": "Double Quote"
+          },
+          {
+            "value": "facebook-f",
+            "label": "Facebook F"
+          },
+          {
+            "value": "finance",
+            "label": "Finance"
+          },
+          {
+            "value": "finance2",
+            "label": "Finance2"
+          },
+          {
+            "value": "headboards",
+            "label": "Headboards"
+          },
+          {
+            "value": "headset",
+            "label": "Headset"
+          },
+          {
+            "value": "heart-hands-lg",
+            "label": "Heart Hands Lg"
+          },
+          {
+            "value": "heart-outline",
+            "label": "Heart Outline"
+          },
+          {
+            "value": "light-bulb",
+            "label": "Light Bulb"
+          },
+          {
+            "value": "linkedin-in",
+            "label": "Linkedin In"
+          },
+          {
+            "value": "maintenance",
+            "label": "Maintenance"
+          },
+          {
+            "value": "minus",
+            "label": "Minus"
+          },
+          {
+            "value": "padded-mattress-platform",
+            "label": "Padded Mattress Platform"
+          },
+          {
+            "value": "parts",
+            "label": "Parts"
+          },
+          {
+            "value": "play-circle",
+            "label": "Play Circle"
+          },
+          {
+            "value": "plus",
+            "label": "Plus"
+          },
+          {
+            "value": "posture",
+            "label": "Posture"
+          },
+          {
+            "value": "recycle-lg",
+            "label": "Recycle Lg"
+          },
+          {
+            "value": "sales",
+            "label": "Sales"
+          },
+          {
+            "value": "search",
+            "label": "Search"
+          },
+          {
+            "value": "secure-checkout",
+            "label": "Secure Checkout"
+          },
+          {
+            "value": "shopping-bag",
+            "label": "Shopping Bag"
+          },
+          {
+            "value": "sleep-in-bed",
+            "label": "Sleep In Bed"
+          },
+          {
+            "value": "star-fill",
+            "label": "Star Fill"
+          },
+          {
+            "value": "star-outline",
+            "label": "Star Outline"
+          },
+          {
+            "value": "trustpilot-primary-dark",
+            "label": "Trustpilot Primary Dark"
+          },
+          {
+            "value": "twitter",
+            "label": "Twitter"
+          },
+          {
+            "value": "uk-map",
+            "label": "Uk Map"
+          },
+          {
+            "value": "union-jack",
+            "label": "Union Jack"
+          },
+          {
+            "value": "user-check",
+            "label": "User Check"
+          },
+          {
+            "value": "user",
+            "label": "User"
+          },
+          {
+            "value": "warranty",
+            "label": "Warranty"
+          },
+          {
+            "value": "widths",
+            "label": "Widths"
+          },
+          {
+            "value": "wireless",
+            "label": "Wireless"
+          }
+        ],
+        "label": "Column 3 - Icon"
+      },
+      {
+        "type": "text",
+        "id": "trustbar_3_title",
+        "label": "Column 3 - Title",
+        "default": "Free Next Day Delivery"
+      },
+      {
+        "type": "url",
+        "id": "trustbar_3_link",
+        "label": "Column 3 - Link"
+      },
+      {
+        "type": "header",
+        "content": "Column 4"
+      },
+      {
+        "type": "select",
+        "id": "trustbar_4_icon",
+        "options": [
+          {
+            "value": "bed-home-trial",
+            "label": "Bed Home 10DT"
+          },
+          {
+            "value": "trustpilot-stars",
+            "label": "Trustpilot stars"
+          },
+          {
+            "value": "advice",
+            "label": "Advice"
+          },
+          {
+            "value": "arrow-down",
+            "label": "Arrow Down"
+          },
+          {
+            "value": "arrow-left",
+            "label": "Arrow Left"
+          },
+          {
+            "value": "arrow-right",
+            "label": "Arrow Right"
+          },
+          {
+            "value": "arrow-up",
+            "label": "Arrow Up"
+          },
+          {
+            "value": "bars",
+            "label": "Bars"
+          },
+          {
+            "value": "bed",
+            "label": "Bed"
+          },
+          {
+            "value": "bespoke-service",
+            "label": "Bespoke Service"
+          },
+          {
+            "value": "brochure2",
+            "label": "Brochure2"
+          },
+          {
+            "value": "brush-square",
+            "label": "Brush Square"
+          },
+          {
+            "value": "caret-down",
+            "label": "Caret Down"
+          },
+          {
+            "value": "caret-left",
+            "label": "Caret Left"
+          },
+          {
+            "value": "caret-right",
+            "label": "Caret Right"
+          },
+          {
+            "value": "caret-up",
+            "label": "Caret Up"
+          },
+          {
+            "value": "check-circle",
+            "label": "Check Circle"
+          },
+          {
+            "value": "check",
+            "label": "Check"
+          },
+          {
+            "value": "chevron-down",
+            "label": "Chevron Down"
+          },
+          {
+            "value": "chevron-left",
+            "label": "Chevron Left"
+          },
+          {
+            "value": "chevron-right",
+            "label": "Chevron Right"
+          },
+          {
+            "value": "chevron-up",
+            "label": "Chevron Up"
+          },
+          {
+            "value": "circulation",
+            "label": "Circulation"
+          },
+          {
+            "value": "close",
+            "label": "Close"
+          },
+          {
+            "value": "comfort",
+            "label": "Comfort"
+          },
+          {
+            "value": "customisable",
+            "label": "Customisable"
+          },
+          {
+            "value": "delivery-lg",
+            "label": "Delivery Lg"
+          },
+          {
+            "value": "delivery-pallet",
+            "label": "Delivery Pallet"
+          },
+          {
+            "value": "delivery-time",
+            "label": "Delivery Time"
+          },
+          {
+            "value": "delivery",
+            "label": "Delivery"
+          },
+          {
+            "value": "delivery2",
+            "label": "Delivery2"
+          },
+          {
+            "value": "discover",
+            "label": "Discover"
+          },
+          {
+            "value": "documents",
+            "label": "Documents"
+          },
+          {
+            "value": "documents2",
+            "label": "Documents2"
+          },
+          {
+            "value": "double-quote",
+            "label": "Double Quote"
+          },
+          {
+            "value": "facebook-f",
+            "label": "Facebook F"
+          },
+          {
+            "value": "finance",
+            "label": "Finance"
+          },
+          {
+            "value": "finance2",
+            "label": "Finance2"
+          },
+          {
+            "value": "headboards",
+            "label": "Headboards"
+          },
+          {
+            "value": "headset",
+            "label": "Headset"
+          },
+          {
+            "value": "heart-hands-lg",
+            "label": "Heart Hands Lg"
+          },
+          {
+            "value": "heart-outline",
+            "label": "Heart Outline"
+          },
+          {
+            "value": "light-bulb",
+            "label": "Light Bulb"
+          },
+          {
+            "value": "linkedin-in",
+            "label": "Linkedin In"
+          },
+          {
+            "value": "maintenance",
+            "label": "Maintenance"
+          },
+          {
+            "value": "minus",
+            "label": "Minus"
+          },
+          {
+            "value": "padded-mattress-platform",
+            "label": "Padded Mattress Platform"
+          },
+          {
+            "value": "parts",
+            "label": "Parts"
+          },
+          {
+            "value": "play-circle",
+            "label": "Play Circle"
+          },
+          {
+            "value": "plus",
+            "label": "Plus"
+          },
+          {
+            "value": "posture",
+            "label": "Posture"
+          },
+          {
+            "value": "recycle-lg",
+            "label": "Recycle Lg"
+          },
+          {
+            "value": "sales",
+            "label": "Sales"
+          },
+          {
+            "value": "search",
+            "label": "Search"
+          },
+          {
+            "value": "secure-checkout",
+            "label": "Secure Checkout"
+          },
+          {
+            "value": "shopping-bag",
+            "label": "Shopping Bag"
+          },
+          {
+            "value": "sleep-in-bed",
+            "label": "Sleep In Bed"
+          },
+          {
+            "value": "star-fill",
+            "label": "Star Fill"
+          },
+          {
+            "value": "star-outline",
+            "label": "Star Outline"
+          },
+          {
+            "value": "trustpilot-primary-dark",
+            "label": "Trustpilot Primary Dark"
+          },
+          {
+            "value": "twitter",
+            "label": "Twitter"
+          },
+          {
+            "value": "uk-map",
+            "label": "Uk Map"
+          },
+          {
+            "value": "union-jack",
+            "label": "Union Jack"
+          },
+          {
+            "value": "user-check",
+            "label": "User Check"
+          },
+          {
+            "value": "user",
+            "label": "User"
+          },
+          {
+            "value": "warranty",
+            "label": "Warranty"
+          },
+          {
+            "value": "widths",
+            "label": "Widths"
+          },
+          {
+            "value": "wireless",
+            "label": "Wireless"
+          }
+        ],
+        "label": "Column 4 - Icon"
+      },
+      {
+        "type": "text",
+        "id": "trustbar_4_title",
+        "label": "Column 4 - Title",
+        "default": "10 Day Home Trial"
+      },
+      {
+        "type": "url",
+        "id": "trustbar_4_link",
+        "label": "Column 4 - Link"
+      }
+    ]
+  }
+]

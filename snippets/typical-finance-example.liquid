@@ -1,0 +1,28 @@
+{% comment %}
+    The typical finance example snippet.
+    Params:
+        finance_amount
+        finance_term
+        finance_apr
+        finance_deposit
+        align - text alignment flag
+{% endcomment %}
+
+{%-liquid
+    assign show_finance = false
+    assign text_align = blank
+
+    if settings.typical_finance_show and finance_amount != blank and finance_term != blank and finance_apr != blank and finance_deposit != blank
+        assign show_finance = true
+    endif
+
+    if align == "center"
+        assign text_align = 'class="text-center"'
+    else if align = "right"
+        assign text_align = 'class="text-right"'
+    endif
+-%}
+
+{%- if show_finance -%}
+    <p {{ text_align }}><small class="text-14">Representative example: {{ finance_amount }} over {{ finance_term }} with {{ finance_deposit }} deposit, representative {{ finance_apr }} APR.</small></p>
+{%- endif -%}

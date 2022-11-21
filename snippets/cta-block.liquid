@@ -1,0 +1,23 @@
+{% comment %}
+    CTA Block snippet.
+{% endcomment %}
+
+<a class="cta-box-link" href="{{- href -}}">
+    <div class="c-info-block{% if class %} {{ class }}{% endif %} bg-elephant py-10" id="cta-box">
+        {%- if icon != blank -%}
+        <svg class="c-info-block__icon mb-8" aria-hidden="true" role="presentation" style="display: inline-block;">
+            <use xlink:href="#sprite-{{ icon | handleize }}"></use>
+        </svg>
+        {%- endif -%}
+        {%- if heading != blank -%}
+        <h3 class="mb-8 text-24 font-weight-medium leading-tight px-4">
+            {{- heading | escape -}}
+        </h3>
+        {%- endif -%}
+        {%- if content != blank -%}
+        <div class="cta-link mb-n4 pb-2 text-14 text-uppercase tracking-wider">
+            <span class="cta-box-border pb-2">{{- content | safe -}}</span>
+        </div>
+        {%- endif -%}
+    </div>
+</a>

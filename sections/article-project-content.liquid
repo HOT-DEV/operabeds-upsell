@@ -1,0 +1,106 @@
+{% comment %}
+    The Project Content section
+{% endcomment %}
+
+{%- liquid
+    assign project_content_heading = article.metafields.accentuate.project_content_heading
+    assign project_content_text = article.metafields.accentuate.project_content_text
+    assign project_content_image = article.metafields.accentuate.project_content_image
+    assign project_content_link_text = article.metafields.accentuate.project_content_link_text
+    assign project_content_link_url = article.metafields.accentuate.project_content_link_url
+
+    assign img_xs = 'https://via.placeholder.com/543x408'
+    assign img_sm = 'https://via.placeholder.com/687x516'
+    assign img_md = 'https://via.placeholder.com/943x708'
+    assign img_lg = 'https://via.placeholder.com/444x334'
+    assign img_xl = 'https://via.placeholder.com/477x358'
+    assign img_xxl = 'https://via.placeholder.com/573x430'
+    assign img_xxxl = 'https://via.placeholder.com/976x732'
+    assign img_alt = ''
+
+    if project_content_image != blank
+        assign img_xs = project_content_image | file_img_url: '543x408', crop: 'center'
+        assign img_sm = project_content_image | file_img_url: '687x516', crop: 'center'
+        assign img_md = project_content_image | file_img_url: '943x708', crop: 'center'
+        assign img_lg = project_content_image | file_img_url: '444x334', crop: 'center'
+        assign img_xl = project_content_image | file_img_url: '477x358', crop: 'center'
+        assign img_xxl = project_content_image | file_img_url: '573x430', crop: 'center'
+        assign img_xxxl = project_content_image | file_img_url: '976x732', crop: 'center'
+    endif
+
+    if project_content_heading != blank or project_content_text != blank or project_content_image != blank
+        assign show_panel = true
+    else 
+        assign show_panel = false
+    endif
+
+    if project_content_image != blank
+        assign show_image = true
+    else 
+        assign show_image = false
+    endif
+-%}
+
+{%- if show_panel -%}
+    <section data-section-type="article-project-content" data-section-id="{{ section.id }}">
+        <div class="container site-padding my-20 my-md-24 my-xxl-30">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10">
+                    <div class="row no-gutters align-items-lg-center">
+                        <div class="col-12 {% if show_image %}col-lg-6 col-xxl-5{% endif %} mb-8 mb-lg-0">
+                            {%- if project_content_heading != blank -%}
+                                <h2 class="mb-8 text-26 text-lg-36 font-weight-medium leading-tight text-elephant">
+                                    {{- project_content_heading | escape -}}
+                                </h2>
+                            {%- endif -%}
+                            {%- if project_content_text != blank -%}
+                                <div class="c-rte">
+                                    {{- project_content_text | safe -}}
+                                </div>
+                            {%- endif -%}
+                            {%- if project_content_link_text != blank and project_content_link_url != blank -%}
+                                <a class="mt-10 c-btn-outline c-btn-outline--blue" href="{{ project_content_link_url }}">
+                                    {{- project_content_link_text | escape -}}
+                                    <svg class="c-btn-icon--caret" aria-hidden="true" role="presentation">
+                                        <use xlink:href="#sprite-caret-right"></use>
+                                    </svg>
+                                </a>
+                            {%- endif -%}
+                        </div>
+                        {%- if show_image -%}
+                            <div class="col-12 col-lg-6 offset-xxl-1">
+                                {%- capture img_sources -%}
+                                    <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+                                    <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                    <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                    <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                                    <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                                    <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                                    <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+                                {%- endcapture -%}
+                                <picture class="c-picture js-lazy" data-iesrc="{{ img_xxxl | url }}" data-alt="{{ img_alt | escape }}">
+                                    {{- img_sources | safe -}}
+                                    {% comment %} <img alt="" /> {% endcomment %}
+                                </picture>
+                                <noscript>
+                                    <picture class="c-picture">
+                                        {{- img_sources | safe -}}
+                                        <img alt="{{ img_alt | escape }}" />
+                                    </picture>
+                                </noscript>
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{%- schema -%}
+{
+    "name": "Content",
+    "settings": [],
+    "blocks": []
+}
+{%- endschema -%}

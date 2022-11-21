@@ -1,0 +1,95 @@
+{% comment %}
+    The start your journey section template.
+	4PE - 1/12/2021
+{% endcomment %}
+
+{{ 'start-your-journey.css' | asset_url | stylesheet_tag }}
+
+<section class="start-your-journey my-12 mt-lg-14 mb-lg-0" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row justify-content-center align-items-center" id="start-your-journey">
+            <h2 class="u-heading-md text-elephant text-center mb-4">{{ section.settings.s_title }}</h2>
+        </div>
+        <div class="mt-8 mb-0">
+            <div class="row justify-content-center justify-content-lg-around">
+                {%- if section.blocks.size > 0 -%}
+                {%- for block in section.blocks -%}
+                <div class="journey-wrapper col-12 col-lg-6 mb-8 mb-lg-0 p-0">
+                        {%- if block.settings.image -%}                  
+                    <picture class="journey-picture js-lazy" data-iesrc="{{ block.settings.image | img_url: 'master' }}"
+                        data-alt="{{ block.settings.image.alt | default: block.settings.title }}">
+                        <source media="(min-width:800px)" srcset="{{ block.settings.image | img_url: 'master' }}" />
+                        <source media="(max-width:799px)" srcset="{{ block.settings.image | img_url: 'master' }}" />
+                    </picture>
+                        {%- endif -%}                  
+                    <div class="image_overlay"></div>
+                    <div class="journey-content text-center">
+                        {%- if block.settings.title -%}
+                        <p class="text-white text-24 text-xl-30 font-weight-semibold">{{ block.settings.title }}</p>
+                        {%- endif -%}
+                        {%- if block.settings.btn_url -%}
+                        <a class="journey-btn c-btn-outline"
+                            href="{{ block.settings.btn_url }}">{{ block.settings.btn_title }}</a>
+                        {%- endif -%}
+                    </div>
+                </div>
+                {%- endfor -%}
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "OB: Start your journey",
+    "settings": [
+        {
+            "type": "text",
+            "id": "s_title",
+            "label": "Section Title",
+			"default": "Start your journey with Opera"
+        }
+    ],
+    "blocks": [
+    {
+        "type": "Block",
+        "name": "Block",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image",
+				"info": "Recommended size: 1200 x 720px (Tips: Have the main-focus point centered in the image for the best responsiveness)"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Image title",
+				"default": "Insert headline here"
+            },
+            {
+                "type": "url",
+                "id": "btn_url",
+                "label": "Button url"
+            },
+            {
+                "type": "text",
+                "id": "btn_title",
+                "label": "Button label",
+				"default": "Discover products"
+            }
+        ]
+    }
+],
+    "presets": [
+        {
+            "name": "OB: Start your journey",
+            "category": "Homepage",
+            "settings": {},
+            "blocks": [
+            ]
+        }
+    ]
+}
+{% endschema %}

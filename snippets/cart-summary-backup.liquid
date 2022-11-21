@@ -1,0 +1,76 @@
+{%- liquid
+    assign debug = false
+    assign vat_multiplier = settings.taxes_vat_multiplier | divided_by: 100.00 | plus: 1
+    assign totalPriceExVAT = cart.total_price
+    assign totalPriceIncVAT = cart.total_price | times: vat_multiplier
+    assign vatAmount = totalPriceIncVAT | minus: cart.total_price
+
+    if customer.tax_exempt
+        assign cart_vat = 0
+        assign cart_total = totalPriceExVAT
+    else
+        assign cart_vat = vatAmount
+        assign cart_total = totalPriceIncVAT
+    endif
+
+-%}
+{%- if debug -%}
+<pre>
+    vat_multiplier:      {{ vat_multiplier }}
+    totalPriceIncVAT:    {{ totalPriceIncVAT }}
+    totalPriceExVAT:     {{ totalPriceExVAT }}
+    vatAmount:           {{ vatAmount }}
+    customer.tax_exempt: {{ customer.tax_exempt }}
+</pre>
+{%- endif -%}
+
+<div class="t-cart-summary mb-4">
+    <dl>
+        <dt>{{ 'template.cart.subtotal' | t }}</dt>
+        <dd>
+            {% comment %}
+                data-cart-total is actually the sub total as we're exVAT
+            {% endcomment %}
+            <span data-sub-total-price="{{ totalPriceExVAT }}">{{ totalPriceExVAT | money }}</span>
+
+            {% comment %}
+                this field is the one which will be updated by bold, we will use it to update our sub total
+            {% endcomment %}
+            <span class="money" hidden data-cart-total data-bold-subTotalPrice>{{ totalPriceExVAT | money }}</span>
+
+        </dd>
+    </dl>
+    <hr class="my-3">
+    <dl>
+        <dt>{{ 'template.cart.vat_total' | t }}</dt>
+        <dd data-cart-vat data-vat-price="{{ cart_vat | round }}">{{ cart_vat | money }}</dd>
+    </dl>
+    <hr class="my-3">
+    <dl class="total">
+        <dt><strong>{{ 'template.cart.total' | t }}</strong></dt>
+        <dd data-total-price="{{ cart_total | round }}" class="mb-0">
+            <strong><span data-cart-total-price>{{ cart_total | money }}</span></strong>
+        </dd>
+    </dl>
+    <hr class="my-3">
+    <ul class="t-cart-summary__payments">
+        {%- for type in shop.enabled_payment_types -%}
+            <li>
+                {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+            </li>
+        {%- endfor -%}
+    </ul>
+</div>
+
+{%- liquid 
+    if show_po_number
+        render 'cart-purchase-order-number'
+    endif
+-%}
+
+<button class="c-btn2 t-cart-checkout" type="submit" name="checkout" id="checkout" form="cart_checkout">
+    <svg class="minus" aria-hidden="true" role="presentation">
+        <use xlink:href="#sprite-secure-checkout"></use>
+    </svg>
+    {{- 'template.cart.checkout' | t | escape -}}
+</button>

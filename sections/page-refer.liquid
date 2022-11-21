@@ -1,0 +1,373 @@
+{%- comment -%}
+    Page Section for template/page.refer.liquid
+{%- endcomment -%}
+<section id="refer-section">
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-12 pt-8 pb-12 pt-lg-12 pb-lg-16 text-center text-lg-left">
+                <h3 class="text-24 text-lg-30 font-weight-medium mb-6">{{ section.settings.form_heading }}</h3>
+                {% if section.settings.form_description != blank %}
+                <span class="text-16">{{ section.settings.form_description }}</span>
+                {% endif %}
+
+                <div class="c-page-form pt-6 pt-lg-6">
+                    {% form 'contact', class: 'c-form c-form-alt', id: 'refer-page-form' -%}
+                    {{ form.errors | default_errors }}
+                    <input type="hidden" name="contact[==========> FORM DETAILS]">
+                    <input type="hidden" name="contact[form]" value="Refer Page Form">
+                    <input type="hidden" name="contact[message]"
+                        value="Form below submitted through operabeds.com/pages/refer" />
+                    {%- if form.posted_successfully? -%}
+                    <div class="bg-mossgreen">
+                        <p class="c-alert c-alert--success text-tropical text-center text-16 p-2 mt-0 mb-8"
+                            role="alert">
+                            Thank you! Your referral has been received and we will contact you soon.
+                        </p>
+                    </div>
+                    {%- endif -%}
+
+                    <div class="d-lg-flex flex-lg-row justify-content-lg-between">
+                        {% comment %} RETAILER FORM {% endcomment %}
+                        <div class="col-12 col-lg-6 m-0 p-0 pr-lg-8">
+                            <h4 class="text-18 font-weight-medium mb-8 mb-lg-12 text-underline2 text-left">
+                                {{ section.settings.s1_heading }}</h4>
+                            <input type="hidden" name="contact[==========> {{ section.settings.s1_heading }}]">
+
+                            {% if section.settings.s1_name != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="your-name">{{ section.settings.s1_name }}{% if section.settings.s1_name-req == true %}*{% endif %}</label>
+                                <input type="text" name="contact[name]" id="your-name" class="c-form-input"
+                                    {% if section.settings.s1_name-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s1_position != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="your-position">{{ section.settings.s1_position }}{% if section.settings.s1_position-req == true %}*{% endif %}</label>
+                                <input type="text" name="contact[position]" id="your-position" class="c-form-input"
+                                    {% if section.settings.s1_position-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s1_email != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="your-email">{{ section.settings.s1_email }}{% if section.settings.s1_email-req == true %}*{% endif %}</label>
+                                <input type="email" name="contact[email]" id="your-email" class="c-form-input"
+                                    {% if section.settings.s1_email-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s1_phone != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="your-phone">{{ section.settings.s1_phone }}{% if section.settings.s1_phone-req == true %}*{% endif %}</label>
+                                <input type="tel" name="contact[phone]" id="your-phone" class="c-form-input"
+                                    {% if section.settings.s1_phone-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s1_store_name != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="store-name">{{ section.settings.s1_store_name }}{% if section.settings.s1_store_name-req == true %}*{% endif %}</label>
+                                <input type="text" name="contact[store_name]" id="store-name" class="c-form-input"
+                                    {% if section.settings.s1_store_name-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s1_store_address != blank %}
+                            <div class="c-form-field textarea mb-6">
+                                <label
+                                    for="store-address">{{ section.settings.s1_store_address }}{% if section.settings.s1_store_address-req == true %}*{% endif %}</label>
+                                <textarea name="contact[store_address]" id="store-address" class="c-form-input"
+                                    {% if section.settings.s1_store_address-req == true %}required{% endif %}></textarea>
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s1_store_phone != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="store-phone">{{ section.settings.s1_store_phone }}{% if section.settings.s1_store_phone-req == true %}*{% endif %}</label>
+                                <input type="tel" name="contact[store_phone]" id="store-phone" class="c-form-input"
+                                    {% if section.settings.s1_store_phone-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                        </div>
+
+                        {% comment %} CUSTOMER FORM {% endcomment %}
+                        <div class="col-12 col-lg-6 m-0 mt-12 mt-lg-0 p-0 pl-lg-8">
+                            <h4 class="text-18 font-weight-medium mb-8 mb-lg-12 text-underline2 text-left">
+                                {{ section.settings.s2_heading }}</h4>
+                            <input type="hidden" name="contact[==========> {{ section.settings.s2_heading }}]">
+
+                            {% if section.settings.s2_name != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="customer-name">{{ section.settings.s2_name }}{% if section.settings.s2_name-req == true %}*{% endif %}</label>
+                                <input type="text" name="contact[customer_name]" id="customer-name" class="c-form-input"
+                                    {% if section.settings.s2_name-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s2_phone != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="customer-phone">{{ section.settings.s2_phone }}{% if section.settings.s2_phone-req == true %}*{% endif %}</label>
+                                <input type="tel" name="contact[customer_phone]" id="customer-phone"
+                                    class="c-form-input"
+                                    {% if section.settings.s2_phone-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s2_email != blank %}
+                            <div class="c-form-field mb-6">
+                                <label
+                                    for="customer-email">{{ section.settings.s2_email }}{% if section.settings.s2_email-req == true %}*{% endif %}</label>
+                                <input type="email" name="contact[customer_email]" id="customer-email"
+                                    class="c-form-input"
+                                    {% if section.settings.s2_email-req == true %}required{% endif %} />
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s2_address != blank %}
+                            <div class="c-form-field textarea mb-6">
+                                <label
+                                    for="customer-address">{{ section.settings.s2_address }}{% if section.settings.s2_address-req == true %}*{% endif %}</label>
+                                <textarea name="contact[customer_address]" id="customer-address" class="c-form-input"
+                                    {% if section.settings.s2_address-req == true %}required{% endif %}></textarea>
+                            </div>
+                            {% endif %}
+
+                            {% if section.settings.s2_comments != blank %}
+                            <div class="c-form-field textarea mb-6">
+                                <label
+                                    for="refer-comments">{{ section.settings.s2_comments }}{% if section.settings.s2_comments-req == true %}*{% endif %}</label>
+                                <textarea name="contact[comments]" id="refer-comments" class="c-form-input"
+                                    {% if section.settings.s2_comments-req == true %}required{% endif %}></textarea>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <input type="submit" value="{{ section.settings.submit_label }}"
+                        class="c-form-contact-submit c-add-to-cart-btn text-16 text-uppercase tracking-wider font-weight-semibold" />
+
+                    {% endform %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+  
+  <style>  
+      @media screen and (min-width: 1280px) {
+      #refer-section {margin-top: 60px;}
+      }
+
+      .text-underline2 {text-decoration: underline; text-underline-offset: 2px;}
+  </style>
+  
+  {% schema %}
+  {
+  "name": "Content",
+  "settings": [
+  {
+  "type": "header",
+  "content": "Details - Refer Form ",
+  "info": "General settings for form on /refer page"
+  },
+  {
+  "type": "text",
+  "id": "form_heading",
+  "label": "Heading",
+  "default": "Send referral to Opera Beds"
+  },
+  {
+  "type": "textarea",
+  "id": "form_description",
+  "label": "Description",
+  "info": "If no description field will be hidden"
+  },
+  {
+  "type": "text",
+  "id": "submit_label",
+  "label": "Submit button label",
+  "default": "Submit referral"
+  },
+  {
+  "type": "header",
+  "content": "Details - Section 1",
+  "info": "Settings for section 1 in form"
+  },
+  {
+  "type": "text",
+  "id": "s1_heading",
+  "label": "Heading",
+  "default": "Retailer Section"
+  },
+  {
+  "type": "text",
+  "id": "s1_name",
+  "label": "Name",
+  "default": "Your Name"
+  },
+  {
+  "type": "checkbox",
+  "id": "s1_name-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s1_position",
+  "label": "Position",
+  "default": "Position"
+  },
+  {
+  "type": "checkbox",
+  "id": "s1_position-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s1_email",
+  "label": "Email",
+  "default": "Your E-Mail Address"
+  },
+  {
+  "type": "checkbox",
+  "id": "s1_email-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s1_phone",
+  "label": "Phone",
+  "default": "Your Phone Number"
+  },
+  {
+  "type": "checkbox",
+  "id": "s1_phone-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s1_store_name",
+  "label": "Store Name",
+  "default": "Store Name"
+  },
+  {
+  "type": "checkbox",
+  "id": "s1_store_name-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s1_store_address",
+  "label": "Store Address",
+  "default": "Store Address"
+  },
+  {
+  "type": "checkbox",
+  "id": "s1_store_address-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s1_store_phone",
+  "label": "Store Phone",
+  "default": "Store Phone Number"
+  },
+  {
+  "type": "checkbox",
+  "id": "s1_store_phone-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "header",
+  "content": "Details - Section 2",
+  "info": "Settings for section 2 in form"
+  },
+  {
+  "type": "text",
+  "id": "s2_heading",
+  "label": "Heading",
+  "default": "Customer Section"
+  },
+  {
+  "type": "text",
+  "id": "s2_name",
+  "label": "Name",
+  "default": "Customer Name"
+  },
+  {
+  "type": "checkbox",
+  "id": "s2_name-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s2_phone",
+  "label": "Phone",
+  "default": "Customer Phone Number"
+  },
+  {
+  "type": "checkbox",
+  "id": "s2_phone-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s2_email",
+  "label": "E-mail",
+  "default": "Customer E-mail Address"
+  },
+  {
+  "type": "checkbox",
+  "id": "s2_email-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s2_address",
+  "label": "Address",
+  "default": "Customer Address"
+  },
+  {
+  "type": "checkbox",
+  "id": "s2_address-req",
+  "label": "Is this a required field?",
+  "default": true
+  },
+  {
+  "type": "text",
+  "id": "s2_comments",
+  "label": "Comments",
+  "default": "Comments/Related Products"
+  },
+  {
+  "type": "checkbox",
+  "id": "s2_comments-req",
+  "label": "Is this a required field?",
+  "default": true
+  }
+  ]
+  }
+  {% endschema %}

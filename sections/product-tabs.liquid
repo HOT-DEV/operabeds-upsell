@@ -1,0 +1,573 @@
+{% comment %}
+    The Product Tabs section template.
+{% endcomment %}
+
+    {{- 'product-resources-tab.css' | asset_url | stylesheet_tag -}}
+
+{%- liquid
+    assign product_tabs_names = product.metafields.accentuate.product_tab_name
+    assign product_tabs_content = product.metafields.accentuate.product_tab_content
+
+    assign product_faqs_questions = product.metafields.accentuate.product_tab_faqs_question
+    assign product_faqs_answers = product.metafields.accentuate.product_tab_faqs_answer
+
+    assign product_resources_link = product.metafields.accentuate.resources_link
+    assign product_resources_titles = product.metafields.accentuate.resources_title
+    assign product_resources_linktype = product.metafields.accentuate.resources_checkbox           
+  
+    assign product_dimensions_image_single = product.metafields.accentuate.dimensions_tab_image_single
+    assign product_dimensions_image_dual = product.metafields.accentuate.dimensions_tab_image_dual
+    assign product_dimensions_titles = product.metafields.accentuate.dimensions_title
+    assign product_dimensions_a_metric = product.metafields.accentuate.measurement_a_metric
+    assign product_dimensions_a_imperial = product.metafields.accentuate.measurement_a_imperial
+    assign product_dimensions_b_metric = product.metafields.accentuate.measurement_b_metric
+    assign product_dimensions_b_imperial = product.metafields.accentuate.measurement_b_imperial
+    assign product_dimensions_c_metric = product.metafields.accentuate.measurement_c_metric
+    assign product_dimensions_c_imperial = product.metafields.accentuate.measurement_c_imperial
+    assign product_dimensions_d_metric = product.metafields.accentuate.measurement_d_metric
+    assign product_dimensions_d_imperial = product.metafields.accentuate.measurement_d_imperial
+    
+    comment
+    Add Dimensions Tab
+    endcomment      
+    
+    if product_dimensions_titles.size > 0
+        assign dimensions_heading = section.settings.dimensions_heading
+        assign dimensions_heading_obj = dimensions_heading | uniq
+        assign product_tabs_names = product_tabs_names | concat: dimensions_heading_obj
+    endif  
+
+    comment
+    Add Resources Tab
+    endcomment
+    if product_resources_titles.size > 0
+        assign resources_heading = section.settings.resources_heading
+        assign resources_heading_obj = resources_heading | uniq
+        assign product_tabs_names = product_tabs_names | concat: resources_heading_obj
+    endif    
+
+    comment
+    Add Reviews Tab
+    endcomment
+    assign reviews_heading = section.settings.reviews_heading
+
+    comment
+    Add FAQs Tab
+    endcomment
+    if product_faqs_questions.size > 0
+        assign faq_heading = section.settings.faq_heading
+        assign faq_heading_obj = faq_heading | uniq
+        assign product_tabs_names = product_tabs_names | concat: faq_heading_obj
+    endif    
+
+    assign product_tabs_size = product_tabs_names.size
+
+    assign product_skus = product.variants | map: 'sku' | join: ','
+    assign product_metafield_skus = product.metafields.trustpilot.skus | remove: '' | append: ',' | replace: ',,', ','
+    assign product_all_skus = product_skus | append: ',' | append: product_metafield_skus | replace: ',,', ',' | remove: ''
+-%}
+
+{%- capture truspilot_logo -%}
+{%- comment -%} Hide trustpilot star logo
+<svg class="trustpilot-star-icon" aria-hidden="true" role="presentation">
+    <use xlink:href="#sprite-trustpilot-star"></use>
+</svg>
+{%- endcomment -%}
+Reviews
+{%- endcapture -%}
+
+{%- if product_tabs_size > 0 -%}
+    {%- if product_faqs_questions.size > 0 -%}
+        {%- capture el_faqs_content -%}
+            <div class="c-accordion m-xl-14 mx-xxl-32" data-accordion data-accordion-multiple="true">
+                {%- for question in product_faqs_questions -%}
+                    <button class="c-accordion__toggle" id="faqs-accordion-toggle-{{ forloop.index }}" type="button" aria-controls="faqs-accordion-content-{{ forloop.index }}" aria-expanded="false" data-accordion-toggle>
+                        <span class="c-accordion__toggle__text">
+                            {{- product_faqs_questions[forloop.index0] | escape -}}
+                        </span>
+                        <svg class="c-accordion__toggle__plus" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-caret-down"></use>
+                        </svg>
+                        <svg class="c-accordion__toggle__minus" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-caret-right"></use>
+                        </svg>
+                    </button>
+                    <div class="c-accordion__content" id="faqs-accordion-content-{{ forloop.index }}" hidden>
+                        <div class="text-14 text-abbey c-rte">
+                            {{- product_faqs_answers[forloop.index0] | safe -}}
+                        </div>
+                    </div>
+                {%- endfor -%}
+            </div>
+        {%- endcapture -%}
+    {%- endif -%}
+
+    {%- capture el_reviews_content -%}
+        <!-- TrustBox widget - Product Reviews SEO -->
+        <div class="trustpilot-widget m-xl-14" data-locale="en-GB" data-template-id="5717796816f630043868e2e8" data-businessunit-id="6015ba1d33fc5e0001b26c2b" data-style-height="800px" data-style-width="100%" data-theme="light" data-sku="{{ product_all_skus }}" data-name="{{ product.title }}" data-review-languages="en" data-no-reviews="hide">
+            <a href="https://uk.trustpilot.com/review/operabeds.com" target="_blank" rel="noopener">Trustpilot</a>
+        </div>
+        <!-- End TrustBox widget -->
+    {%- endcapture -%}
+
+    {%- if product_resources_titles.size > 0 -%}
+    {%- capture el_resources_content -%}
+    <div class="row justify-content-between align-items-stretch m-xl-14 mx-xxl-32">
+      {%- for resources in product_resources_titles -%}
+      <a class="tab-resources_card d-flex mb-6 px-4 px-xl-0 text-elephant" href="{{- product_resources_link[forloop.index0] -}}" {% if product_resources_linktype[forloop.index0] == 'pdf' %}target="_blank"{% endif %}{% if product_resources_linktype[forloop.index0] == 'video' %}data-lity{% endif %}>       
+        <div class="tab-resources_card_icon col-3 text-center d-flex align-items-center justify-content-center"{% if product_resources_linktype[forloop.index0] == 'video' %} style="background-color: #0a2438!important;"{% elsif product_resources_linktype[forloop.index0] == 'pdf' %} style="background-color: #006a5b!important;" {% elsif product_resources_linktype[forloop.index0] == 'link' %} style="background-color: #b95519!important;"{% endif %}>
+          {% if product_resources_linktype[forloop.index0] == 'video' %}
+          <svg aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-resources-video"></use>
+          </svg>
+          {% elsif product_resources_linktype[forloop.index0] == 'pdf' %}
+          <svg aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-resources-pdf"></use>
+          </svg>
+          {% elsif product.metafields.accentuate.resources_checkbox[forloop.index0] == 'link' %}
+
+          <svg aria-hidden="true" role="presentation">
+            <use xlink:href="#sprite-resources-link"></use>
+          </svg>          
+
+          {% endif %}        
+        </div>
+        <div class="tab-resources_card_title col-9 d-flex align-items-center">
+          <p class="text-16 font-weight-medium m-0">{{- product_resources_titles[forloop.index0] -}}</p>
+        </div>    
+      </a>            
+      {%- endfor -%}
+    </div>
+    {%- endcapture -%}
+    {%- endif -%}
+
+    {%- if product_dimensions_titles.size > 0 -%}
+    {%- capture el_dimensions_content -%}
+
+    <!-- Option selector -->    
+    <div class="row justify-content-between align-items-center p-4 p-lg-0 m-lg-0 m-xl-8 mb-lg-4">
+{%- comment -%}
+        {% if product_dimensions_titles.size > 1 %}
+        <div class="col-12 col-xl-6 p-0 m-0">
+            <select class="c-tabs__selector c-select d-block bg-gray mb-4 py-4 py-xl-4 radius-10" data-action="width-selector" style="font-size: 16px;">
+                {%- for width_title in product_dimensions_titles -%}  
+                <option value="{{ forloop.index }}">{{ width_title }}</option>
+                {%- endfor -%}
+            </select>  
+        </div>
+        {% else %}
+        <div class="col-12 col-xl-6 p-0 m-0">
+        {%- for width_title in product_dimensions_titles -%}  
+        <p class="c-tabs__selector c-select d-block bg-gray mb-4 py-4 py-xl-4 radius-10" style="font-size: 16px; background: white;">{{ width_title }}</p>
+        {%- endfor -%}   
+        </div>  
+        {% endif %}
+{%- endcomment -%} 
+
+{% if product_dimensions_titles.size > 1 %}
+<div class="row w-100 no-gutters justify-content-end d-xl-none">
+<div class="col-12 col-xl-6 p-0 m-0 pl-xl-6 pl-xxl-8 pr-0">
+    <select class="c-tabs__selector c-select d-block bg-gray mb-4 py-4 py-xl-4 radius-10" data-action="width-selector" style="font-size: 16px;">
+        {%- for width_title in product_dimensions_titles -%}  
+        <option value="{{ forloop.index }}">{{ width_title }}</option>
+        {%- endfor -%}
+    </select>  
+</div>
+</div>
+{% else %}
+<div class="row w-100 no-gutters justify-content-end d-xl-none">
+<div class="col-12 col-xl-6 p-0 m-0 pl-xl-6 pl-xxl-8 pr-0">
+{%- for width_title in product_dimensions_titles -%}  
+<p class="c-tabs__selector c-select d-block bg-gray mb-4 py-4 py-xl-4 radius-10" style="font-size: 16px; background: white;">{{ width_title }}</p>
+{%- endfor -%}   
+</div> 
+</div>
+{% endif %}
+
+        {%- for titles in product_dimensions_titles -%}
+        <div class="dimensions-content row no-gutters justify-content-between align-items-center hk{{ forloop.index }}">
+            <div class="col-12 col-xl-6 dimensions-media pl-0 pr-0">
+
+                <!-- Image section -->
+                <div class="dimensions-media_wrapper">
+                    {% if titles contains '3ft' or titles contains '4ft' or titles contains '3ft6' or titles contains 'single' %}
+                        <img src="{{ product_dimensions_image_single }}" alt=""/>
+                    {% elsif titles contains '5ft' or titles contains '6ft' or titles contains 'king' %}
+                        <img src="{{ product_dimensions_image_dual }}" alt=""/>
+                    {% else %}
+                        <img src="{{ product_dimensions_image_single }}" alt=""/>
+                    {% endif %}
+                </div>
+ 
+            </div>
+
+            <div class="col-12 col-xl-6 dimensions-measurements pl-xl-6 pl-xxl-8 pr-0">           
+                <div class="d-none">
+                <!-- Measurement A -->
+                {% if product_dimensions_a_metric[forloop.index0] != blank or product_dimensions_a_imperial[forloop.index0] != blank %}                    
+                <div class="col-12 py-4 px-0" style="display: flex; flex-direction: row; flex-wrap:nowrap; width: 100%; justify-content: space-between; align-items: center; border-bottom: 1px solid #52555b30;">
+                    <div class="measure_icon col-7 m-0 p-0">
+                        {% render 'icon-dimensions-a' %}
+                        <span class="pl-1 text-14 text-sm-15  font-weight-bold">{{'Headboard Height'}}</span>
+                    </div>
+                    <div class="text-14 text-sm-15  font-weight-medium col-5 m-0 p-0 text-right">
+                        <div class="row no-gutters justify-content-center">
+                        <div class="first-measure text-right" style="">
+                            {{- product_dimensions_a_metric[forloop.index0] | escape }}
+                        </div>
+                        <div class="text-center" style="">/</div>
+                        <div class="text-left" style="">
+                            {{ product_dimensions_a_imperial[forloop.index0] | escape -}}
+                        </div>
+                    </div>
+                    </div>
+                </div>                
+                {% endif %}
+
+                <!-- Measurement B -->
+                {% if product_dimensions_b_metric[forloop.index0] != blank or product_dimensions_b_imperial[forloop.index0] != blank %}                    
+                <div class="col-12 py-4 px-0" style="display: flex; flex-direction: row; flex-wrap:nowrap; width: 100%; justify-content: space-between; align-items: center; border-bottom: 1px solid #52555b30;">
+                    <div class="dimensions-measurements_measure col-7 m-0 p-0">
+                        {% render 'icon-dimensions-b' %}
+                        <span class="pl-1 text-14 text-sm-15  font-weight-bold">{{'External Length'}}</span>
+                    </div>
+                    <div class="text-14 text-sm-15  font-weight-medium col-5 m-0 p-0 text-right">
+                        <div class="row no-gutters justify-content-center">
+                        <div class="first-measure text-right" style="">
+                            {{- product_dimensions_b_metric[forloop.index0] | escape }}
+                        </div>
+                        <div class="text-center" style="">/</div>
+                        <div class="text-left" style="">
+                            {{ product_dimensions_b_imperial[forloop.index0] | escape -}}
+                        </div>
+                    </div>
+                    </div>
+                </div>                
+                {% endif %}
+
+                <!-- Measurement C -->
+                {% if product_dimensions_c_metric[forloop.index0] != blank or product_dimensions_c_imperial[forloop.index0] != blank %}                    
+                <div class="col-12 py-4 px-0" style="display: flex; flex-direction: row; flex-wrap:nowrap; width: 100%; justify-content: space-between; align-items: center; border-bottom: 1px solid #52555b30;">
+                    <div class="dimensions-measurements_measure col-7 m-0 p-0">
+                        {% render 'icon-dimensions-c' %}
+                        <span class="pl-1 text-14 text-sm-15  font-weight-bold">{{'External Width'}}</span>
+                    </div>
+                    <div class="text-14 text-sm-15  font-weight-medium col-5 m-0 p-0 text-right">
+                        <div class="row no-gutters justify-content-center">
+                        <div class="first-measure text-right" style="">
+                            {{- product_dimensions_c_metric[forloop.index0] | escape }}
+                        </div>
+                        <div class="text-center" style="">/</div>
+                        <div class="text-left" style="">
+                            {{ product_dimensions_c_imperial[forloop.index0] | escape -}}
+                        </div>
+                    </div>
+                    </div>
+                </div>                
+                {% endif %}
+
+                <!-- Measurement D -->   
+                {% if product_dimensions_d_metric[forloop.index0] != blank or product_dimensions_d_imperial[forloop.index0] != blank %}                    
+                <div class="col-12 py-4 px-0" style="display: flex; flex-direction: row; flex-wrap:nowrap; width: 100%; justify-content: space-between; align-items: center;">
+                    <div class="dimensions-measurements_measure col-7 m-0 p-0">
+                        {% render 'icon-dimensions-d' %}
+                        <span class="pl-1 text-14 text-sm-15  font-weight-bold">{{'Height to Mattress Platform'}}</span>
+                    </div>
+                    <div class="text-14 text-sm-15  font-weight-medium col-5 m-0 p-0 text-right">
+                        <div class="row no-gutters justify-content-center">
+                        <div class="first-measure text-right" style="">
+                            {{- product_dimensions_d_metric[forloop.index0] | escape }}
+                        </div>
+                        <div class="text-center" style="">/</div>
+                        <div class="text-left" style="">
+                            {{ product_dimensions_d_imperial[forloop.index0] | escape -}}
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                {% endif %}
+                </div>
+                
+
+                <!-- desktop dimensions -->
+
+                <table class="dimensions_table text-14 text-sm-15 text-xl-14 text-xxl-15 d-block">
+                    <!-- Measurement A -->
+                    {% if product_dimensions_a_metric[forloop.index0] != blank or product_dimensions_a_imperial[forloop.index0] != blank %}                    
+                    <tr>
+                      <td class="measure_icon">
+                        {% render 'icon-dimensions-a' %}
+                      </td>
+                      <td class="measure_title">
+                        <span class="pl-1 font-weight-bold">{{'Headboard Height'}}</span>
+                      </td>
+                      <td class="measure_metric">
+                          {{- product_dimensions_a_metric[forloop.index0] | escape }}
+                      </td>
+                      <td class="measure_divider">/</td>
+                      <td class="measure_imperial">
+                        {{- product_dimensions_a_imperial[forloop.index0] | escape }}
+                      </td>
+                    </tr>
+                    {% endif %}
+                    <!-- Measurement B -->
+                    {% if product_dimensions_b_metric[forloop.index0] != blank or product_dimensions_b_imperial[forloop.index0] != blank %}                    
+                    <tr>
+                        <td class="measure_icon">
+                          {% render 'icon-dimensions-b' %}
+                        </td>
+                        <td class="measure_title">
+                          <span class="pl-1 font-weight-bold">{{'External Length'}}</span>
+                        </td>
+                        <td class="measure_metric">
+                            {{- product_dimensions_b_metric[forloop.index0] | escape }}
+                        </td>
+                        <td class="measure_divider">/</td>
+                        <td class="measure_imperial">
+                          {{- product_dimensions_b_imperial[forloop.index0] | escape }}
+                        </td>
+                    </tr>  
+                    {% endif %}                 
+                    <!-- Measurement C -->
+                    {% if product_dimensions_c_metric[forloop.index0] != blank or product_dimensions_c_imperial[forloop.index0] != blank %}                    
+                    <tr>
+                        <td class="measure_icon">
+                          {% render 'icon-dimensions-c' %}
+                        </td>
+                        <td class="measure_title">
+                          <span class="pl-1 font-weight-bold">{{'External Width'}}</span>
+                        </td>
+                        <td class="measure_metric">
+                            {{- product_dimensions_c_metric[forloop.index0] | escape }}
+                        </td>
+                        <td class="measure_divider">/</td>
+                        <td class="measure_imperial">
+                          {{- product_dimensions_c_imperial[forloop.index0] | escape }}
+                        </td>
+                    </tr>       
+                    {% endif %}             
+                    <!-- Measurement D -->
+                    {% if product_dimensions_d_metric[forloop.index0] != blank or product_dimensions_d_imperial[forloop.index0] != blank %}                    
+                    <tr>
+                        <td class="measure_icon">
+                          {% render 'icon-dimensions-d' %}
+                        </td>
+                        <td class="measure_title">
+                          <span class="pl-1 font-weight-bold">{{'<span class="d-none-mattress">Height to </span>Mattress Platform'}}</span>
+                        </td>
+                        <td class="measure_metric">
+                            {{- product_dimensions_d_metric[forloop.index0] | escape }}
+                        </td>
+                        <td class="measure_divider">/</td>
+                        <td class="measure_imperial">
+                          {{- product_dimensions_d_imperial[forloop.index0] | escape }}
+                        </td>
+                    </tr>          
+                    {% endif %}          
+                  </table>           
+      
+
+            </div>  
+            </div>
+        {%- endfor -%}
+
+        {% if product_dimensions_titles.size > 1 %}
+        <div class="row w-100 no-gutters justify-content-end d-none d-xl-flex">
+        <div class="col-12 col-xl-6 p-0 m-0 pl-xl-6 pl-xxl-8 pr-0">
+            <select class="c-tabs__selector c-select d-block bg-gray mt-4 py-4 py-xl-4 radius-10" data-action="width-selector" style="font-size: 16px;">
+                {%- for width_title in product_dimensions_titles -%}  
+                <option value="{{ forloop.index }}">{{ width_title }}</option>
+                {%- endfor -%}
+            </select>  
+        </div>
+        </div>
+        {% else %}
+        <div class="row w-100 no-gutters justify-content-end d-none d-xl-flex">
+            <div class="col-12 col-xl-6 p-0 m-0 pl-xl-6 pl-xxl-8 pr-0">
+        {%- for width_title in product_dimensions_titles -%}  
+        <p class="c-tabs__selector c-select d-block bg-gray mt-4 py-4 py-xl-4 radius-10" style="font-size: 16px; background: white;">{{ width_title }}</p>
+        {%- endfor -%}   
+        </div> 
+        </div>
+        {% endif %}
+
+    </div>  
+
+    <style>
+        .dimensions-content{
+            display:none;
+        }         
+    </style>
+
+    {%- endcapture -%}
+    {%- endif -%}
+
+
+    <section class="py-8 pb-xl-6 bg-lg-gray px-lg-4" data-section-type="product-tabs" data-section-id="{{ section.id }}" id="product-resources">
+        <div class="container site-padding pb-16 pb-xl-20 pb-xxl-22">
+
+            <div class="row justify-content-center mx-xxl-0">
+                <div class="product-tabs-wrapper col-12 col-xl-10 radius-10 p-lg-0">
+                    {% comment %} Accordion {% endcomment %}
+                    <div class="c-accordion d-xl-none" data-accordion data-accordion-multiple="false">
+                        
+                        {%- for tab_name in product_tabs_names -%}
+                            {%- liquid
+                                assign is_dimensions_tab = false                                
+                                assign is_reviews_tab = false
+                                assign is_faqs_tab = false
+                                assign is_resources_tab = false                                
+
+                                if tab_name == dimensions_heading
+                                    assign is_dimensions_tab = true  
+                                elsif tab_name == reviews_heading
+                                    assign is_reviews_tab = true
+                                elsif tab_name == faq_heading
+                                    assign is_faqs_tab = true
+                                elsif tab_name == resources_heading
+                                    assign is_resources_tab = true                                                                      
+                                endif
+                            -%}
+                            <button data-tab-name="{{ tab_name | handleize }}" class="c-accordion__toggle" id="product-accordion-toggle-{{ forloop.index }}-{{ tab_name | downcase }}" type="button" aria-controls="product-accordion-content-{{ forloop.index }}" aria-expanded="false" data-accordion-toggle {% if tab_name == reviews_heading and product.metafields.custom.show_trustpilot_reviews != true%}hidden{%endif%}>
+                                <span class="c-accordion__toggle__text c-accordion__toggle__text--alt text-20 text-capitalize font-weight-medium tracking-wide">
+                                    {{ tab_name | replace: reviews_heading, truspilot_logo }}
+                                </span>
+                                <svg class="c-accordion__toggle__plus" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-down"></use>
+                                </svg>
+                                <svg class="c-accordion__toggle__minus" aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-caret-right"></use>
+                                </svg>
+                            </button>
+                            <div data-tab-content-name="{{ tab_name | handleize }}" class="c-accordion__content" id="product-accordion-content-{{ forloop.index }}" hidden data-accordion-content>
+                                {%- if is_faqs_tab -%}
+                                    {{ el_faqs_content | replace: 'faqs-accordion', 'faqs-accordion-mobile' }}
+                                {%- elsif is_reviews_tab -%}
+                                    {{ el_reviews_content }}
+                                {%- elsif is_resources_tab -%}
+                                    {{ el_resources_content }}                              
+                                {%- elsif is_dimensions_tab -%}
+                                    {{ el_dimensions_content }}                              
+                                {%- else -%}
+                                    {%- render 'product-tab-content'
+                                        product_tab_content: product_tabs_content[forloop.index0]
+                                    -%}
+                                {%- endif -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+
+                    {% comment %} Tabs {% endcomment %}
+                    <div class="c-tabs d-none d-xl-block" data-tabs>
+                        <ul class="c-tabs__tablist c-tabs__tablist mb-4 justify-content-start" role="tablist">
+                            {%- for tab_name in product_tabs_names -%}
+                                {%- liquid
+                                    assign is_dimensions_tab = false                                                                    
+                                    assign is_reviews_tab = false
+                                    assign is_faqs_tab = false
+ 	                                assign is_resources_tab = false                                                                    
+
+                                    if tab_name == dimensions_heading
+                                        assign is_dimensions_tab = true
+                                        elsif tab_name == reviews_heading
+                                            assign is_reviews_tab = true                                       
+                                    elsif tab_name == faq_heading
+                                        assign is_faqs_tab = true
+                                	elsif tab_name == resources_heading
+                                    	assign is_resources_tab = true                                         
+                                    endif
+                                -%}
+                                <li data-tab-name="{{ tab_name | handleize }}" role="none" {% if is_reviews_tab %} {% if product.metafields.custom.show_trustpilot_reviews == true %}{% else %}hidden{% endif %}{% endif %}>
+                                    <button class="c-tabs__pill text-20 font-weight-medium text-capitalize tracking-wide" id="product-tab-{{ forloop.index }}-{{ tab_name | downcase }}" {% if forloop.first %}aria-selected="true"{% endif %} aria-controls="product-tabpanel-{{ forloop.index }}-{{ tab_name | downcase }}" type="button" role="tab" data-tabs-btn>
+                                        {%- if is_reviews_tab -%}
+                                            {{ truspilot_logo }}
+                                        {%- else -%}
+                                            {{ tab_name }}
+                                        {%- endif -%}
+                                    </button>
+                                </li>
+                            {%- endfor -%}
+                        </ul>
+                        {%- for tab_name in product_tabs_names -%}
+                            {%- liquid
+	                            assign is_dimensions_tab = false                                                                                                    
+                                assign is_reviews_tab = false
+                                assign is_faqs_tab = false
+	                            assign is_resources_tab = false                                                                                                    
+
+                                if tab_name == dimensions_heading
+                                    assign is_dimensions_tab = true
+                                elsif tab_name == faq_heading
+                                    assign is_faqs_tab = true
+                              	elsif tab_name == resources_heading
+                                   	assign is_resources_tab = true                                     
+                              	elsif tab_name == reviews_heading
+                                    assign is_reviews_tab = true                                    
+                                endif
+                            -%}
+                            <div data-tab-content-name="{{ tab_name | handleize }}" class="c-tabs__tabpanel" id="product-tabpanel-{{ forloop.index }}-{{ tab_name | downcase }}" aria-labelledby="product-tab-{{ forloop.index }}" tabindex="{{ forloop.index0 }}" role="tabpanel" data-tabs-panel {% unless forloop.first %}hidden{% endunless %}>
+                                {%- if is_faqs_tab -%}
+                                    {{ el_faqs_content | replace: 'faqs-accordion', 'faqs-accordion-desktop' }}
+                                {%- elsif is_reviews_tab -%}
+                                    {{ el_reviews_content  }}
+                                {%- elsif is_resources_tab -%}
+                                    {{ el_resources_content }}                                  
+                                {%- elsif is_dimensions_tab -%}
+                                    {{ el_dimensions_content }}                                  
+                                {%- else -%}
+                                    {%- render 'product-tab-content'
+                                        product_tab_content: product_tabs_content[forloop.index0]
+                                    -%}
+                                {%- endif -%}
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Tabs",
+    "settings": [
+        {
+            "type":"header",
+            "content": "Content Addition Note",
+            "info": "Product specific data can be added through App 'Accentuate'."
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Product tab heading",
+            "default": "Specifications & Details for the"
+        },
+        {
+            "type": "text",
+            "id": "resources_heading",
+            "label": "Resources tab heading",
+            "default": "Resources"
+        },
+        {
+            "type": "text",
+            "id": "dimensions_heading",
+            "label": "Dimensions tab heading",
+            "default": "Dimensions"
+        },
+        {
+            "type": "text",
+            "id": "faq_heading",
+            "label": "FAQ tab heading",
+            "default": "Q&A"
+        },
+        {
+            "type": "text",
+            "id": "reviews_heading",
+            "label": "Reviews tab heading",
+            "default": "Reviews"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

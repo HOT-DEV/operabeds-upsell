@@ -1,0 +1,82 @@
+{%- if section.settings.panel_theme_colour == 'grey' -%}
+    <section class="bg-athens-gray text-blue-diane mb-16 ">
+        <div class="container site-padding py-14 py-lg-12 text-center">
+            <p class="mb-4 text-20 text-lg-24 leading-tight font-weight-normal font-weight-lg-medium">
+                {{- section.settings.heading | escape -}}
+            </p>
+            <p class="u-heading-md">
+                {%- render 'presenter-phone-number'
+                    _phone_number:  settings.company_phone,
+                    _template:      section.settings.template_telephone,
+                -%}
+            </p>
+            {{ section.settings.book_a_call | replace: '<p', '<p class="m-0 text-14 leading-none font-weight-semibold tracking-wider text-uppercase"' }}
+        </div>
+    </section>
+{%- else -%}
+    <section class="bg-prussian-blue text-white mb-16">
+        <div class="container site-padding py-14 py-lg-12 text-center">
+            <p class="mb-4 text-20 text-lg-24 leading-tight font-weight-normal font-weight-lg-medium">
+                {{- section.settings.heading | escape -}}
+            </p>
+            <p class="u-heading-md">
+                {%- render 'presenter-phone-number'
+                    _phone_number:  settings.company_phone,
+                    _template:      section.settings.template_telephone,
+                -%}
+            </p>
+            {{ section.settings.book_a_call | replace: '<p', '<p class="m-0 text-14 leading-none font-weight-semibold tracking-wider text-uppercase"' }}
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Finance Text Panel",
+    "settings": [
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+        },
+        {
+            "type": "header",
+            "content": "Additional CTAs"
+        },
+        {
+            "type": "text",
+            "id": "template_telephone",
+            "label": "Telephone",
+            "default": "<strong>Call us on {number}</strong>",
+            "info": "{number} is automatically replaced with the theme's company telephone number"
+        },
+        {
+            "type": "richtext",
+            "id": "book_a_call",
+            "label": "Book a call",
+            "default": "<p>or <a href=\"\/pages\/call-consultation\">Book a call</a></p>"
+        },
+        {
+            "type": "header",
+            "content": "Panel Options"
+        },
+        {
+            "type": "select",
+            "id": "panel_theme_colour",
+            "label": "Panel Background Colour",
+            "options": [
+                {
+                    "value": "grey",
+                    "label": "Grey"
+                },
+                {
+                    "value": "blue",
+                    "label": "Blue"
+                }
+            ],
+            "default": "blue",
+            "info": "Set the background panel colour"
+        }
+    ]
+}
+{% endschema %}

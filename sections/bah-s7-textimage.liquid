@@ -1,0 +1,100 @@
+{% comment %}
+    Section with text on the left hand side and image on the right hand side.
+	4PE - 1/12/2021
+{% endcomment %}
+
+<section class="s7-textimage" data-section-id="{{ section.id }}">
+    <div class="container text-center text-lg-left">
+        <div class="d-none d-lg-flex row justify-content-center align-items-center">
+            <div
+                class="bah-text col-12 col-lg-6 text-elephant px-4 px-sm-10 px-md-16 px-lg-8 px-xl-16 px-xxl-40 py-10 py-lg-0">
+                <div class="content-box">
+                    {% if section.settings.title %}
+                    <h2 class="text-26 text-lg-36 font-weight-semibold leading-tight text-elephant m-0 p-0">
+                        {{ section.settings.title }}
+                    </h2>
+                    {% endif %}
+                    {% if section.settings.description %}
+                    <p class="my-8">
+                        {{ section.settings.description }}
+                    </p>
+                    {% endif %}
+                    {% if section.settings.btn_link != blank %}
+                    <a class="c-btn-outline c-btn-outline--blue c-btn--3 mt-2" href="{{ section.settings.btn_link }}">
+                        {{ section.settings.btn_label }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if section.settings.image %}
+            <div class="bah-image col-12 col-lg-6">
+                <img class="js-lazy" src="{{ section.settings.image | img_url: 'master' }}">
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="d-flex d-lg-none row justify-content-center align-items-center">
+            {% if section.settings.image %}
+            <div class="bah-image col-12 col-lg-6">
+                <img class="js-lazy" src="{{ section.settings.image | img_url: 'master' }}">
+            </div>
+            {% endif %}
+            <div
+                class="bah-text col-12 col-lg-6 text-center text-lg-left text-elephant px-4 px-sm-10 px-md-16 px-lg-8 px-xl-16 px-xxl-40 py-10 py-lg-0">
+                {% if section.settings.title %}
+                <h2 class="text-26 text-lg-36 font-weight-semibold leading-tight text-elephant m-0 p-0">
+                    {{ section.settings.title }}
+                </h2>
+                {% endif %}
+                {% if section.settings.description %}
+                <p class="my-8">
+                    {{ section.settings.description }}
+                </p>
+                {% endif %}
+                {% if section.settings.btn_link != blank %}
+                <a class="c-btn-outline c-btn-outline--blue c-btn--3 mt-2" href="{{ section.settings.btn_link }}">
+                    {{ section.settings.btn_label }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "S7 - Text with Image",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Recommended size: 1920 x 1080px (Tips: Have the main-focus point centered in the image for the best responsiveness)"
+    },
+    {
+      "type": "text",
+      "id": "title",
+	  "label": "Title",	
+      "default": "Section Title Here"
+    },   
+    {
+      "type": "textarea",
+      "id": "description",
+	  "label": "Description",	
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    },  
+    {
+      "type": "text",
+      "id": "btn_label",
+	  "label": "Button - Label",
+      "default": "Learn more"
+    }, 
+    {
+      "type": "url",
+      "id": "btn_link",
+	  "label": "Button - Link",
+	  "info": "Add url to show button, leave url blank to hide button"
+    } 
+  ]
+}
+{% endschema %}

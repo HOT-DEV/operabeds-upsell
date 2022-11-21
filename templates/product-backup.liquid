@@ -1,0 +1,37 @@
+{% comment %}
+    The Bed Product template.
+{% endcomment %}
+
+{{- 'product-ja.css' | asset_url | stylesheet_tag -}}
+
+{%- section 'product-OB006' -%}
+
+{%- section 'product-video-yt' -%}
+
+{%- comment -%} Add cost calculator section on the Automated Lateral Turning mattress / Jesper 4PE {%- endcomment -%}
+{% if product.handle contains 'autoturn-lateral' %}
+    {%- section 'product-autoturn-cost-calculator' -%}
+{% endif %}
+
+{%- section 'product-features' -%}
+
+{%- section 'product-comparison' -%}
+
+{%- section 'product-testimonials' -%}
+
+{%- section 'product-tabs' -%}
+
+{%- section 'product-announcement' -%}
+
+{%- for c in product.collections -%}
+    {%- if c.title == 'Adjustable Beds' or c.title == 'Rotating Chair Beds' or c.title == 'Profiling Care Beds' -%}
+		{%- section 'static-delivery-info-with-map' -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{%- comment -%} Enable popup for Bespoke Design Service of products in Adjustable beds / Jesper 4PE {%- endcomment -%}
+{% for c in product.collections %}
+    {% if c.title == 'Adjustable Beds' %}
+        {% render 'popup-bespoke-design-service' %}
+    {% endif %}
+{% endfor %}

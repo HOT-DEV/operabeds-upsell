@@ -1,0 +1,173 @@
+{% comment %}
+    The Product Testimonials section template.
+{% endcomment %}
+
+{%- liquid
+    assign image_xs = 'https://via.placeholder.com/576x476'
+    assign image_sm = 'https://via.placeholder.com/768x476'
+    assign image_md = 'https://via.placeholder.com/1024x476'
+    assign image_lg = 'https://via.placeholder.com/1280x580'
+    assign image_xl = 'https://via.placeholder.com/1440x680'
+    assign image_xxl = 'https://via.placeholder.com/1670x780'
+    assign image_xxxl = 'https://via.placeholder.com/1920x780'
+
+
+    assign image = product.metafields.accentuate.product_review_bg_img_override | strip
+    
+    if image
+        assign image_alt = image.alt | default: section.settings.title
+        assign image_xs = image | file_img_url: '576x476'
+        assign image_sm = image | file_img_url: '768x476'
+        assign image_md = image | file_img_url: '1024x476'
+        assign image_lg = image | file_img_url: '1280x580'
+        assign image_xl = image | file_img_url: 'x680'
+        assign image_xxl = image | file_img_url: 'x680'
+        assign image_xxxl = image | file_img_url: 'x680'
+    elsif section.settings.image
+        assign image = section.settings.image
+        assign image_alt = image.alt | default: section.settings.title
+        assign image_xs = image | img_url: '576x476'
+        assign image_sm = image | img_url: '768x476'
+        assign image_md = image | img_url: '1024x476'
+        assign image_lg = image | img_url: '1280x580'
+        assign image_xl = image | img_url: 'x680'
+        assign image_xxl = image | img_url: 'x680'
+        assign image_xxxl = image | img_url: 'x680'
+    endif
+
+    comment
+        Reviews from accentuate
+    endcomment
+    assign accentuate_reviews = product.metafields.accentuate.product_review_title
+
+-%}
+{%- if accentuate_reviews -%}
+    <section class="s-product-testimonials" data-section-type="product-testimonials" data-section-id="{{ section.id }}">
+        <picture class="s-product-testimonials__picture js-lazy" data-iesrc="{{ image_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+            <source srcset="{{ image_xs | url }}" media="(max-width: 575px)">
+            <source srcset="{{ image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+            <source srcset="{{ image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+            <source srcset="{{ image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+            <source srcset="{{ image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+            <source srcset="{{ image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+            <source srcset="{{ image_xxxl | url }}" media="(min-width: 1670px)">
+            {% comment %} <img alt="" /> {% endcomment %}
+        </picture>
+        <div class="container site-padding py-lg-20 mt-n20 mt-lg-0">
+            <div class="row">
+                <div class="col-12 col-md-6 col-xxl-5">
+                    <div class="p-10 pt-lg-16 bg-white text-center text-lg-left">
+                        <div class="s-product-testimonials__slider swiper-container" data-product-testimonials-slider>
+                            <div class="swiper-wrapper">
+                                {%- if accentuate_reviews -%}
+                                    {%- for block in accentuate_reviews -%}
+                                        {%- liquid
+                                            assign review_title = product.metafields.accentuate.product_review_title[forloop.index0]
+                                            assign review_content = product.metafields.accentuate.product_review_content[forloop.index0]
+                                            assign review_author = product.metafields.accentuate.product_review_author[forloop.index0]
+                                        -%}
+                                        <div class="swiper-slide">
+                                            <div class="c-testimonial-card w-100 h-100 p-0 text-center text-lg-left">
+                                                <svg class="c-testimonial-card__icon mb-6 mb-lg-8 ml-lg-0" aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-double-quote"></use>
+                                                </svg>
+                                                <h3 class="text-24 font-weight-medium leading-tight mb-6 mb-lg-4">
+                                                    {{ review_title | escape }}
+                                                </h3>
+                                                <div class="mb-12 text-abbey mb-lg-8">
+                                                    {{ review_content | escape | prepend: '<p>' | append: '</p>' }}
+                                                </div>
+                                                <p class="mt-auto mb-0 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                                                    {{ review_author | escape }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    {%- endfor -%}
+                                {%- else -%}
+                                    {%- for block in section.blocks -%}
+                                        {%- liquid
+                                            assign review_title = block.settings.title
+                                            assign review_content = block.settings.review_content
+                                            assign review_author = block.settings.review_author
+                                        -%}
+                                        <div class="swiper-slide" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                                            <div class="c-testimonial-card w-100 h-100 p-0 text-center text-lg-left">
+                                                <svg class="c-testimonial-card__icon mb-6 mb-lg-8 ml-lg-0" aria-hidden="true" role="presentation">
+                                                    <use xlink:href="#sprite-double-quote"></use>
+                                                </svg>
+                                                <h3 class="text-24 font-weight-medium leading-tight mb-6 mb-lg-4">
+                                                    {{ review_title | escape }}
+                                                </h3>
+                                                <div class="mb-12 text-abbey mb-lg-8">
+                                                    {{ review_content | escape | prepend: '<p>' | append: '</p>' }}
+                                                </div>
+                                                <p class="mt-auto mb-0 text-14 font-weight-bold leading-tight tracking-widest text-uppercase">
+                                                    {{ review_author | escape }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    {%- endfor -%}
+                                {%- endif -%}
+                            </div>
+                        </div>
+                        <div class="s-product-testimonials__nav">
+                            <button class="swiper-arrow swiper-button-prev" type="button" aria-label="{{ 'components.slider_labels.previous_slide' | t | escape }}" data-product-testimonials-slider-prev>
+                                <svg aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-chevron-left"></use>
+                                </svg>
+                            </button>
+                            <div class="swiper-pagination" data-product-testimonials-slider-pagination></div>
+                            <button class="swiper-arrow swiper-button-next" type="button" aria-label="{{ 'components.slider_labels.next_slide' | t | escape }}" data-product-testimonials-slider-next>
+                                <svg aria-hidden="true" role="presentation">
+                                    <use xlink:href="#sprite-chevron-right"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "Testimonials",
+    "settings": [
+        {
+            "type":"header",
+            "content": "Content Addition Note",
+            "info": "No Reviews will be shown unless added through App 'Accentuate'. "
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image",
+            "info": "Can be overidden by Accentuate"
+        }
+    ],
+    "blocks": [
+    {
+        "type": "review",
+        "name": "Review",
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Heading"
+            },
+            {
+                "type": "textarea",
+                "id": "review_content",
+                "label": "Review Content"
+            },
+            {
+                "type": "text",
+                "id": "review_author",
+                "label": "Author"
+            }
+        ]
+    }
+    ]
+}
+{% endschema %}

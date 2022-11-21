@@ -1,0 +1,113 @@
+{% comment %}
+    The Bed Product template.
+{% endcomment %}
+
+{{- 'product-ja.css' | asset_url | stylesheet_tag -}}
+
+{%- section 'product-ja' -%}
+
+    {% if product.metafields.custom.show_bespoke_fabric_option == true %}
+        {% render 'popup-bespoke-design-service' %}
+    {% endif %}
+
+{%- section 'product-info-slider' -%}
+
+{%- section 'product-video-yt' -%}
+
+{%- section 'product-tabs' -%}
+
+{%- section 'product-here-to-help-ja' -%}
+
+{%- for c in product.collections -%}
+    {%- if c.title == 'Adjustable Beds' or c.title == 'Rotating Chair Beds' or c.title == 'Profiling Care Beds' -%}
+		{%- section 'static-delivery-info-with-map' -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{% if product %}
+    <style>
+        @media (min-width: 576px) {
+        .site-padding {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        }
+        }
+        @media (min-width: 1024px) {
+        .site-padding {
+        padding-left: 6rem;
+        padding-right: 6rem;
+        }
+        }
+        @media (min-width: 1440px) {
+        .site-padding {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        max-width: 1350px;
+        }
+        }
+        @media (min-width: 1920px) {
+        .site-padding {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        max-width: 1350px;
+        }
+        .s-header .navigation .primary-menu ul.tier-2>li img {
+        position: absolute !important;
+        right: -19%!important;
+        bottom: -75px!important;
+        width: 100% !important;
+        height: 185px !important;
+        margin-bottom: 0 !important;
+        transition: bottom ease .5s!important;
+        }
+        .s-header .navigation .primary-menu ul.tier-2>li:hover img {
+        bottom: -65px!important;
+    }
+
+    .s-header .navigation .primary-menu ul.tier-2 > li .content {padding-right: 0rem!important;}
+        }
+
+
+    </style>
+{% endif %}
+
+
+<!-- TrustBox script -->
+<script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
+<!-- End TrustBox script -->
+
+<script>
+        // Script to scroll down and open review section tab or accordion when click review stars on product page
+        const reviewStars = document.querySelector('.product-trustpilot-badge');
+        reviewStars.addEventListener('click', (event) => {
+            document.getElementById("product-resources").scrollIntoView();
+            document.querySelector(`[id*="-reviews"]`).click();      
+            
+        });
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>      
+
+<script>
+    $(document).ready(function() {
+        // If we have any HK, pre-select dimensions tab and show first HK
+        var dimensionsContents = $(".dimensions-content");
+        if(dimensionsContents.length) {
+            // Click on dimensions tab
+            setTimeout(function() {
+                $("li[data-tab-name='dimensions'] button").click();
+            }, 50);
+
+            $(".hk1").show().css("display", "flex");
+        }
+        
+        $('[data-action="width-selector"]').each(function() {
+            $(this).on('change', function(){
+                var selectedValue = $(this).val(); 
+                $("div.dimensions-content").hide();
+                $(".hk"+selectedValue).show().css("display", "flex");
+                console.log('width selector change');
+            });
+        });
+    });
+</script>

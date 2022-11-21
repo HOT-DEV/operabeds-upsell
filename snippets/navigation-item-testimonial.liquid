@@ -1,0 +1,17 @@
+{%- comment -%}
+Usage:
+    {%- render  'navigation-testimonial'
+            _index: 3,
+            _text:  'Although the lowest priced bed it still performs perfectly well. I actually wanted the Signature bed but bought the Classic due to delivery constraints. Nevertheless I am very satisfied.',
+    -%}
+{%- endcomment -%}
+{%- liquid
+    assign column_index = 'column-' | append: _index
+-%}
+<div class="block full-tile full-tile is-testimonial {{ column_index }}">
+    <svg class="c-testimonial-card__icon mb-6 mb-lg-8 ml-lg-0" aria-hidden="true" role="presentation">
+        <use xlink:href="#sprite-double-quote"></use>
+    </svg>
+    {{ _text | prepend: '<p>'| append: '</p>' }}
+    <span class="text-14 font-weight-bold leading-tight tracking-widest text-uppercase mt-6">{{- _author -}}</span>
+</div>

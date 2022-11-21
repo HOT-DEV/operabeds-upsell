@@ -1,0 +1,85 @@
+{%- liquid 
+    assign image = _image
+    assign image_alt = _image.alt | default: _heading
+
+    assign img_xs = image | img_url: '376x263', crop: 'center'
+    assign img_sm = image | img_url: '480x336', crop: 'center'
+    assign img_md = image | img_url: '608x426', crop: 'center'
+    assign img_lg = image | img_url: '464x325', crop: 'center'
+    assign img_xl = image | img_url: '524x367', crop: 'center'
+    assign img_xxl = image | img_url: '379x265', crop: 'center'
+    assign img_xxxl = image | img_url: '459x321', crop: 'center'
+
+
+    assign features_list = _features_list | newline_to_br | split: '<br />'
+
+    assign mod = _index | modulo: 2
+    if mod == 0
+        assign position = 'even'
+    else 
+        assign position = 'odd'
+    endif
+
+    if _index == 0
+        assign padding_row = 'my-20'
+    endif
+-%}
+{%- capture element_image -%}
+    <picture class="picture-cover js-lazy" data-iesrc="{{- image | img_url: '575x' -}}" data-alt="{{ image_alt }}">
+        <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+        <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+        <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+        <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+        <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+        <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+        <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+        {% comment %} <img alt="" /> {% endcomment %}
+    </picture>
+{%- endcapture -%}
+{%- capture element_text -%}
+    <h2 class="text-24 text-md-36 font-weight-normal text-elephant mb-6 mb-md-9">{{ _heading }}</h2>
+    <p>{{ _text }}</p>
+    {%- if features_list.size > 0 -%}
+        <ul class="c-check-list c-check-list--two-col">
+            {% for feature in features_list -%}
+                <li>
+                    <svg aria-hidden="true" role="presentation">
+                        <use xlink:href="#sprite-check-circle"></use>
+                    </svg>
+                    <span>
+                        {{ feature }}
+                    </span>
+                </li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
+{%- endcapture -%}
+
+<div class="container site-padding" data-position="{{ position }}">
+    {%- if position == 'odd' -%}
+        <div class="row justify-content-md-between align-items-md-stretch {{ padding_row }}">
+            <div class="col-md-5 col-xxl-4 py-md-20">
+                {{ element_text }}
+            </div>
+            <div class="col-md-6 col-xxl-7 mt-10 mt-md-0">
+                {{ element_image }}
+            </div>
+        </div>
+    {%- else -%}
+        <div class="row justify-content-md-between align-items-md-stretch my-20">
+            <div class="col-md-6 col-xxl-7 order-last order-md-first mt-10 mt-md-0">
+                {{ element_image }}
+            </div>
+            <div class="col-md-5 col-xxl-4 py-md-20 order-first order-md-last">
+                {{ element_text }}
+            </div>
+        </div>
+    {%- endif -%}
+</div>
+
+
+
+
+
+
+    

@@ -1,0 +1,207 @@
+{
+  "template": {
+    "404": {
+      "title": "Page not found",
+      "description_html": "Sorry, we couldn't find that page. <a href=\"{{ url }}\">Click here<\/a> to return to the home page."
+    },
+    "article": {
+      "meta_html": "Posted <time datetime=\"{{ datetime }}\">{{ date }}<\/time> by <span>{{ author }}<\/span>",
+      "tags_title": "Tags",
+      "no_tags": "Sorry, there are no tags for this blog.",
+      "subscribe_title": "Subscribe",
+      "subscribe_link": "Subscribe to our blog"
+    },
+    "blog": {
+      "description_html": "Displaying {{ count }} blog articles.",
+      "description_with_tag_html": "Displaying {{ count }} blog articles tagged with \"{{ tag }}\".",
+      "empty": "Sorry, there are no published articles for this blog.",
+      "tags_title": "Tags",
+      "clear_tags": "Clear tags",
+      "no_tags": "Sorry, there are no tags for this blog.",
+      "subscribe_title": "Subscribe",
+      "subscribe_link": "Subscribe to our blog"
+    },
+    "cart": {
+      "title": "Basket",
+      "summary": "Summary",
+      "remove": "Remove",
+      "note_label": "Notes",
+      "note_placeholder": "Special instructions for your delivery.",
+      "subtotal": "Subtotal",
+      "vat_total": "VAT",
+      "total": "Total",
+      "shipping_at_checkout": "Shipping & taxes calculated at checkout",
+      "update": "Update",
+      "checkout": "Checkout Securely",
+      "clear": "Clear",
+      "empty": "Your basket is currently empty.",
+      "cookies_required": "Enable cookies to use the shopping basket",
+      "continue_browsing_html": "Continue browsing the store <a href=\"\/collections\/all\">here<\/a>.",
+      "item_quantity": "Item quantity",
+      "savings": "You're saving",
+      "exc_vat": "exc. VAT",
+      "inc_vat": "inc. VAT",
+      "label": {
+        "product": "Product",
+        "price": "Price",
+        "quantity": "Quantity",
+        "total": "Total",
+        "discounted_price": "Discounted price",
+        "original_price": "Original price"
+      },
+      "purchase_order_number": {
+        "heading": "Order Details",
+        "label": "Purchase Order Number *",
+        "text_html": "",
+        "placeholder": "Enter PO number or reference"
+      }
+    },
+    "vat_relief": {
+      "applied_message": "VAT Relief Applied",
+      "fields": {
+        "label": "I am claiming VAT Relief as an individual",
+        "name_label": "Individual's Name",
+        "name_placeholder": "Product user's name",
+        "name_input_title": "Individuals name",
+        "condition_label": "Medical condition",
+        "condition_input_title": "Medical condition",
+        "condition_placeholder": "Enter your medical condition"
+      },
+      "button_text": "Apply",
+      "remove_button_text": "Remove VAT Relief"
+    },
+    "gift_card": {
+      "title": "Here's your {{ value }} gift card for {{ shop }}!",
+      "subtext": "Here's your gift card!",
+      "disabled": "Disabled",
+      "expired": "Expired on {{ expiry }}",
+      "active": "Expires on {{ expiry }}",
+      "redeem": "Use this code at checkout to redeem your gift card",
+      "shop_link": "Start shopping",
+      "print": "Print",
+      "remaining_html": "{{ balance }} left",
+      "add_to_apple_wallet": "Add to Apple Wallet",
+      "initial_value": "{{ value }}"
+    },
+    "list_collections": {
+      "title": "Collections",
+      "description": {
+        "one": "Browsing {{ count }} collection",
+        "other": "Browsing {{ count }} collections"
+      }
+    },
+    "password": {
+      "title": "Opening Soon",
+      "description": "This store is password protected.",
+      "form_aria_label": "Password form",
+      "form_password_label": "Password",
+      "form_password_placeholder": "Enter password",
+      "form_submit": "Submit",
+      "admin_link_html": "{{ text }} <a href=\"{{ link_url }}\">{{ link_text }}<\/a>"
+    },
+    "product": {
+      "mattress_message": "*Mattress not included. Choose your mattress once added to your basket"
+    }
+  },
+  "components": {
+    "slider_labels": {
+      "next_slide": "Next slide",
+      "previous_slide": "Previous slide"
+    }
+  },
+  "products": {
+    "product": {
+      "regular_price": "Regular price",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
+      "on_sale": "On Sale",
+      "on_sale_from_html": "On Sale from {{ price }}",
+      "from_text_html": "From {{ price }}",
+      "quantity": "Quantity",
+      "add_to_cart": "Add to Basket"
+    },
+    "cross_sell": {
+      "heading": "Complete your purchase",
+      "skip": "Skip to basket",
+      "close_btn_text": "Close",
+      "next_btn_text": "Continue",
+      "prev_btn_text": "Back",
+      "nextprev_btn_to_text": "to",
+      "finish_btn_text": "Complete Your Order",
+      "added_to_cart": "Added to Basket",
+      "view_more": "View More",
+      "view_product": "View Product",
+      "no_results": "There are no products to display",
+      "order_total": "Your Order Total: "
+    }
+  },
+  "breadcrumb": {
+    "aria_label": "Breadcrumb links"
+  },
+  "pagination": {
+    "aria_label": "Pagination links",
+    "previous_page": "Previous page",
+    "next_page": "Next page",
+    "page_with_number": "Page {{ number }}"
+  },
+  "general": {
+    "meta": {
+      "tags": "{{ tags }} ",
+      "page": "Page {{ page }}"
+    },
+    "search": {
+      "heading": "Search",
+      "results_with_count": "{{ terms }} found {{ count }} results "
+    },
+    "newsletter": {
+      "form": {
+        "tags": "newsletter",
+        "context": "newsletter",
+        "heading": "Subscribe now to get updates on our latest product releases",
+        "success_message": "Thank you for signing up to our newsletter.",
+        "email": {
+          "label": "Email",
+          "placeholder": "Enter email address"
+        },
+        "send_button": {
+          "text": "Send"
+        }
+      }
+    }
+  },
+  "sections": {
+    "header": {
+      "nav_aria_label": "Site links",
+      "cart_link_title_html": "Basket ({{ count }})",
+      "cart_link_text": "Basket"
+    },
+    "footer": {
+      "nav_aria_label": "Footer links",
+      "contact_heading": "Contact",
+      "opening_title": "Enquiries Line:",
+      "telephone_title": "Tel: ",
+      "newsletter_title": "Sign up to our newsletter",
+      "newsletter_label": "Newsletter Form",
+      "newsletter_input_placeholder": "E-Mail Address",
+      "newsletter_button_label": "Sign Up",
+      "social_heading": "Social",
+      "copyright_html": "Copyright &copy; {{ company_name }}. All Rights Reserved. ",
+      "company_number_html": "Company No. {{ company_number }}",
+      "vat_number_html": "VAT No. {{ company_vat_number }}"
+    }
+  },
+  "cookie": {
+    "cookie_policy_message_html": "Opera Beds use cookies to provide a better user experience and personalised ads \/ content. By clicking 'ACCEPT', you are agreeing to our Privacy and <a href=\"\/pages\/privacy-policy\">Cookie Policy<\/a>. You can opt out by <button class=\"c-btn-text mt-0\" type=\"button\" data-cookie-bar-reject>clicking here<\/button>.",
+    "accept_text": "Accept"
+  },
+  "shopify": {
+    "checkout": {
+      "delivery_options": {
+        "free_total_label": "£0"
+      },
+      "shipping": {
+        "free_rate_label": "£0"
+      }
+    }
+  }
+}

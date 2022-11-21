@@ -1,0 +1,170 @@
+{% comment %}
+    Section with image on the left hand side and text on the right hand side.
+	4PE - 1/12/2021
+{% endcomment %}
+
+<section class="s5-imagetext" data-section-id="{{ section.id }}">
+    <div class="container text-center text-lg-left">
+        <div class="row justify-content-center align-items-center">
+            {% if section.settings.image != blank %}
+            <div class="bah-image col-12 col-lg-6">
+                <img class="js-lazy" src="{{ section.settings.image | img_url: 'master' }}">
+                {% if section.settings.msg_text != blank %}
+                <div class="overlay-msg row align-items-center no-gutters pr-8 pr-lg-20 pl-6 py-2">
+                    {% if section.settings.msg_icon != blank %}
+                    <span>
+                        <svg class="overlay-msg__icon mr-4 text-white" aria-hidden="true" role="presentation">
+                            <use xlink:href="#sprite-{{- section.settings.msg_icon -}}"></use>
+                        </svg>
+                    </span>
+                    {% endif %}
+                    <span
+                        class="text-white text-right text-16 text-lg-18 font-weight-semibold text-capitalize">{{- section.settings.msg_text -}}</span>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div
+                class="bah-text col-12 col-lg-6 text-elephant px-4 px-sm-10 px-md-16 px-lg-8 px-xl-16 px-xxl-40 py-10 py-lg-0">
+                <div class="content-box">
+                    {% if section.settings.title != blank %}
+                    <h2 class="text-26 text-lg-36 font-weight-semibold leading-tight text-elephant m-0 p-0">
+                        {{ section.settings.title }}
+                    </h2>
+                    {% endif %}
+                    {% if section.settings.description != blank %}
+                    <p class="my-8">
+                        {{ section.settings.description }}
+                    </p>
+                    {% endif %}
+                    {% if section.settings.btn_link != blank %}
+                    <a class="c-btn-outline c-btn-outline--blue c-btn--3 mt-2" href="{{ section.settings.btn_link }}">
+                        {{ section.settings.btn_label }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "S5 - Image with Text",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+	  "label": "Image",
+      "info": "Recommended size: 1920 x 1080px (Tips: Have the main-focus point centered in the image for the best responsiveness)"
+    },
+    {
+      "type": "text",
+      "id": "title",
+	  "label": "Title",	
+      "default": "Section Title Here"
+    },   
+    {
+      "type": "textarea",
+      "id": "description",
+	  "label": "Description",	
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+    },  
+    {
+      "type": "text",
+      "id": "btn_label",
+	  "label": "Button - Label",
+      "default": "Learn more"
+    }, 
+    {
+      "type": "url",
+      "id": "btn_link",
+	  "label": "Button - Link",
+	  "info": "Add url to show button, leave url blank to hide button"
+    },
+    {
+      "type": "header",
+      "content": "Settings for overlay message"
+    },
+    {
+    "type": "select",
+	"id": "msg_icon",
+    "options": [
+                  { "value": "advice", "label": "Advice"},
+                  { "value": "arrow-down", "label": "Arrow Down"},
+                  { "value": "arrow-left", "label": "Arrow Left"},
+                  { "value": "arrow-right", "label": "Arrow Right"},
+                  { "value": "arrow-up", "label": "Arrow Up"},
+                  { "value": "bars", "label": "Bars"},
+                  { "value": "bed", "label": "Bed"},
+                  { "value": "bespoke-service", "label": "Bespoke Service"},
+                  { "value": "brochure2", "label": "Brochure2"},
+                  { "value": "brush-square", "label": "Brush Square"},
+                  { "value": "caret-down", "label": "Caret Down"},
+                  { "value": "caret-left", "label": "Caret Left"},
+                  { "value": "caret-right", "label": "Caret Right"},
+                  { "value": "caret-up", "label": "Caret Up"},
+                  { "value": "check-circle", "label": "Check Circle"},
+                  { "value": "check", "label": "Check"},
+                  { "value": "chevron-down", "label": "Chevron Down"},
+                  { "value": "chevron-left", "label": "Chevron Left"},
+                  { "value": "chevron-right", "label": "Chevron Right"},
+                  { "value": "chevron-up", "label": "Chevron Up"},
+                  { "value": "circulation", "label": "Circulation"},
+                  { "value": "close", "label": "Close"},
+                  { "value": "comfort", "label": "Comfort"},
+                  { "value": "customisable", "label": "Customisable"},
+                  { "value": "delivery-lg", "label": "Delivery Lg"},
+                  { "value": "delivery-pallet", "label": "Delivery Pallet"},
+                  { "value": "delivery-time", "label": "Delivery Time"},
+                  { "value": "delivery", "label": "Delivery"},
+                  { "value": "delivery2", "label": "Delivery2"},
+                  { "value": "discover", "label": "Discover"},
+                  { "value": "documents", "label": "Documents"},
+                  { "value": "documents2", "label": "Documents2"},
+                  { "value": "double-quote", "label": "Double Quote"},
+                  { "value": "facebook-f", "label": "Facebook F"},
+                  { "value": "finance", "label": "Finance"},
+                  { "value": "finance2", "label": "Finance2"},
+                  { "value": "headboards", "label": "Headboards"},
+                  { "value": "headset", "label": "Headset"},
+                  { "value": "heart-hands-lg", "label": "Heart Hands Lg"},
+                  { "value": "heart-outline", "label": "Heart Outline"},
+                  { "value": "light-bulb", "label": "Light Bulb"},
+                  { "value": "linkedin-in", "label": "Linkedin In"},
+                  { "value": "maintenance", "label": "Maintenance"},
+                  { "value": "minus", "label": "Minus"},
+                  { "value": "padded-mattress-platform", "label": "Padded Mattress Platform"},
+                  { "value": "parts", "label": "Parts"},
+                  { "value": "play-circle", "label": "Play Circle"},
+                  { "value": "plus", "label": "Plus"},
+                  { "value": "posture", "label": "Posture"},
+                  { "value": "recycle-lg", "label": "Recycle Lg"},
+                  { "value": "sales", "label": "Sales"},
+                  { "value": "search", "label": "Search"},
+                  { "value": "secure-checkout", "label": "Secure Checkout"},
+                  { "value": "shopping-bag", "label": "Shopping Bag"},
+                  { "value": "sleep-in-bed", "label": "Sleep In Bed"},
+                  { "value": "star-fill", "label": "Star Fill"},
+                  { "value": "star-outline", "label": "Star Outline"},
+                  { "value": "trustpilot-primary-dark", "label": "Trustpilot Primary Dark"},
+                  { "value": "twitter", "label": "Twitter"},
+                  { "value": "uk-map", "label": "Uk Map"},
+                  { "value": "union-jack", "label": "Union Jack"},
+                  { "value": "user-check", "label": "User Check"},
+                  { "value": "user", "label": "User"},
+                  { "value": "warranty", "label": "Warranty"},
+                  { "value": "widths", "label": "Widths"},
+                  { "value": "wireless", "label": "Wireless"}
+                ],
+    "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "msg_text",
+	  "label": "Text",
+      "default": "Overlay message here"
+    }
+  ]
+}
+{% endschema %}

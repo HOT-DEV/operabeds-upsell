@@ -1,0 +1,51 @@
+{% comment %}
+    The Pagination snippet.
+{% endcomment %}
+
+<nav class="c-pagination" aria-label="{{ 'pagination.aria_label' | t }}" role="navigation">
+    {%- if paginate.previous -%}
+        <a class="c-btn" href="{{ paginate.previous.url | remove: '?page=1"' }}" title="{{- 'pagination.previous_page' | t -}}">
+            <span class="sr-only">{{- 'pagination.previous_page' | t -}}</span>
+            <svg aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-chevron-left"></use>
+            </svg>
+        </a>
+    {%- else -%}
+        <span class="c-btn">
+            <span class="sr-only">{{- 'pagination.previous_page' | t -}}</span>
+            <svg aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-chevron-left"></use>
+            </svg>
+        </span>
+    {%- endif -%}
+
+    <div class="c-pagination__links">
+        {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+                <a href="{{ part.url | remove: '?page=1"' }}" title="{{- 'pagination.page_with_number' | t: number: part.title -}}">
+                    {{- part.title -}}
+                </a>
+            {%- else -%}
+                <span aria-current="page">
+                    {{- part.title -}}
+                </span>
+            {%- endif -%}
+        {%- endfor -%}
+    </div>
+
+    {%- if paginate.next -%}
+        <a class="c-btn" href="{{ paginate.next.url }}" title="{{- 'pagination.next_page' | t -}}">
+            <span class="sr-only">{{- 'pagination.next_page' | t -}}</span>
+            <svg aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-chevron-right"></use>
+            </svg>
+        </a>
+    {%- else -%}
+        <span class="c-btn">
+            <span class="sr-only">{{- 'pagination.next_page' | t -}}</span>
+            <svg aria-hidden="true" role="presentation">
+                <use xlink:href="#sprite-chevron-right"></use>
+            </svg>
+        </span>
+    {%- endif -%}
+</nav>

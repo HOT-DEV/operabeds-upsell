@@ -1,0 +1,54 @@
+<div id="bespoke-design-service" class="overlay">
+    <div class="popup-call p-0">
+        <a class="close" href="#/">&times;</a>
+
+        <div class="d-block d-lg-flex flex-lg-row justify-content-center">
+            <div class="d-none d-lg-block popup-bespoke-image col-lg-4 px-0 text-center">
+            </div>
+
+            <div class="col-lg-8 px-4 px-lg-16 py-12 py-lg-16 text-center text-lg-left">
+                <div class="col p-0 m-0">
+                    <div class="col-12 col-lg-10">
+                <p class="mb-4 text-14 font-weight-bold leading-tight tracking-widest text-uppercase text-elpehant">{{ settings.popup_bed-service_subheading }}</p>                
+                <h3 class="text-24 text-lg-30 font-weight-medium mb-6">{{ settings.popup_bed-service_title-main }}</h3>
+              {% if settings.popup_bed-service_description != blank %}
+              <p class="d-none d-lg-block text-16">{{ settings.popup_bed-service_description }}</p>
+              {% endif %}                
+            </div>
+            <div class="col-12">
+            <hr class="my-8">
+            <h3 class="text-18 text-lg-24 font-weight-medium mb-6">{{ settings.popup_bed-service_title-cta }}</h3>
+            <div class="row align-items-lg-center">
+                <div class="col-12 col-lg-auto">
+                    <a href="{{ settings.popup_bed-service_btn-url }}" class="c-btn c-btn--blue text-capitalize text-16 font-weight-medium tracking-normal py-4 px-12">{{ settings.popup_bed-service_btn-label }}</a>
+                </div>
+                <div class="col-12 col-lg-auto mt-6 mt-lg-0">
+                    <a href="tel:03332228484" class="text-18 text-uppercase tracking-widest font-weight-bold" style="text-decoration: underline; cursor: pointer;">{{ settings.popup_bed-service_link-label }}</a>
+                </div>
+            </div>
+        </div>
+        </div>    
+        </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+
+.popup-bespoke-image {
+  background-image: url("https://cdn.shopify.com/s/files/1/0331/6806/4648/files/Bespoke-Process-Manufacture.jpg?v=1623875046");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 300px;
+}
+
+@media screen and (min-width: 1024px) {
+  .popup-bespoke-image {
+    background-image: url("https://cdn.shopify.com/s/files/1/0331/6806/4648/files/Bespoke-Process-Manufacture.jpg?v=1623875046");
+    height: auto;
+  }
+}
+    
+</style>

@@ -1,0 +1,132 @@
+{%- liquid
+    assign hero_image = section.settings.hero_image
+    assign hero_image_alt = section.settings.hero_image.alt | default: page.title
+
+    assign hero_image_xs = 'https://via.placeholder.com/376x242'
+    assign hero_image_sm = 'https://via.placeholder.com/480x242'
+    assign hero_image_md = 'https://via.placeholder.com/292x242'
+    assign hero_image_lg = 'https://via.placeholder.com/304x242'
+    assign hero_image_xl = 'https://via.placeholder.com/283x242'
+    assign hero_image_xxl = 'https://via.placeholder.com/316x242'
+    assign hero_image_xxxl = 'https://via.placeholder.com/438x242'
+
+    if hero_image != blank
+        assign hero_image_xs = hero_image | img_url: '600x'
+        assign hero_image_sm = hero_image | img_url: '800x'
+        assign hero_image_md = hero_image | img_url: '1100x'
+        assign hero_image_lg = hero_image | img_url: '1300x'
+        assign hero_image_xl = hero_image | img_url: '1500x'
+        assign hero_image_xxl = hero_image | img_url: '1800x'
+        assign hero_image_xxxl = hero_image | img_url: '2048x'
+    endif
+-%}
+<section data-section-type="blog-landing" data-section-id="{{ section.id }}" aria-labelledby="page-title" aria-describedby="page-description">
+    <header>
+        <div class="t-page-hero">
+            <div class="t-page-hero__image">
+                {%- capture image_source -%}
+                    <source srcset="{{ hero_image_xs | url }}" media="(max-width: 575px)">
+                    <source srcset="{{ hero_image_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                    <source srcset="{{ hero_image_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                    <source srcset="{{ hero_image_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                    <source srcset="{{ hero_image_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                    <source srcset="{{ hero_image_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                    <source srcset="{{ hero_image_xxxl | url }}" media="(min-width: 1670px)">
+                {%- endcapture -%}
+                <picture class="c-page-header__bg js-lazy" data-iesrc="{{ hero_image_xxxl | url }}" data-alt="{{- hero_alt -}}">
+                    {{- image_source -}}
+                </picture>
+                <noscript>
+                    <picture class="c-page-header__bg">
+                        {{- image_source -}}
+                        <img src="{{ hero_image_xl | url }}" alt="{{- hero_alt -}}"/>
+                    </picture>
+                </noscript>
+            </div>
+            <div class="c-page-header__content h-100">
+                <div class="container site-padding h-100">
+                    <div class="row h-100 align-items-center justify-content-center">
+                        <div class="col-sm-10 col-md-8 text-center text-white">
+                            <h1 class="text-36 text-md-46 font-weight-normal">{{- page.title | escape }}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c-page-header__overlay" aria-hidden="true" role="presentation"></div>
+        </div>
+    </header>
+    {%- if section.blocks.size > 0 -%}
+        <div class="container site-padding mt-16 mt-md-22">
+            <div class="row justify-content-center mb-8">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-4 text-center">
+                    <h2 class="text-24 text-md-36 text-blue-diane font-weight-semibold leading-tight">Browse by category</h2>
+                </div>
+            </div>
+            <div class="row">
+                {%- for block in section.blocks -%}
+                    {%- liquid
+                        assign blog = blogs[block.settings.blog]
+                        assign title = blog.title
+                        assign image = block.settings.image | default: blog.articles.first.image
+                    -%}
+                    <div class="col-12 col-md-6 col-lg-4 mb-8" data-block-id="{{ block.id }}" data-block-type="{{ block.type | handleize }}" {{ block.shopify_attributes }}>
+                        {%- render 'blog-card'
+                            _blog: blog,
+                            _image: image
+                        -%}
+                    </div>
+                {%- endfor -%}
+            </div>
+        </div>
+    {%- endif -%}
+</section>
+
+{% schema %}
+{
+    "name": {
+        "de": "Blog Landing",
+        "en": "Blog Landing",
+        "es": "Blog Landing",
+        "fr": "Blog Landing",
+        "it": "Blog Landing",
+        "ja": "ブログランディング",
+        "pt-BR": "Blog Landing"
+    },
+    "settings": [
+        {
+            "type": "header",
+            "content": "Hero Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "hero_image",
+            "label": "Hero Image",
+            "info": "image will be overriden by metafields (old website)"
+        },
+        {
+            "type": "textarea",
+            "id": "page_strapline",
+            "label": "Page Strapline (add line break for design)",
+            "default": "Page\r\nstrapline"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "blog",
+            "name": "Blog",
+            "settings": [
+                {
+                    "type": "blog",
+                    "id": "blog",
+                    "label": "Blog"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

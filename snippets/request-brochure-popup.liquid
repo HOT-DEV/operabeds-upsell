@@ -1,0 +1,125 @@
+<div id="request-brochure" class="overlay">
+    <div class="popup-call p-0">
+        <a class="close" href="#/">&times;</a>
+        <div class="d-block d-lg-flex flex-lg-row justify-content-center">
+            <div class="d-none d-lg-block cta-brochure-image col-lg-4 px-0 text-center">
+            </div>
+            <div class="col-lg-8 px-4 px-lg-16 py-6 py-lg-12 text-center text-lg-left">
+                <h3 class="d-none d-lg-block text-lg-30 font-weight-medium mb-6">{{- settings.popup_brochure_title -}}</h3>
+                <h3 class="d-lg-none text-18 text-lg-30 font-weight-medium mb-2">{{ 'Request a Free Brochure' }}</h3>
+                <span class="d-none d-lg-block text-16">{{- settings.popup_brochure_info -}}</span>
+                <div class="c-page-form pt-6 pt-lg-6">
+                    {%- form 'contact', class: 'c-form c-form-alt', id: 'brochure-request-form', aria-label: 'Brochure Request form' -%}
+                    <input type="hidden" name="contact[form]" value="Brochure Request Form (popup)">
+                    {{- form.errors | default_errors | replace: 'class="errors"', 'class="c-alert c-alert--error" role="alert"' -}}
+                    <div class="d-lg-flex flex-lg-row justify-content-lg-between">
+                        <div class="c-form-field mb-6" id="split">
+                            <label class="white-bg" for="name">Your Full Name</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'name' %} c-input--error{% endif %}"
+                                id="name" name="contact[name]" placeholder="Enter your full name" type="text"
+                                {%- if form.name -%} value="{{ form.name }}" {%- endif -%} required />
+                        </div>
+                        <div class="c-form-field mb-6 c-form-field--white-bg" id="split">
+                            <label for="email">E-Mail Address</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'email' %} c-input--error{% endif %}"
+                                id="email" name="contact[email]" placeholder="Enter your email address" type="email"
+                                {%- if form.email -%} value="{{ form.email }}" {%- endif -%} required />
+                        </div>
+                    </div>
+                    <div class="d-lg-flex flex-lg-row justify-content-lg-between">
+                        <div class="c-form-field mb-6" id="split">
+                            <label class="white-bg" for="name">Your Phone Number</label>
+                            <input
+                                class="c-form-input {% if show_errors == true and form.errors contains 'phone' %} c-input--error{% endif %}"
+                                id="phone" name="contact[phone]" placeholder="Enter your phone number" type="number"
+                                {%- if form.phone -%} value="{{ form.phone }}" {%- endif -%} required />
+                        </div>
+                        <div class="c-form-field mb-6" id="split">
+                            <label for="subject">When do you need a new bed?</label>
+                            <select id="subject" name="contact[When do you need your bed]" class="c-form-input"
+                                required>
+                                <option selected disabled value="3">{{- 'Select how soon' | escape -}}</option>
+                                <option value="1">Immediately (Delivery tomorrow)</option>
+                                <option value="2">Quickly (In the next week)</option>
+                                <option value="3">No Rush (4+ weeks)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-lg-flex flex-lg-row justify-content-lg-between">
+                        <div class="c-form-field textarea mb-6 c-form-field--white-bg" id="split">
+                            <label for="Address">Address</label>
+                            <textarea
+                                class="c-form-input {% if show_errors == true and form.errors contains 'message' %} c-input--error{% endif %}"
+                                id="message" name="contact[address]" placeholder="Enter your address" required>
+                                {%- if form.body -%}
+                                    {{- form.body -}}
+                                {%- endif -%}
+                            </textarea>
+                        </div>
+                        <div class="d-none d-lg-block c-form-field textarea mb-6 c-form-field--white-bg" id="split">
+                            <label for="Message">What brought you here today?</label>
+                            <textarea
+                                class="c-form-input {% if show_errors == true and form.errors contains 'message' %} c-input--error{% endif %}"
+                                id="message" name="contact[What brought you here today]"
+                                placeholder="Enter your message here">
+                                {%- if form.body -%}
+                                    {{- form.body -}}
+                                {%- endif -%}
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-sm-end">
+                        <button type="submit" class="c-form-contact-submit c-add-to-cart-btn" onclick="webHook()" >
+                            <span
+                                class="text-16 text-uppercase tracking-wider text-bold">{{- settings.popup_brochure_ctalabel -}}</span>
+                        </button>
+                    </div>
+                    {%- if form.posted_successfully? -%}
+                    <div class="bg-mossgreen">
+                        <p class="c-alert c-alert--success text-tropical text-center text-16 mt-4 p-2" role="alert">
+                            Thank you! Your request
+                            has been received and we will contact you soon.
+                        </p>
+                    </div>
+                    {%- endif -%}
+                    {%- endform -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  function webHook(){
+console.log("Hello opera beds");
+    var inputs = document.getElementById("brochure-request-form").elements;
+  var  name = inputs["contact[name]"].value;
+  var  email = inputs["contact[email]"].value;
+  var  address = inputs["contact[address]"].value;
+  var  phone = inputs["contact[phone]"].value;
+  var  whenDo = inputs["contact[When do you need your bed]"].value || 3; 
+  var whatBrought =  inputs["contact[What brought you here today]"].value;
+  
+    var params = "&name="+name+"&email="+email+"&phone="+phone+"&address="+address+"&whenDo="+whenDo+"&whatBrought="+whatBrought;
+  	console.log("params",params);
+    var uploudUrl ="https://4586376.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=881&deploy=1&compid=4586376&h=fd10d38a4e72b26f299b";
+           
+                fetch(uploudUrl+params, {
+                        method: 'POST',
+						headers: {'Content-Type': 'application/json'},
+                        body: "&name=testName",
+						referrerPolicy: "origin-when-cross-origin"
+                      }).then(function(response) {
+                
+                return response.json();
+          
+              
+              }).then(function(result) {
+                
+              
+                artData = result.Data;
+			  });
+    
+  }
+</script>

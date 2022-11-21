@@ -1,0 +1,57 @@
+{% comment %}
+    The Announcement section template.
+{% endcomment %}
+{%- liquid
+    assign phone_number_no_spaces = section.settings.phone_number | replace: ' ', ''
+    assign phone_number = section.settings.phone_number
+    assign clickable_phone_number = '<a href="tel:{number_no_spaces}"><span class="rTapNumber413992">{number}</span></a>' | replace: '{number_no_spaces}', phone_number_no_spaces | replace: '{number}', phone_number
+    assign phone_number_message = section.settings.phone_message | replace: '{number}', clickable_phone_number
+-%}
+<section class="bg-prussian-blue text-white" data-section-type="static-announcement" data-section-id="{{ section.id }}">
+    <div class="container site-padding py-14 py-lg-9 text-26 text-md-30 leading-tight tracking-tighter font-weight-normal text-center">
+        <p class="m-0">
+            <span class="d-block d-md-inline-block">
+                {{ section.settings.title }}
+            </span>
+            <span class="d-block d-md-inline-block">
+                <strong>{{ phone_number_message }}</strong>
+                {{ section.settings.text_after }}
+            </span>
+        </p>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Announcement",
+    "settings": [
+        {
+            "type":"text",
+            "id": "title",
+            "label": "Heading",
+            "default": "We're here to help."
+        },
+        {
+            "type":"text",
+            "id": "phone_number",
+            "label": "Phone Number",
+            "default": "0370 218 4615"
+        },
+        {
+            "type":"text",
+            "id": "phone_message",
+            "label": "Phone Message with Number",
+            "default": "Call us on {number}",
+            "placeholder": "Call us on {number}",
+            "info": "Call us on {number}, number will be replaced by the phone number field"
+        },
+        {
+            "type":"text",
+            "id": "text_after",
+            "label": "Text after message",
+            "default": "if you have any questions."
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

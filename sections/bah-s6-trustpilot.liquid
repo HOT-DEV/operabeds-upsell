@@ -1,0 +1,33 @@
+{% comment %}
+    The trustpilot section (out of the box solution from meta/trustpilot)
+	4PE - 1/12/2021
+{% endcomment %}
+
+<section class="s6-trustpilot py-10 py-md-20" data-section-id="{{ section.id }}">
+    <div class="container site-padding">
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+                {%- if section.settings.embed != blank -%}
+                    {{- section.settings.embed | safe -}}
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+</style>  
+
+{% schema %}
+{
+    "name": "S6 - Trustpilot",
+    "settings": [
+        {
+            "type": "html",
+            "id": "embed",
+            "label": "Embed"
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

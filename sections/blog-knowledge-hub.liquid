@@ -1,0 +1,229 @@
+{% comment %}
+The Knowledge Hub Blog section template.
+{% endcomment %}
+
+{%- paginate blog.articles by section.settings.posts_per_page -%}
+{%- liquid
+        assign offset = 0
+        assign featured_article = blog.metafields.accentuate.blog_featured_article | default: blog.articles.first
+        assign blog_articles = blog.articles | offset: offset
+
+        assign posts_per_row = section.settings.posts_per_row
+
+        assign blog_name = blog.handle
+    -%}
+<section data-section-type="blog" data-section-id="{{ section.id }}" aria-labelledby="page-title" aria-describedby="page-description">
+ 
+{% comment %}
+===========================================
+ SECTION - Hero content
+===========================================  
+  TO-DO
+  * Done
+===========================================
+{% endcomment %}    
+  
+  {%- capture element_header -%}
+  <picture class="c-page-header__bg js-lazy" data-iesrc="{{ section.settings.image_desktop | img_url: '2048x' }}" data-alt="{{ image_alt | escape }}">
+    <source srcset="{{ section.settings.image_desktop | img_url: 'x550' }}" media="(max-width: 575px)">
+    <source srcset="{{ section.settings.image_desktop | img_url: '800x' }}" media="(min-width: 576px) and (max-width: 767px)">
+    <source srcset="{{ section.settings.image_desktop | img_url: '1100x' }}" media="(min-width: 768px) and (max-width: 1023px)">
+    <source srcset="{{ section.settings.image_desktop | img_url: '1300x' }}" media="(min-width: 1024px) and (max-width: 1279px)">
+    <source srcset="{{ section.settings.image_desktop | img_url: '1500x' }}" media="(min-width: 1280px) and (max-width: 1439px)">
+    <source srcset="{{ section.settings.image_desktop | img_url: '1800x' }}" media="(min-width: 1440px) and (max-width: 1669px)">
+    <source srcset="{{ section.settings.image_desktop | img_url: '2048x' }}" media="(min-width: 1670px)">
+    {% comment %} <img alt="" /> {% endcomment %}
+  </picture>
+  <div class="c-page-header__content h-100">
+    <div class="container site-padding h-100">
+      <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-12 text-center text-white">
+          <p class="mb-5 text-14 font-weight-bold leading-tight tracking-widest text-uppercase text-center">Resources</p>
+          <h1 class="mb-10 mb-md-6 text-46 font-weight-medium text-white text-center" id="page-title">{{- blog.title | escape -}}</h1>
+          <div class="">
+            <form action="{{ shop.url }}/search" method="get" accept-charset="utf-8" role="search" class="kh-search-container">
+              <div class="c-search-form__fields">              
+              <input type="hidden" name="type" value="article" />              
+              <input type="search" id="search-bar" name="q" placeholder="What are you looking for?"/>
+                <button class="c-search-form__submit" aria-label="{{ 'Submit' | escape }}">
+                  <svg focusable="false" aria-hidden="true" role="presentation" id="kh-page">
+                    <use xlink:href="#sprite-search"></use>
+                  </svg>
+                </button> 
+              </div>
+            </form>                   
+          </div>            
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c-page-header__overlay" aria-hidden="true" role="presentation" id="kh-page"></div>
+  {%- endcapture -%}      
+
+  <header class="c-page-header position-relative" id="kh-page">
+    {{ element_header }}
+ 
+{% comment %}
+===========================================
+ SECTION - Search Categories
+===========================================  
+  TO-DO
+  * Styling: Add svg to spritesheet and render snippet instead to shorter code  
+===========================================
+{% endcomment %}    
+    
+    
+{% assign tags_with_sort_order = '' | split: '' %}
+
+{% for tag in blog.all_tags %}
+    {% if tag contains 'Opera Beds' %}
+    	{% assign tag_value = "aa" | append: tag %}	
+    {% elsif tag contains 'Pressure' %}
+    	{% assign tag_value = "bb" | append: tag %}	
+    {% elsif tag contains 'Provider' %}
+    	{% assign tag_value = "cc" | append: tag %}	 
+    {% elsif tag contains 'Independence' %}
+    	{% assign tag_value = "dd" | append: tag %}	     
+	{% else %}
+		{% assign tag_value = "zz" | append: tag %}	
+	{% endif %}
+
+	{% assign temp_array = tag_value | split: "_" %}
+	{% assign tags_with_sort_order = tags_with_sort_order | concat: temp_array %}
+{% endfor %}
+
+{% assign sorted_tags = tags_with_sort_order | sort | limit: 4 %}    
+    
+  <!-- Desktop -->  
+  <div class="container site-padding bg-transparent d-none d-xl-block position-absolute mb-n13" id="sc-desktop">
+    <div class="row justify-content-center align-items-center text-left no-gutters">
+      {%- for tag_with_sort_order in sorted_tags -%} 
+      {% assign tag = tag_with_sort_order | slice: 2,99 %}
+      <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="category-card {% if current_tags.first == tag %} category-card-selected {% endif %} d-inline-flex align-items-center text-white bg-elephant p-6 mr-6">          
+        <div class="cc-icon mr-4 align-self-center">
+          {%- if tag contains 'Opera Beds' -%}
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="66.591" height="56.569" viewBox="0 0 66.591 56.569"> <defs> <clipPath id="clip-path"> <rect id="Rectangle_796" data-name="Rectangle 796" width="66.591" height="56.569" fill="none" stroke="#96917d" stroke-width="2"/> </clipPath> </defs> <g id="Group_1817" data-name="Group 1817" clip-path="url(#clip-path)"> <path id="Path_472" data-name="Path 472" d="M23.573,41.1,3.55,6.422,13.373.75,30.122,29.762H63.675V41.1H23.626" transform="translate(1.789 0.378)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <line id="Line_442" data-name="Line 442" x1="11.682" transform="translate(36.802 50.957)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <path id="Path_473" data-name="Path 473" d="M28.841,30.9l-4.475,4.475,4.493,4.494" transform="translate(12.283 15.575)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <line id="Line_443" data-name="Line 443" y1="5.666" x2="10.216" transform="translate(1.128 27.366)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <path id="Path_474" data-name="Path 474" d="M7.939,24.82l1.743-6.084-6.11-1.749" transform="translate(1.801 8.563)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> </g></svg>                          
+          {%- elsif tag contains 'Pressure Care' -%}
+		  <svg viewBox="0 0 72.347 61.748" xmlns="http://www.w3.org/2000/svg"><path transform="translate(.25 .287)" d="M2.341,4.607S12.358,22.132,38.993,6.89,69.854,9.58,69.854,9.58" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" data-name="Path 475"/><path transform="translate(.25 2.026)" d="M2.341,10.677S12.358,28.2,38.993,12.96s30.861,2.69,30.861,2.69" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" data-name="Path 476"/><path transform="translate(.25 5.879)" d="M5.223,54.869V32.42H.75L10.2,20.268l9.382,12.07H15.3V54.869" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" data-name="Path 477"/><path transform="translate(.25 5.879)" d="M30.983,54.869V32.42H26.51l9.445-12.152,9.382,12.07H41.06V54.869" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" data-name="Path 478"/><path transform="translate(.25 5.879)" d="M56.744,54.869V32.42H52.271l9.445-12.152L71.1,32.338H66.82V54.869" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" data-name="Path 479"/></svg>
+          {%- elsif tag contains 'Care Provider' -%}
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="57.536" height="56.607" viewBox="0 0 57.536 56.607"> <defs> <clipPath id="clip-path"> <rect id="Rectangle_798" data-name="Rectangle 798" width="57.536" height="56.607" fill="none" stroke="#96917d" stroke-width="2"/> </clipPath> </defs> <g id="Group_1822" data-name="Group 1822" transform="translate(0 0)"> <g id="Group_1821" data-name="Group 1821" transform="translate(0 0)" clip-path="url(#clip-path)"> <path id="Path_480" data-name="Path 480" d="M11.977,57.05V53.308L2.1,41.786A5.615,5.615,0,0,1,.75,38.133v-17.1a3.274,3.274,0,0,1,6.549,0v10.88" transform="translate(-0.048 -1.144)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <path id="Path_481" data-name="Path 481" d="M23.62,57.918V45.274a5.613,5.613,0,0,0-1.644-3.969L12.861,32.19a3.307,3.307,0,0,0-4.677,0h0a3.307,3.307,0,0,0,0,4.677h0L15.2,43.885" transform="translate(-0.465 -2.012)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <path id="Path_482" data-name="Path 482" d="M48.75,57.05V53.308l9.876-11.521a5.615,5.615,0,0,0,1.351-3.653v-17.1a3.274,3.274,0,0,0-6.549,0v10.88" transform="translate(-3.142 -1.144)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <path id="Path_483" data-name="Path 483" d="M36.75,57.918V45.274a5.613,5.613,0,0,1,1.644-3.969l9.115-9.115a3.307,3.307,0,0,1,4.677,0h0a3.307,3.307,0,0,1,0,4.677h0L45.17,43.885" transform="translate(-2.369 -2.012)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <path id="Path_484" data-name="Path 484" d="M42.945,7.773a7.017,7.017,0,0,0-13.1-3.491A7.012,7.012,0,1,0,19.1,13L29.847,23.777,40.592,13A6.987,6.987,0,0,0,42.945,7.773Z" transform="translate(-1.079 -0.048)" fill="none" stroke="#96917d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> </g> </g></svg>                 
+          {%- elsif tag contains 'Independence' -%}
+          <svg id="Group_1824" data-name="Group 1824" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="55.5" height="55.5" viewBox="0 0 55.5 55.5"> <defs> <clipPath id="clip-path"> <rect id="Rectangle_799" data-name="Rectangle 799" width="55.5" height="55.5" fill="none" stroke="#707070" stroke-width="2"/> </clipPath> </defs> <g id="Group_1823" data-name="Group 1823" clip-path="url(#clip-path)"> <path id="Path_485" data-name="Path 485" d="M54.75,25.95,27.75.75l-27,25.2" fill="none" stroke="#95907d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> <path id="Path_486" data-name="Path 486" d="M7.95,29.55v25.2h14.4V40.35h10.8v14.4h14.4V29.55" fill="none" stroke="#95907d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/> </g></svg>                 
+          {%- endif -%}
+        </div>
+        <div class="cc-title text-17 text-xxl-17 font-weight-medium">
+          {{ tag }}
+        </div>
+      </a>
+      <!-- {% unless forloop.last %}, {% endunless %} -->
+      {%- endfor -%}          
+    </div>
+  </div> 
+  <!-- Mobile -->
+  <div class="container site-padding d-flex d-xl-none justify-content-center bg-transparent position-absolute mb-n13" id="sc-mobile">
+    <div class="row w-100">
+
+        <select class="c-tabs__selector c-select mb-6 bg-elephant" id="sc-mobile" onchange="javascript:window.location.href=this.value;">
+          <option value="{{ blog.url }}">
+              All Categories
+            </option>
+      {%- for tag_with_sort_order in sorted_tags -%} 
+      {% assign tag = tag_with_sort_order | slice: 2,99 %}
+          {%- if current_tags.size == 1 and current_tags.first == tag -%}
+            <option value="{{ blog.url }}/tagged/{{ tag | handle }}" selected="selected">
+              {{ tag | escape -}}
+            </option>             
+          {%- else -%}
+            <option value="{{ blog.url }}/tagged/{{ tag | handle }}">
+              {{ tag | escape -}}
+            </option>          
+          {%- endif -%}
+          {%- endfor -%}  
+        </select>
+    </div>
+  </div>
+    </header>
+  
+{% comment %}
+===========================================
+ SECTION - Latest Guides
+===========================================  
+  TO-DO
+  * Done
+===========================================
+{% endcomment %}    
+  
+  <div class="bg-porcelain2 pb-10 pt-18 pb-md-24">
+    <div class="container site-padding">              
+      <div class="row justify-content-between align-items-center mb-8">
+        <div class="col-6 text-left pr-0">
+          <h2 class="text-capitalize font-weight-medium text-26 text-md-36">Latest Guides</h2>
+        </div>
+        <div class="col-6 text-right">
+          <a href="{{ blog.url }}" class="kh-blog-all">View All Posts</a>
+        </div>                
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-12{% if section.settings.enable_sidebar and blog_gallery == false %} col-lg-8 offset-lg-1{% endif %}">
+          <div class="row mb-n4">
+            {%- for article in blog.articles limit: limit offset: offset  -%}
+            {%- if blog_gallery == true -%}
+            <div class="col-12 col-md-6 col-xl-4 mb-6">
+              {%- else -%}
+              <div class="col-12 col-md-6{% if posts_per_row >= 3 %} col-xl-4{% endif %}{% if posts_per_row >= 4 %} col-xxl-3{% endif %} mb-6">
+                {%- endif -%}
+
+                {%- include 'article-card', article: article -%}
+              </div>
+              {%- endfor -%}
+            </div>
+            {%- if paginate.pages > 1 -%}
+            <div class="mt-10">
+              {%- include 'pagination' -%}
+            </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+</section>
+{%- endpaginate -%}
+
+
+{% schema %}
+{
+    "name": "Knowledge Hub - Main",
+    "settings": [
+{
+"type": "header",
+"content": "Content"
+},
+{
+"type": "range",
+"id": "posts_per_page",
+"min": 2,
+"max": 24,
+"step": 1,
+"label": "Posts per page",
+"default": 9
+},
+{
+"type": "range",
+"id": "posts_per_row",
+"min": 2,
+"max": 4,
+"step": 1,
+"label": "Posts per row",
+"default": 3
+},
+{
+"type": "image_picker",
+"id": "image_desktop",
+"label": "Hero Image",
+"info": "2:3 ratio recommended"
+}
+],
+"blocks": []
+}
+{% endschema %}

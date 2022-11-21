@@ -1,0 +1,170 @@
+{% comment %}
+    The Collection section template.
+{% endcomment %}
+<section class="s-collection" data-section-type="collection" data-section-id="{{ section.id }}" aria-labelledby="collection-title"{%- if collection.description != blank -%} aria-describedby="collection-description"{%- endif -%}{% if section.settings.enable_ajax %} data-collection-ajax{% endif %}>
+    {%- if collection.image != blank -%}
+        <div class="container site-padding">
+            <figure class="m-0" data-collection-image>
+                <img src="{{ collection.image | img_url: '1140x400', crop: 'center' }}" alt="{{ collection.image.alt | escape }}" />
+            </figure>
+            </div>
+    {%- endif -%}
+    {%- paginate collection.products by section.settings.products_per_page -%}
+        <header>
+            <div class="container site-padding py-5">
+                <div class="row">
+                    <div class="col-12 mb-3" data-collection-breadcrumbs>
+                        {%- include 'breadcrumb' -%}
+                    </div>
+                    <div class="col-12">
+                        <h1 class="mb-0" id="collection-title" data-collection-title>{{- collection.title | escape -}}</h1>
+                        <div id="collection-description" data-collection-description>{{- collection.description | safe -}}</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="container site-padding">
+            {%- if collection.products.size > 0 -%}
+                <div class="row">
+                    {%- if section.settings.enable_filters -%}
+                        <div class="col-12 col-md-4 col-lg-3">
+                            {%-
+                                render 'collection-filters',
+                                collection: collection,
+                                current_tags: current_tags
+                            -%}
+                        </div>
+                    {%- endif -%}
+                    <div class="col-12{% if section.settings.enable_filters %} col-md-8 col-lg-9{% endif %}">
+                        {%- if section.settings.enable_filters or section.settings.enable_count or section.settings.enable_sorting -%}
+                            <div class="row justify-content-md-between align-items-md-center mb-3{% unless section.settings.enable_count or section.settings.enable_sorting %} mb-md-0{% endunless %}">
+                                {%- if section.settings.enable_filters -%}
+                                    <div class="col-12 d-md-none">
+                                        <button class="c-btn c-btn--block" type="button" aria-controls="collection-filters" aria-expanded="false" data-collection-filters-toggle>
+                                            {{- 'Filters' | escape -}}
+                                        </button>
+                                    </div>
+                                {%- endif -%}
+                                {%- if section.settings.enable_count -%}
+                                    <div class="col-12 col-md-auto{% if section.settings.enable_filters %} mt-3 mt-md-0{% endif %}">
+                                        <p class="text-center text-md-left mb-0 py-2" data-collection-count>
+                                            {{ paginate.items }} products
+                                        </p>
+                                    </div>
+                                {%- endif -%}
+                                {%- if section.settings.enable_sorting -%}
+                                    <div class="col-12 col-md-auto{% if section.settings.enable_filters or section.settings.enable_count %} mt-2 mt-md-0{% endif %} ml-md-auto">
+                                        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                                        <div class="d-flex flex-row flex-nowrap align-items-center">
+                                            <label class="c-label flex-none mb-0 mr-2" for="collection-sort">Sort</label>
+                                            <select class="c-input flex-grow-1" id="collection-sort" name="sort_by" data-collection-sort>
+                                                {%- for option in collection.sort_options -%}
+                                                    <option value="{{ option.value }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name }}</option>
+                                                {%- endfor -%}
+                                            </select>
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        {%- endif -%}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row mb-n4" data-collection-products>
+                                    {%- for product in collection.products -%}
+                                        <div class="col-6 col-lg-4 mb-4">
+                                            {%-
+                                                render 'product-item',
+                                                product: product,
+                                                collection: collection
+                                            -%}
+                                        </div>
+                                    {%- endfor -%}
+                                </div>
+                                <div class="mt-4" data-collection-pagination>
+                                    {%- if paginate.pages > 1 -%}
+                                        {%-
+                                            render 'pagination',
+                                            paginate: paginate
+                                        -%}
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {%- else -%}
+                <p class="mb-0" data-collection-empty>
+                    {{- 'There are no products.' | escape -}}
+                </p>
+            {%- endif -%}
+        </div>
+    {%- endpaginate -%}
+</section>
+
+{% schema %}
+{
+    "name": {
+        "de": "Sammlung",
+        "en": "Collection",
+        "es": "Colección",
+        "fr": "Collection",
+        "it": "Collezione",
+        "ja": "コレクション",
+        "pt-BR": "Coleção"
+    },
+    "settings": [
+        {
+            "type": "header",
+            "content": "Settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_ajax",
+            "default": true,
+            "label": "Enable AJAX",
+            "info": "Enables real-time filtering, sorting and pagination using AJAX."
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_filters",
+            "default": false,
+            "label": "Enable Filters"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_count",
+            "default": true,
+            "label": "Enable Count"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_sorting",
+            "default": true,
+            "label": "Enable Sorting"
+        },
+        {
+            "type": "header",
+            "content": "Products"
+        },
+        {
+            "type": "range",
+            "id": "products_per_page",
+            "min": 1,
+            "max": 30,
+            "step": 1,
+            "label": "Products per Page",
+            "default": 24
+        },
+        {
+            "type": "range",
+            "id": "products_per_row",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "label": "Products per Row",
+            "default": 3
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}

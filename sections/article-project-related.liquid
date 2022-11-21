@@ -1,0 +1,167 @@
+{% comment %}
+    The Project Related section
+{% endcomment %}
+
+{%- liquid
+    assign limit = section.settings.limit
+    assign project_related_heading = article.metafields.accentuate.project_related_heading | default: section.settings.heading
+    assign project_related_projects = article.metafields.accentuate.project_related_projects
+    if article.metafields.accentuate.project_related_projects == blank
+        assign project_related_projects = blogs[section.settings.blog].articles | map: 'handle'
+    else
+        assign project_related_projects = project_related_projects | split: '|'
+    endif
+
+
+    assign img_xs = 'https://via.placeholder.com/543x340'
+    assign img_sm = 'https://via.placeholder.com/687x340'
+    assign img_md = 'https://via.placeholder.com/464x440'
+    assign img_lg = 'https://via.placeholder.com/436x540'
+    assign img_xl = 'https://via.placeholder.com/470x540'
+    assign img_xxl = 'https://via.placeholder.com/565x540'
+    assign img_xxxl = 'https://via.placeholder.com/936x540'
+    assign img_alt = ''
+-%}
+
+<section data-section-type="article-project-related" data-section-id="{{ section.id }}">
+    <div class="container site-padding my-20 my-md-24 my-xxl-30">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="row mb-8">
+                    <div class="col-12 col-md-auto text-center text-md-left">
+                        {%- if project_related_heading != blank -%}
+                            <h2 class="m-0 u-heading-md text-elephant">
+                                {{- project_related_heading | escape -}}
+                            </h2>
+                        {%- endif -%}
+                    </div>
+                    {%- if section.settings.cta_url -%}
+                        <div class="col-12 col-md-auto ml-md-auto d-none d-md-block">
+                            <a class="c-btn-outline c-btn-outline--blue" href="{{ section.settings.cta_url }}">
+                                {{- section.settings.cta_text | escape -}}
+                            </a>
+                        </div>
+                    {%- endif -%}
+                </div>
+                <div class="row mx-n2 mb-n4">
+                    {%- for related_project in project_related_projects limit: limit -%}
+                        {%- liquid
+                            assign project = articles[related_project]
+                            assign project_title = project.title
+                            assign project_description = project.excerpt | strip_html | default: project.content | strip_html | truncatewords: truncate_words_limit
+                            assign project_image = project.image
+                            assign project_provider = project.metafields.accentuate.project_details_provider
+
+                            if project_image != blank
+                                assign image_alt = project_image.alt | default: project_title
+                                assign img_xs = project_image | img_url: '543x340', crop: 'center'
+                                assign img_sm = project_image | img_url: '687x340', crop: 'center'
+                                assign img_md = project_image | img_url: '464x440', crop: 'center'
+                                assign img_lg = project_image | img_url: '436x540', crop: 'center'
+                                assign img_xl = project_image | img_url: '470x540', crop: 'center'
+                                assign img_xxl = project_image | img_url: '565x540', crop: 'center'
+                                assign img_xxxl = project_image | img_url: '936x540', crop: 'center'
+                            endif
+                        -%}
+                        <div class="col-12 col-md-6 mb-4 px-2">
+                            <div class="c-project-card">
+                                <picture class="c-project-card__picture js-lazy" data-iesrc="{{ img_xxxl | url }}" data-alt="{{ image_alt | escape }}">
+                                    <source srcset="{{ img_xs | url }}" media="(max-width: 575px)">
+                                    <source srcset="{{ img_sm | url }}" media="(min-width: 576px) and (max-width: 767px)">
+                                    <source srcset="{{ img_md | url }}" media="(min-width: 768px) and (max-width: 1023px)">
+                                    <source srcset="{{ img_lg | url }}" media="(min-width: 1024px) and (max-width: 1279px)">
+                                    <source srcset="{{ img_xl | url }}" media="(min-width: 1280px) and (max-width: 1439px)">
+                                    <source srcset="{{ img_xxl | url }}" media="(min-width: 1440px) and (max-width: 1669px)">
+                                    <source srcset="{{ img_xxxl | url }}" media="(min-width: 1670px)">
+                                    {% comment %} <img alt="" /> {% endcomment %}
+                                </picture>
+                                <div class="c-project-card__content text-white">
+                                    {%- if project_provider != blank -%}
+                                        <p class="mb-5 text-14 leading-tight font-weight-bold tracking-widest text-uppercase">
+                                            {{- project_provider | escape -}}
+                                        </p>
+                                    {%- endif -%}
+                                    {%- if project_title != blank -%}
+                                        <h2 class="m-0 text-24 text-md-36 leading-tight font-weight-normal">
+                                            {{- project_title | escape -}}
+                                        </h2>
+                                    {%- endif -%}
+                                    {%- if project_description != blank -%}
+                                        <p class="mt-5 mb-0 d-none d-lg-block">
+                                            {{- project_description | safe -}}
+                                        </p>
+                                    {%- endif -%}
+                                    <a class="mt-10 mt-lg-12 c-text-btn text-14 font-weight-bold leading-tight tracking-widest text-uppercase" href="{{ project.url }}">
+                                        View Project
+                                        <svg class="c-btn-icon--caret" aria-hidden="true" role="presentation">
+                                            <use xlink:href="#sprite-caret-right"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+                {%- if section.settings.cta_url -%}
+                    <div class="mt-5 d-md-none text-center">
+                        <a class="c-btn-outline c-btn-outline--blue" href="{{ section.settings.cta_url }}">
+                            {{- section.settings.cta_text | escape -}}
+                        </a>
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Related",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Default settings"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Similar Projects"
+        },
+        {
+            "type": "blog",
+            "id": "blog",
+            "label": "Blog (fallback)"
+        },
+        {
+            "type": "header",
+            "content": "CTA"
+        },
+        {
+            "type": "text",
+            "id": "cta_text",
+            "label": "Text",
+            "default": "View All Projects"
+        },
+        {
+            "type": "url",
+            "id": "cta_url",
+            "label": "Url"
+        },
+        {
+            "type": "header",
+            "content": "Section Settings"
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "min": 2,
+            "max": 12,
+            "step": 1,
+            "label": "Limit",
+            "default": 4
+        }
+    ],
+    "blocks": []
+}
+{% endschema %}
